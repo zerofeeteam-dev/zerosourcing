@@ -1,0 +1,197 @@
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 24px 32px;
+  border: 1px solid #e9ecf2;
+  border-radius: 16px;
+  background: #ffffff;
+  color: #1b1f2a;
+  overflow: hidden;
+  transition:
+    border-color 220ms ease-in-out,
+    color 220ms ease-in-out;
+}
+
+.card::before {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  content: "";
+  background:
+    linear-gradient(90deg, #3d82f5 0%, #0360ef 100%),
+    linear-gradient(90deg, #f6f8fb 0%, #f6f8fb 100%);
+  opacity: 0;
+  transition: opacity 220ms ease-in-out;
+}
+
+.card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.card:hover,
+.card:focus-within {
+  border-color: transparent;
+  color: #f8faff;
+}
+
+.card:hover::before,
+.card:focus-within::before {
+  opacity: 1;
+}
+
+.centered {
+  justify-content: center;
+}
+
+.header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.titleGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.iconFrame {
+  --zs-glass-bg: rgb(27 31 42 / 4%);
+  --zs-glass-border: rgb(255 255 255 / 0%);
+  --zs-glass-depth-shadow: none;
+  --zs-glass-frost: 10px;
+  --zs-glass-inner-light: none;
+  --zs-glass-refraction-edge: none;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 16px;
+  color: #1b1f2a;
+  transition:
+    border-color 220ms ease-in-out,
+    color 220ms ease-in-out;
+}
+
+.card:hover .iconFrame,
+.card:focus-within .iconFrame {
+  --zs-glass-bg: rgb(255 255 255 / 10%);
+  --zs-glass-frost: 20px;
+
+  color: #f8faff;
+}
+
+.iconFrame svg {
+  position: relative;
+  z-index: 1;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 26px;
+  letter-spacing: 0;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: 32px;
+  background: #f2f7ff;
+  color: #0360ef;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+  letter-spacing: 0;
+  white-space: nowrap;
+  transition: background 220ms ease-in-out;
+}
+
+.card:hover .badge,
+.card:focus-within .badge {
+  background: #ffffff;
+}
+
+.copy {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.headline {
+  color: #0360ef;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 21px;
+  letter-spacing: 0;
+  transition: color 220ms ease-in-out;
+}
+
+.card:hover .headline,
+.card:focus-within .headline {
+  color: #f8faff;
+}
+
+.description {
+  display: flex;
+  flex-direction: column;
+  color: #3f4759;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 21px;
+  letter-spacing: 0;
+  transition: color 220ms ease-in-out;
+}
+
+.card:hover .description,
+.card:focus-within .description {
+  color: #e9ecf2;
+}
+
+.action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 0;
+  border: 0;
+  border-radius: 16px;
+  background: transparent;
+  color: #1b1f2a;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 21px;
+  letter-spacing: 0;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 220ms ease-in-out;
+}
+
+.card:hover .action,
+.card:focus-within .action {
+  color: #f8faff;
+}
+
+@media (max-width: 768px) {
+  .card {
+    padding: 24px;
+  }
+}

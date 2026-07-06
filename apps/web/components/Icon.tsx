@@ -12,12 +12,15 @@ import {
   SavedArrowUpSquareContainedIcon,
 } from "./icons";
 
-type IconName =
+export type IconName =
   | "arrow-left"
   | "arrow-right"
   | "chevron-down"
+  | "device-mobile"
   | "edit-03"
+  | "home-02"
   | "message-typing"
+  | "package-02"
   | "quote-left"
   | "arrow-curve-left-down"
   | "arrow-curve-left-right"
@@ -149,6 +152,82 @@ function MessageTypingIcon({ size = 24, ...props }: Omit<IconProps, "name">) {
   );
 }
 
+function Package02Icon({ size = 24, ...props }: Omit<IconProps, "name">) {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      height={size}
+      viewBox="0 0 24 24"
+      width={size}
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M12 3L20 7.5V16.5L12 21L4 16.5V7.5L12 3Z"
+        stroke="currentColor"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+      <path
+        d="M4.5 8L12 12.25L19.5 8M12 12.25V20.5"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+    </svg>
+  );
+}
+
+function DeviceMobileIcon({ size = 24, ...props }: Omit<IconProps, "name">) {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      height={size}
+      viewBox="0 0 24 24"
+      width={size}
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M8 3.5H16C17.1046 3.5 18 4.39543 18 5.5V18.5C18 19.6046 17.1046 20.5 16 20.5H8C6.89543 20.5 6 19.6046 6 18.5V5.5C6 4.39543 6.89543 3.5 8 3.5Z"
+        stroke="currentColor"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+      <path
+        d="M10 6.5H14M11.5 17.5H12.5"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeWidth="1.8"
+      />
+    </svg>
+  );
+}
+
+function Home02Icon({ size = 24, ...props }: Omit<IconProps, "name">) {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      height={size}
+      viewBox="0 0 24 24"
+      width={size}
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M4 10.75L12 4L20 10.75V19C20 19.5523 19.5523 20 19 20H15V14H9V20H5C4.44772 20 4 19.5523 4 19V10.75Z"
+        stroke="currentColor"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+    </svg>
+  );
+}
+
 function QuoteLeftIcon({ size = 24, ...props }: Omit<IconProps, "name">) {
   return (
     <svg
@@ -172,8 +251,11 @@ const icons = {
   "arrow-left": ArrowLeftIcon,
   "arrow-right": ArrowRightIcon,
   "chevron-down": ChevronDownIcon,
+  "device-mobile": DeviceMobileIcon,
   "edit-03": Edit03Icon,
+  "home-02": Home02Icon,
   "message-typing": MessageTypingIcon,
+  "package-02": Package02Icon,
   "quote-left": QuoteLeftIcon,
   "arrow-curve-left-down": SavedArrowCurveLeftDownIcon,
   "arrow-curve-left-right": SavedArrowCurveLeftRightIcon,

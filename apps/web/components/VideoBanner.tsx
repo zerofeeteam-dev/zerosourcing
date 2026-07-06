@@ -58,7 +58,7 @@ export function VideoBanner({
         <div className={styles.copy}>
           {eyebrow ? (
             <div
-              className={`${styles.eyebrowChip} glassSurface glassSurfacePill`}
+              className={`${styles.eyebrowChip} glassSurface glassSurfacePill glassSurfaceGradientBorder`}
             >
               <p className={styles.eyebrow}>{eyebrow}</p>
             </div>

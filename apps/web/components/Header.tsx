@@ -21,7 +21,7 @@ const ctaButtonStyle = {
 export function Header() {
   return (
     <header
-      className={`${styles.header} glassSurface glassSurfacePill`}
+      className={`${styles.header} glassSurface glassSurfacePill glassSurfaceGradientBorder`}
       data-node-id="269:32520"
     >
       <div className={styles.left}>

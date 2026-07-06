@@ -1,3 +1,4 @@
+import { BusinessTypesSection } from "../components/BusinessTypesSection";
 import { Header } from "../components/Header";
 import { ListeningSection } from "../components/ListeningSection";
 import { VideoBanner } from "../components/VideoBanner";
@@ -35,6 +36,7 @@ export default function Home() {
         }
       />
       <ListeningSection />
+      <BusinessTypesSection />
     </main>
   );
 }

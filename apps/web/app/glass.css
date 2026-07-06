@@ -17,8 +17,7 @@
   background: var(--zs-glass-bg);
   border: 1px solid var(--zs-glass-border);
   box-shadow:
-    var(--zs-glass-depth-shadow),
-    var(--zs-glass-inner-light),
+    var(--zs-glass-depth-shadow), var(--zs-glass-inner-light),
     var(--zs-glass-refraction-edge);
   -webkit-backdrop-filter: blur(var(--zs-glass-frost));
   backdrop-filter: blur(var(--zs-glass-frost));
@@ -37,6 +36,30 @@
     rgb(255 255 255 / 0%) 48%
   );
   opacity: 0.28;
+}
+
+.glassSurfaceGradientBorder {
+  --zs-glass-border-light: rgb(255 255 255 / 92%);
+  --zs-glass-border-soft: rgb(255 255 255 / 12%);
+
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--zs-glass-bg), var(--zs-glass-bg)) padding-box,
+    linear-gradient(
+        150deg,
+        var(--zs-glass-border-light) 0%,
+        var(--zs-glass-border-soft) 36%,
+        rgb(255 255 255 / 0%) 72%
+      )
+      border-box,
+    linear-gradient(
+        340deg,
+        rgb(255 255 255 / 56%) 0%,
+        var(--zs-glass-border-soft) 34%,
+        rgb(255 255 255 / 0%) 72%
+      )
+      border-box;
+  box-sizing: border-box;
 }
 
 .glassSurfacePill {
