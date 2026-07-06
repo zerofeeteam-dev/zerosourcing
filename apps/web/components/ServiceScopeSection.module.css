@@ -1,0 +1,266 @@
+.section {
+  --section-padding-y: 156px;
+  --section-padding-y-tablet: 156px;
+  --section-padding-y-mobile: 108px;
+  --section-inner-gap-mobile: 32px;
+  --section-title-size-mobile: 24px;
+  --section-title-line-height-mobile: 32px;
+
+  background-color: #ffffff;
+  background-image: url("/images/s4_bg.png");
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.mobileDescriptionLine {
+  display: none;
+}
+
+.stepList {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  align-items: stretch;
+  gap: 20px;
+}
+
+.phaseCard,
+.detailCard {
+  overflow: hidden;
+  border-radius: 16px;
+  background: #ffffff;
+}
+
+.phaseCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+  padding: 0 32px;
+}
+
+.phase {
+  width: 100%;
+  color: #0360ef;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 21px;
+  letter-spacing: 0;
+}
+
+.phaseTitleGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.stepTitle {
+  margin: 0;
+  color: #1b1f2a;
+  font-family: var(--font-sans);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 26px;
+  letter-spacing: 0;
+}
+
+.stepSubtitle {
+  color: #3f4759;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+  letter-spacing: 0;
+}
+
+.detailCard {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px 32px;
+}
+
+.description {
+  display: flex;
+  flex-direction: column;
+  color: #1b1f2a;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 21px;
+  letter-spacing: 0;
+}
+
+.featureGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 320px));
+  gap: 8px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.featureItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #1b1f2a;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 21px;
+  letter-spacing: 0;
+}
+
+.featureIcon {
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  flex: 0 0 16px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+  background: #0360ef;
+  color: #f8faff;
+}
+
+.burdenBox {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  border-radius: 16px;
+  background: #f2f7ff;
+}
+
+.burdenBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 24px;
+  flex: 0 0 auto;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: #0360ef;
+  color: #f8faff;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+.burdenText {
+  color: #0360ef;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+  letter-spacing: 0;
+}
+
+.summary {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #1b1f2a;
+  font-family: var(--font-sans);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 30px;
+  letter-spacing: 0;
+  text-align: center;
+}
+
+.summaryLine {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.summary strong {
+  color: #0360ef;
+  font-weight: 700;
+}
+
+@media (max-width: 1080px) {
+  .step {
+    gap: 8px;
+  }
+
+  .featureGrid {
+    grid-template-columns: repeat(2, minmax(0, 320px));
+  }
+}
+
+@media (max-width: 768px) {
+  .stepList {
+    gap: 8px;
+  }
+
+  .step {
+    grid-template-columns: 1fr;
+  }
+
+  .phaseCard {
+    padding: 20px 32px;
+  }
+
+  .featureGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .burdenBox {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .summary {
+    font-size: 16px;
+    line-height: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .desktopDescriptionLine {
+    display: none;
+  }
+
+  .desktopLineBreak {
+    display: none;
+  }
+
+  .mobileDescriptionLine {
+    display: block;
+  }
+
+  .detailCard {
+    padding: 16px 20px;
+  }
+
+  .featureItem {
+    align-items: flex-start;
+    font-size: 12px;
+    line-height: 18px;
+  }
+}

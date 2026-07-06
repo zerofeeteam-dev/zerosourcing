@@ -1,0 +1,55 @@
+.viewport {
+  width: 100%;
+}
+
+.track {
+  display: flex;
+  gap: var(--carousel-gap);
+}
+
+.viewport[data-mode="row"] .track > * {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+/* 캐러셀 모드: 트랙은 bleed만큼 컨테이너 밖으로 확장되고,
+   좌우 여백은 컨테이너 패딩 대신 첫/마지막 카드 마진으로 적용된다. */
+.viewport[data-mode="carousel"] .track {
+  gap: var(--carousel-gap-narrow);
+  margin-inline: calc(-1 * var(--carousel-bleed));
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--carousel-bleed);
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.viewport[data-mode="carousel"] .track::-webkit-scrollbar {
+  display: none;
+}
+
+.viewport[data-mode="carousel"] .track > * {
+  flex: 0 0 min(var(--carousel-item-width), 100%);
+  scroll-snap-align: start;
+}
+
+.viewport[data-mode="carousel"][data-snap-align="center"] .track > * {
+  scroll-snap-align: center;
+}
+
+.viewport[data-mode="carousel"] .track > :first-child {
+  margin-inline-start: var(--carousel-bleed);
+}
+
+.viewport[data-mode="carousel"] .track > :last-child {
+  margin-inline-end: var(--carousel-bleed);
+}
+
+.viewport[data-mode="carousel"][data-snap-align="center"] .track > :first-child {
+  scroll-snap-align: start;
+}
+
+.viewport[data-mode="carousel"][data-snap-align="center"] .track > :last-child {
+  scroll-snap-align: end;
+}

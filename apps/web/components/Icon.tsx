@@ -15,13 +15,23 @@ import {
 export type IconName =
   | "arrow-left"
   | "arrow-right"
+  | "calendar-02"
+  | "check"
+  | "chevron-right"
+  | "component"
   | "chevron-down"
   | "device-mobile"
   | "edit-03"
+  | "file-edit-02"
+  | "headphones"
   | "home-02"
+  | "line-chart-up-02"
+  | "menu-01"
   | "message-typing"
   | "package-02"
   | "quote-left"
+  | "wrench"
+  | "x-03"
   | "arrow-curve-left-down"
   | "arrow-curve-left-right"
   | "arrow-curve-left-up"
@@ -86,6 +96,28 @@ function ArrowRightIcon({ size = 24, ...props }: Omit<IconProps, "name">) {
   );
 }
 
+function ChevronRightIcon({ size = 24, ...props }: Omit<IconProps, "name">) {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      height={size}
+      viewBox="0 0 24 24"
+      width={size}
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M10 7L15 12L10 17"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+    </svg>
+  );
+}
+
 function ChevronDownIcon({ size = 24, ...props }: Omit<IconProps, "name">) {
   return (
     <svg
@@ -99,6 +131,177 @@ function ChevronDownIcon({ size = 24, ...props }: Omit<IconProps, "name">) {
     >
       <path
         d="M7 10L12 15L17 10"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+    </svg>
+  );
+}
+
+function HeadphonesIcon({ size = 24, ...props }: Omit<IconProps, "name">) {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      height={size}
+      viewBox="0 0 24 24"
+      width={size}
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M4 13V12C4 7.58172 7.58172 4 12 4C16.4183 4 20 7.58172 20 12V13"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+      <path
+        d="M6 13H8V19H6C4.89543 19 4 18.1046 4 17V15C4 13.8954 4.89543 13 6 13ZM18 13H16V19H18C19.1046 19 20 18.1046 20 17V15C20 13.8954 19.1046 13 18 13Z"
+        stroke="currentColor"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+    </svg>
+  );
+}
+
+function FileEdit02Icon({ size = 24, ...props }: Omit<IconProps, "name">) {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      height={size}
+      viewBox="0 0 24 24"
+      width={size}
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M14 3.5V8C14 8.55228 14.4477 9 15 9H19.5M13 20.5H6C5.17157 20.5 4.5 19.8284 4.5 19V5C4.5 4.17157 5.17157 3.5 6 3.5H14.25L19.5 8.75V12"
+        stroke="currentColor"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+      <path
+        d="M14.5 19.5L15 17L19.75 12.25C20.1642 11.8358 20.8358 11.8358 21.25 12.25C21.6642 12.6642 21.6642 13.3358 21.25 13.75L16.5 18.5L14.5 19.5Z"
+        stroke="currentColor"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+    </svg>
+  );
+}
+
+function WrenchIcon({ size = 24, ...props }: Omit<IconProps, "name">) {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      height={size}
+      viewBox="0 0 24 24"
+      width={size}
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M14.7 6.3C15.8 5.2 17.4 4.9 18.8 5.3L16.5 7.6L16.4 9.5L18.3 9.4L20.6 7.1C21 8.5 20.7 10.1 19.6 11.2C18.4 12.4 16.7 12.7 15.2 12.2L8.2 19.2C7.4 20 6.1 20 5.3 19.2C4.5 18.4 4.5 17.1 5.3 16.3L12.3 9.3C11.8 7.8 12.1 6.1 14.7 6.3Z"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+    </svg>
+  );
+}
+
+function CheckIcon({ size = 24, ...props }: Omit<IconProps, "name">) {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      height={size}
+      viewBox="0 0 12 12"
+      width={size}
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M2.5 6.1L5 8.5L9.5 3.5"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.6"
+      />
+    </svg>
+  );
+}
+
+function Calendar02Icon({ size = 24, ...props }: Omit<IconProps, "name">) {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      height={size}
+      viewBox="0 0 16 16"
+      width={size}
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M5.33333 2V4M10.6667 2V4M2.66667 6.16667H13.3333M4 3.16667H12C12.7364 3.16667 13.3333 3.76362 13.3333 4.5V12C13.3333 12.7364 12.7364 13.3333 12 13.3333H4C3.26362 13.3333 2.66667 12.7364 2.66667 12V4.5C2.66667 3.76362 3.26362 3.16667 4 3.16667Z"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.3"
+      />
+    </svg>
+  );
+}
+
+function ComponentIcon({ size = 24, ...props }: Omit<IconProps, "name">) {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      height={size}
+      viewBox="0 0 24 24"
+      width={size}
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M12 3.5L20.5 8.25L12 13L3.5 8.25L12 3.5Z"
+        stroke="currentColor"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+      <path
+        d="M4 12L12 16.5L20 12M4 15.75L12 20.25L20 15.75"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+    </svg>
+  );
+}
+
+function LineChartUp02Icon({ size = 24, ...props }: Omit<IconProps, "name">) {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      height={size}
+      viewBox="0 0 24 24"
+      width={size}
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M4 19H20M6 16L10 12L13 15L19 8M19 8V13M19 8H14"
         stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -143,6 +346,50 @@ function MessageTypingIcon({ size = 24, ...props }: Omit<IconProps, "name">) {
     >
       <path
         d="M7.49957 12.0846V12M11.9991 12.0846V12M16.4987 12.0846V12M20.9983 12C20.9983 13.2938 20.7253 14.5238 20.2338 15.6356L21 20.9991L16.4039 19.85C15.1019 20.5823 13.5993 21 11.9991 21C7.02906 21 3 16.9706 3 12C3 7.02944 7.02906 3 11.9991 3C16.9692 3 20.9983 7.02944 20.9983 12Z"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+      />
+    </svg>
+  );
+}
+
+function Menu01Icon({ size = 24, ...props }: Omit<IconProps, "name">) {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      height={size}
+      viewBox="0 0 24 24"
+      width={size}
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M4 7H20M4 12H20M4 17H20"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+      />
+    </svg>
+  );
+}
+
+function X03Icon({ size = 24, ...props }: Omit<IconProps, "name">) {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      height={size}
+      viewBox="0 0 24 24"
+      width={size}
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M18 6L6 18M6 6L18 18"
         stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -250,13 +497,23 @@ function QuoteLeftIcon({ size = 24, ...props }: Omit<IconProps, "name">) {
 const icons = {
   "arrow-left": ArrowLeftIcon,
   "arrow-right": ArrowRightIcon,
+  "calendar-02": Calendar02Icon,
+  check: CheckIcon,
+  "chevron-right": ChevronRightIcon,
+  component: ComponentIcon,
   "chevron-down": ChevronDownIcon,
   "device-mobile": DeviceMobileIcon,
   "edit-03": Edit03Icon,
+  "file-edit-02": FileEdit02Icon,
+  headphones: HeadphonesIcon,
   "home-02": Home02Icon,
+  "line-chart-up-02": LineChartUp02Icon,
+  "menu-01": Menu01Icon,
   "message-typing": MessageTypingIcon,
   "package-02": Package02Icon,
   "quote-left": QuoteLeftIcon,
+  wrench: WrenchIcon,
+  "x-03": X03Icon,
   "arrow-curve-left-down": SavedArrowCurveLeftDownIcon,
   "arrow-curve-left-right": SavedArrowCurveLeftRightIcon,
   "arrow-curve-left-up": SavedArrowCurveLeftUpIcon,

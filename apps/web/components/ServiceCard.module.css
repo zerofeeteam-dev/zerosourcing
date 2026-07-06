@@ -5,14 +5,12 @@
   align-items: flex-start;
   gap: 16px;
   padding: 24px 32px;
-  border: 1px solid #e9ecf2;
+  border: 0;
   border-radius: 16px;
-  background: #ffffff;
+  background: #f6f8fb;
   color: #1b1f2a;
   overflow: hidden;
-  transition:
-    border-color 220ms ease-in-out,
-    color 220ms ease-in-out;
+  transition: color 220ms ease-in-out;
 }
 
 .card::before {
@@ -34,7 +32,6 @@
 
 .card:hover,
 .card:focus-within {
-  border-color: transparent;
   color: #f8faff;
 }
 
@@ -65,7 +62,7 @@
   --zs-glass-bg: rgb(27 31 42 / 4%);
   --zs-glass-border: rgb(255 255 255 / 0%);
   --zs-glass-depth-shadow: none;
-  --zs-glass-frost: 10px;
+  --zs-glass-frost: 0px;
   --zs-glass-inner-light: none;
   --zs-glass-refraction-edge: none;
 
@@ -84,9 +81,12 @@
 .card:hover .iconFrame,
 .card:focus-within .iconFrame {
   --zs-glass-bg: rgb(255 255 255 / 10%);
-  --zs-glass-frost: 20px;
 
   color: #f8faff;
+}
+
+.iconFrame::before {
+  opacity: 0;
 }
 
 .iconFrame svg {

@@ -4,7 +4,8 @@ import styles from "./SectionShell.module.css";
 
 type SectionShellProps = {
   children: ReactNode;
-  description: ReactNode;
+  className?: string;
+  description?: ReactNode;
   label: string;
   order: string;
   title: ReactNode;
@@ -12,13 +13,16 @@ type SectionShellProps = {
 
 export function SectionShell({
   children,
+  className,
   description,
   label,
   order,
   title,
 }: SectionShellProps) {
   return (
-    <section className={styles.section}>
+    <section
+      className={className ? `${styles.section} ${className}` : styles.section}
+    >
       <div className={styles.inner}>
         <div className={styles.header}>
           <div className={styles.heading}>
@@ -32,7 +36,9 @@ export function SectionShell({
             </div>
             <h2 className={styles.title}>{title}</h2>
           </div>
-          <p className={styles.description}>{description}</p>
+          {description ? (
+            <p className={styles.description}>{description}</p>
+          ) : null}
         </div>
         <div className={styles.body}>{children}</div>
       </div>

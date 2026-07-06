@@ -1,0 +1,97 @@
+.metrics {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  text-align: center;
+}
+
+.divider {
+  align-self: center;
+  height: 72px;
+  border-left: 1px dashed #e9ecf2;
+}
+
+.valueGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.label,
+.note {
+  color: #475569;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: 0;
+}
+
+.value {
+  color: #1e293b;
+  font-family: var(--font-sans);
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 48px;
+  letter-spacing: 0;
+}
+
+@media (max-width: 1080px) {
+  .metrics {
+    grid-template-columns: 1fr auto 1fr;
+    row-gap: 32px;
+  }
+
+  .metric:nth-of-type(1) {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .metric:nth-of-type(2) {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .metric:nth-of-type(3) {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .metric:nth-of-type(4) {
+    grid-column: 3;
+    grid-row: 2;
+  }
+
+  .divider:nth-of-type(1) {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .divider:nth-of-type(2) {
+    display: none;
+  }
+
+  .divider:nth-of-type(3) {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .label,
+  .note {
+    font-size: 14px;
+    line-height: 21px;
+  }
+
+  .value {
+    font-size: 24px;
+    line-height: 32px;
+  }
+}

@@ -68,7 +68,8 @@ Do not create local wrapper components such as `ButtonIcon` or `HeaderIcon` insi
 ## Icons 규격
 
 - 아이콘 registry 위치: `apps/web/components/Icon.tsx`
-- Figma에서 받은 원본/백업 벡터 위치: `apps/web/components/icons.tsx`
+- Figma에서 받은 UI 아이콘 SVG 원본 위치: `apps/web/public/figma-icons`
+- `apps/web/public/figma-assets`에는 로고, 브랜드마크, 파트너 로고, 이미지 같은 비아이콘 asset만 둔다.
 - 신규 아이콘 추가 전 `apps/web/components/Icon.tsx`와 `apps/web/components/icons.tsx`에 동일 이름 아이콘이 있는지 먼저 확인한다.
 - 동일 이름 아이콘이 이미 있으면 기존 아이콘을 꺼내서 사용하고, 중복 SVG 파일이나 색상별 아이콘을 만들지 않는다.
 - UI에서 아이콘을 사용할 때는 `apps/web/components/Icon.tsx`의 `Icon` 컴포넌트를 사용한다.
@@ -77,7 +78,8 @@ Do not create local wrapper components such as `ButtonIcon` or `HeaderIcon` insi
 - Figma SVG를 가져올 때 고정 `stroke`/`fill` 색상은 `currentColor`로 변환해 등록한다.
 - 고정색 asset SVG는 제품 UI 아이콘 registry에 넣지 않고, 해당 그래픽을 쓰는 컴포넌트에서 명시적으로 사용한다.
 - 사용 예시: `<Icon name="arrow-right" size={16} />`
-- 원본/백업 파일 규격: `apps/web/components/icons.tsx`
+- 원본 SVG 파일 규격: `apps/web/public/figma-icons`
+- 코드 registry 보조 파일: `apps/web/components/icons.tsx`
 - 파일 내 항목
   - 아이콘 타입: `FigmaIconAsset`
   - 아이콘 데이터 배열: `figmaArrowIcons`
@@ -107,6 +109,17 @@ Use `margin` only for page-level exceptions where `gap` cannot express the layou
 - 디자인 레이아웃을 잡기 위해 `min-width`와 `min-height`를 되도록 사용하지 않는다.
 - 레이아웃 크기와 간격은 기본적으로 부모의 `padding`, `gap`, 컨텐츠 흐름으로 만든다.
 - `min-width`나 `min-height`가 꼭 필요하면 구현 후 최종 응답에서 사용한 파일, selector, 이유를 명시한다.
+
+# Divider
+
+Dividers and separators that appear as visible design elements must be rendered as explicit DOM elements. Do not hide structural dividers in `::before` or `::after` pseudo-elements.
+
+## 디바이더 규칙
+
+- 점선, 실선, 세로선, 가로선처럼 디자인에서 독립 요소로 보이는 divider는 `<span aria-hidden="true" />` 같은 실제 요소로 만든다.
+- divider의 크기, 색상, 점선/실선 여부는 해당 요소의 class에서 관리한다.
+- `::before`, `::after`는 hover highlight, decorative overlay처럼 구조가 아닌 시각 효과에만 사용한다.
+- 목록이나 grid 사이의 divider는 렌더링 단계에서 필요한 위치에 명시적으로 끼워 넣는다.
 
 # Button
 

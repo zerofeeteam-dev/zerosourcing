@@ -1,0 +1,82 @@
+.footer {
+  width: 100%;
+  padding: 52px 20px;
+  border-top: 1px solid #e9ecf2;
+  background: #f6f8fb;
+  display: flex;
+  justify-content: center;
+}
+
+.inner {
+  width: min(100%, 1360px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.logo {
+  width: 167px;
+  height: 24px;
+  display: block;
+  flex: 0 0 auto;
+}
+
+.divider {
+  width: 100%;
+  height: 0;
+  border-top: 1px dashed #e9ecf2;
+  display: block;
+}
+
+.policyGroup,
+.companyGroup {
+  width: 100%;
+  color: #3f4759;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.policyGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.customerGroup,
+.companyGroup,
+.mobileAddress {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.bold {
+  font-weight: 700;
+}
+
+.mobileOnly,
+.mobileAddress {
+  display: none;
+}
+
+@media (max-width: 480px) {
+  .desktopOnly {
+    display: none;
+  }
+
+  .mobileOnly {
+    display: block;
+  }
+
+  .mobileAddress {
+    display: flex;
+  }
+}

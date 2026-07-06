@@ -86,7 +86,6 @@ a.primary {
 
 a.secondary {
   border-color: var(--gray-alpha-200);
-  min-width: 180px;
 }
 
 button.secondary {
@@ -106,7 +105,6 @@ button.secondary {
   font-weight: 500;
   background: transparent;
   border-color: var(--gray-alpha-200);
-  min-width: 180px;
 }
 
 .footer {
@@ -166,10 +164,6 @@ button.secondary {
     font-size: 14px;
     height: 40px;
     padding: 0 16px;
-  }
-
-  a.secondary {
-    min-width: auto;
   }
 
   .footer {
