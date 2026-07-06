@@ -1,25 +1,42 @@
 :root {
-  --zs-glass-bg: rgb(255 255 255 / 12%);
-  --zs-glass-bg-hover: rgb(255 255 255 / 18%);
+  --zs-glass-bg: rgb(255 255 255 / 10%);
+  --zs-glass-bg-hover: rgb(255 255 255 / 16%);
   --zs-glass-bg-fallback: rgb(255 255 255 / 86%);
-  --zs-glass-border: rgb(255 255 255 / 64%);
-  --zs-glass-shadow: 0 12px 32px rgb(15 23 42 / 8%);
-  --zs-glass-blur-soft: 12px;
-  --zs-glass-blur-strong: 24px;
+  --zs-glass-border: rgb(255 255 255 / 58%);
+  --zs-glass-depth-shadow: 0 20px 48px rgb(15 23 42 / 10%);
+  --zs-glass-inner-light: inset 0 1px 0 rgb(255 255 255 / 72%);
+  --zs-glass-refraction-edge: inset 0 -1px 0 rgb(255 255 255 / 20%);
+  --zs-glass-frost: 20px;
+  --zs-glass-light-angle: -45deg;
+  --zs-glass-light-opacity: 80%;
 }
 
 .glassSurface {
   position: relative;
+  overflow: hidden;
   background: var(--zs-glass-bg);
   border: 1px solid var(--zs-glass-border);
-  box-shadow: var(--zs-glass-shadow);
-  backdrop-filter: blur(var(--zs-glass-blur-soft));
-  -webkit-backdrop-filter: blur(var(--zs-glass-blur-soft));
+  box-shadow:
+    var(--zs-glass-depth-shadow),
+    var(--zs-glass-inner-light),
+    var(--zs-glass-refraction-edge);
+  -webkit-backdrop-filter: blur(var(--zs-glass-frost));
+  backdrop-filter: blur(var(--zs-glass-frost));
 }
 
-.glassSurfaceStrong {
-  backdrop-filter: blur(var(--zs-glass-blur-strong));
-  -webkit-backdrop-filter: blur(var(--zs-glass-blur-strong));
+.glassSurface::before {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  content: "";
+  background: linear-gradient(
+    var(--zs-glass-light-angle),
+    rgb(255 255 255 / var(--zs-glass-light-opacity)) 0%,
+    rgb(255 255 255 / 22%) 18%,
+    rgb(255 255 255 / 0%) 48%
+  );
+  opacity: 0.28;
 }
 
 .glassSurfacePill {
@@ -28,7 +45,7 @@
 
 .glassSurfaceInteractive {
   transition:
-    background-color 160ms ease,
+    background 160ms ease,
     border-color 160ms ease,
     box-shadow 160ms ease;
 }

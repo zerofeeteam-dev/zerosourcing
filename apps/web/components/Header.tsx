@@ -1,18 +1,27 @@
+"use client";
+
+import type { CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { Button } from "@repo/ui/button";
 
 import { Icon } from "./Icon";
+import { emitCtaClick } from "./cta-events";
 import styles from "./Header.module.css";
 
 const imgLogoMark = "/figma-assets/logo-mark.svg";
 const imgLogoType = "/figma-assets/logo-type.svg";
 
 const navItems = ["About", "Service", "Blog", "Portfolio", "FAQ"];
+const ctaButtonStyle = {
+  borderRadius: 32,
+  padding: "8px 20px",
+} satisfies CSSProperties;
 
 export function Header() {
   return (
     <header
-      className={`${styles.header} glassSurface glassSurfaceStrong glassSurfacePill`}
+      className={`${styles.header} glassSurface glassSurfacePill`}
       data-node-id="269:32520"
     >
       <div className={styles.left}>
@@ -56,14 +65,26 @@ export function Header() {
       </div>
 
       <div className={styles.actions}>
-        <Link className={styles.outsourceButton} href="/">
-          <Icon name="edit-03" size={24} />
+        <Button
+          color="blue"
+          iconSize={24}
+          leftIcon={<Icon name="edit-03" size={24} />}
+          onClick={() => emitCtaClick("outsource")}
+          style={ctaButtonStyle}
+          variant="gradient"
+        >
           외주 문의하기
-        </Link>
-        <Link className={styles.quickButton} href="/">
-          <Icon name="message-typing" size={24} />
+        </Button>
+        <Button
+          color="yellow"
+          iconSize={24}
+          leftIcon={<Icon name="message-typing" size={24} />}
+          onClick={() => emitCtaClick("quick")}
+          style={ctaButtonStyle}
+          variant="gradient"
+        >
           간편 문의하기
-        </Link>
+        </Button>
       </div>
     </header>
   );
