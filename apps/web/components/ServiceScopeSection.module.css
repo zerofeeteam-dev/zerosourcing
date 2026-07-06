@@ -54,13 +54,9 @@
 }
 
 .phase {
+  composes: pretendard-medium-14 from global;
   width: 100%;
-  color: #0360ef;
-  font-family: var(--font-sans);
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 21px;
-  letter-spacing: 0;
+  color: var(--color-brand-500);
 }
 
 .phaseTitleGroup {
@@ -69,22 +65,14 @@
 }
 
 .stepTitle {
+  composes: pretendard-bold-18 from global;
   margin: 0;
-  color: #1b1f2a;
-  font-family: var(--font-sans);
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 26px;
-  letter-spacing: 0;
+  color: var(--color-gray-800);
 }
 
 .stepSubtitle {
-  color: #3f4759;
-  font-family: var(--font-sans);
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 18px;
-  letter-spacing: 0;
+  composes: pretendard-medium-12 from global;
+  color: var(--color-gray-600);
 }
 
 .detailCard {
@@ -95,14 +83,10 @@
 }
 
 .description {
+  composes: pretendard-medium-14 from global;
   display: flex;
   flex-direction: column;
-  color: #1b1f2a;
-  font-family: var(--font-sans);
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 21px;
-  letter-spacing: 0;
+  color: var(--color-gray-800);
 }
 
 .featureGrid {
@@ -115,15 +99,11 @@
 }
 
 .featureItem {
+  composes: pretendard-medium-14 from global;
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #1b1f2a;
-  font-family: var(--font-sans);
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 21px;
-  letter-spacing: 0;
+  color: var(--color-gray-800);
 }
 
 .featureIcon {
@@ -134,7 +114,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 2px;
-  background: #0360ef;
+  background: var(--color-brand-500);
   color: #f8faff;
 }
 
@@ -144,10 +124,11 @@
   gap: 16px;
   padding: 16px 20px;
   border-radius: 16px;
-  background: #f2f7ff;
+  background: var(--color-brand-50);
 }
 
 .burdenBadge {
+  composes: pretendard-medium-12 from global;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -155,37 +136,24 @@
   flex: 0 0 auto;
   padding: 0 8px;
   border-radius: 999px;
-  background: #0360ef;
+  background: var(--color-brand-500);
   color: #f8faff;
-  font-family: var(--font-sans);
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 18px;
-  letter-spacing: 0;
   white-space: nowrap;
 }
 
 .burdenText {
-  color: #0360ef;
-  font-family: var(--font-sans);
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 18px;
-  letter-spacing: 0;
+  composes: pretendard-medium-12 from global;
+  color: var(--color-brand-500);
 }
 
 .summary {
+  composes: pretendard-medium-20 from global;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: #1b1f2a;
-  font-family: var(--font-sans);
-  font-size: 20px;
-  font-weight: 500;
-  line-height: 30px;
-  letter-spacing: 0;
+  color: var(--color-gray-800);
   text-align: center;
 }
 
@@ -198,8 +166,7 @@
 }
 
 .summary strong {
-  color: #0360ef;
-  font-weight: 700;
+  color: var(--color-brand-500);
 }
 
 @media (max-width: 1080px) {

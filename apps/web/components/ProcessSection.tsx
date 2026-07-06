@@ -69,9 +69,7 @@ export function ProcessSection({
         <div className={styles.header}>
           <div className={styles.heading}>
             <div className={styles.kicker}>
-              <span
-                className={`${styles.orderChip} glassSurface glassSurfacePill glassSurfaceGradientBorder`}
-              >
+              <span className={styles.orderChip}>
                 <span className={styles.orderText}>{order}</span>
               </span>
               <p className={styles.label}>진행 프로세스</p>

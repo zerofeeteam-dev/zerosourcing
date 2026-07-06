@@ -6,8 +6,8 @@
   gap: 8px;
   padding: 16px 20px;
   border-radius: 16px;
-  background: #f6f8fb;
-  color: #1b1f2a;
+  background: var(--color-gray-50);
+  color: var(--color-gray-800);
 }
 
 .heading {
@@ -25,17 +25,13 @@
   flex: 0 0 40px;
   border-radius: 16px;
   background: rgb(255 255 255 / 10%);
-  color: #1b1f2a;
+  color: var(--color-gray-800);
 }
 
 .title {
+  composes: pretendard-bold-18 from global;
   margin: 0;
-  color: #1b1f2a;
-  font-family: var(--font-sans);
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 26px;
-  letter-spacing: 0;
+  color: var(--color-gray-800);
   white-space: nowrap;
 }
 
@@ -48,25 +44,17 @@
 }
 
 .description {
+  composes: pretendard-medium-14 from global;
   width: 100%;
-  color: #1b1f2a;
-  font-family: var(--font-sans);
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 21px;
-  letter-spacing: 0;
+  color: var(--color-gray-800);
   word-break: keep-all;
   overflow-wrap: anywhere;
 }
 
 .duration {
+  composes: pretendard-medium-12 from global;
   width: 100%;
-  color: #3f4759;
-  font-family: var(--font-sans);
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 18px;
-  letter-spacing: 0;
+  color: var(--color-gray-600);
 }
 
 @media (max-width: 1080px) {

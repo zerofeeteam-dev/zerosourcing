@@ -55,17 +55,13 @@
   align-items: center;
   justify-content: center;
   padding: 8px 16px;
+  border-radius: 999px;
+  background: var(--color-gray-50);
 }
 
 .eyebrow {
-  position: relative;
-  z-index: 1;
-  color: #1b1f2a;
-  font-family: var(--font-sans);
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 21px;
-  letter-spacing: 0;
+  composes: pretendard-medium-14 from global;
+  color: var(--color-gray-800);
   white-space: nowrap;
 }
 
@@ -77,22 +73,14 @@
 }
 
 .title {
+  composes: pretendard-bold-32 from global;
   margin: 0;
-  color: #1b1f2a;
-  font-family: var(--font-sans);
-  font-size: 32px;
-  font-weight: 700;
-  line-height: 40px;
-  letter-spacing: 0;
+  color: var(--color-gray-800);
 }
 
 .description {
-  color: #3f4759;
-  font-family: var(--font-sans);
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 24px;
-  letter-spacing: 0;
+  composes: pretendard-medium-16 from global;
+  color: var(--color-gray-600);
 }
 
 .actions {

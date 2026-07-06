@@ -20,37 +20,29 @@
   gap: 16px;
   padding: 24px 32px;
   border-radius: 16px;
-  background: #f6f8fb;
+  background: var(--color-gray-50);
 }
 
 .quoteIcon {
   display: block;
-  color: #0360ef;
+  color: var(--color-brand-500);
 }
 
 .cardText {
+  composes: pretendard-medium-14 from global;
   display: flex;
   flex-direction: column;
-  color: #1b1f2a;
-  font-family: var(--font-sans);
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 21px;
-  letter-spacing: 0;
+  color: var(--color-gray-800);
 }
 
 .summary {
+  composes: pretendard-medium-20 from global;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: #1b1f2a;
-  font-family: var(--font-sans);
-  font-size: 20px;
-  font-weight: 500;
-  line-height: 30px;
-  letter-spacing: 0;
+  color: var(--color-gray-800);
   text-align: center;
 }
 
@@ -62,8 +54,7 @@
 }
 
 .summary strong {
-  color: #0360ef;
-  font-weight: 700;
+  color: var(--color-brand-500);
 }
 
 @media (max-width: 1280px) {

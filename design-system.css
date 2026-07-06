@@ -68,12 +68,36 @@
   --color-info-900: #0d2031;
 }
 
+.pretendard-bold-10-tight {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -1.5%;
+}
+
 .pretendard-medium-12 {
   font-family: var(--font-sans);
   font-size: 12px;
   font-weight: 500;
   line-height: 18px;
-  letter-spacing: 0;
+  letter-spacing: -1.5%;
+}
+
+.pretendard-medium-12-16 {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: -1.5%;
+}
+
+.pretendard-bold-12-16 {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 16px;
+  letter-spacing: -1.5%;
 }
 
 .pretendard-bold-12 {
@@ -81,7 +105,7 @@
   font-size: 12px;
   font-weight: 700;
   line-height: 18px;
-  letter-spacing: 0;
+  letter-spacing: -1.5%;
 }
 
 .pretendard-medium-14 {
@@ -89,7 +113,23 @@
   font-size: 14px;
   font-weight: 500;
   line-height: 21px;
-  letter-spacing: 0;
+  letter-spacing: -1.5%;
+}
+
+.pretendard-medium-14-24 {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: -1.5%;
+}
+
+.pretendard-bold-14-24 {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 24px;
+  letter-spacing: -1.5%;
 }
 
 .pretendard-bold-14 {
@@ -97,7 +137,15 @@
   font-size: 14px;
   font-weight: 700;
   line-height: 21px;
-  letter-spacing: 0;
+  letter-spacing: -1.5%;
+}
+
+.pretendard-medium-13-normal {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -1.5%;
 }
 
 .pretendard-medium-16 {
@@ -105,7 +153,15 @@
   font-size: 16px;
   font-weight: 500;
   line-height: 24px;
-  letter-spacing: 0;
+  letter-spacing: -1.5%;
+}
+
+.pretendard-medium-16-20 {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: -1.5%;
 }
 
 .pretendard-bold-16 {
@@ -113,7 +169,7 @@
   font-size: 16px;
   font-weight: 700;
   line-height: 24px;
-  letter-spacing: 0;
+  letter-spacing: -1.5%;
 }
 
 .pretendard-medium-18 {
@@ -121,7 +177,7 @@
   font-size: 18px;
   font-weight: 500;
   line-height: 26px;
-  letter-spacing: 0;
+  letter-spacing: -1.5%;
 }
 
 .pretendard-bold-18 {
@@ -129,7 +185,7 @@
   font-size: 18px;
   font-weight: 700;
   line-height: 26px;
-  letter-spacing: 0;
+  letter-spacing: -1.5%;
 }
 
 .pretendard-medium-20 {
@@ -137,7 +193,7 @@
   font-size: 20px;
   font-weight: 500;
   line-height: 30px;
-  letter-spacing: 0;
+  letter-spacing: -1.5%;
 }
 
 .pretendard-bold-20 {
@@ -145,7 +201,7 @@
   font-size: 20px;
   font-weight: 700;
   line-height: 30px;
-  letter-spacing: 0;
+  letter-spacing: -1.5%;
 }
 
 .pretendard-medium-22 {
@@ -153,7 +209,7 @@
   font-size: 22px;
   font-weight: 500;
   line-height: 32px;
-  letter-spacing: 0;
+  letter-spacing: -1.5%;
 }
 
 .pretendard-bold-22 {
@@ -161,7 +217,7 @@
   font-size: 22px;
   font-weight: 700;
   line-height: 32px;
-  letter-spacing: 0;
+  letter-spacing: -1.5%;
 }
 
 .pretendard-medium-24 {
@@ -169,7 +225,7 @@
   font-size: 24px;
   font-weight: 500;
   line-height: 32px;
-  letter-spacing: 0;
+  letter-spacing: -1.5%;
 }
 
 .pretendard-bold-24 {
@@ -177,7 +233,7 @@
   font-size: 24px;
   font-weight: 700;
   line-height: 32px;
-  letter-spacing: 0;
+  letter-spacing: -1.5%;
 }
 
 .pretendard-medium-28 {
@@ -185,7 +241,7 @@
   font-size: 28px;
   font-weight: 500;
   line-height: 36px;
-  letter-spacing: 0;
+  letter-spacing: -1.5%;
 }
 
 .pretendard-bold-28 {
@@ -193,7 +249,7 @@
   font-size: 28px;
   font-weight: 700;
   line-height: 36px;
-  letter-spacing: 0;
+  letter-spacing: -1.5%;
 }
 
 .pretendard-medium-32 {
@@ -201,7 +257,7 @@
   font-size: 32px;
   font-weight: 500;
   line-height: 40px;
-  letter-spacing: 0;
+  letter-spacing: -1.5%;
 }
 
 .pretendard-bold-32 {
@@ -209,5 +265,13 @@
   font-size: 32px;
   font-weight: 700;
   line-height: 40px;
-  letter-spacing: 0;
+  letter-spacing: -1.5%;
+}
+
+.pretendard-bold-36-48 {
+  font-family: var(--font-sans);
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 48px;
+  letter-spacing: -1.5%;
 }

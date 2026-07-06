@@ -18,7 +18,7 @@
 .alert {
   padding: 16px 20px;
   border-radius: 16px;
-  background: #fef5f5;
+  background: var(--color-error-50);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -26,26 +26,14 @@
 }
 
 .alertTitle {
+  composes: pretendard-bold-16 from global;
   margin: 0;
-  color: #f53333;
-  font-family: var(--font-sans);
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 24px;
-  letter-spacing: 0;
+  color: var(--color-error-500);
 }
 
 .alertText {
-  color: #3f4759;
-  font-family: var(--font-sans);
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 21px;
-  letter-spacing: 0;
-}
-
-.alertText strong {
-  font-weight: 700;
+  composes: pretendard-medium-14 from global;
+  color: var(--color-gray-600);
 }
 
 .programGrid {
@@ -57,7 +45,7 @@
 .programCard {
   padding: 24px 32px;
   border-radius: 16px;
-  background: #f6f8fb;
+  background: var(--color-gray-50);
 }
 
 .programInner {
@@ -68,6 +56,7 @@
 }
 
 .programTag {
+  composes: pretendard-medium-12 from global;
   height: 24px;
   padding: 0 8px;
   border-radius: 32px;
@@ -75,12 +64,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #0360ef;
-  font-family: var(--font-sans);
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 18px;
-  letter-spacing: 0;
+  color: var(--color-brand-500);
   white-space: nowrap;
 }
 
@@ -92,22 +76,14 @@
 }
 
 .programTitle {
+  composes: pretendard-bold-18 from global;
   margin: 0;
-  color: #1b1f2a;
-  font-family: var(--font-sans);
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 26px;
-  letter-spacing: 0;
+  color: var(--color-gray-800);
 }
 
 .programDescription {
-  color: #3f4759;
-  font-family: var(--font-sans);
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 21px;
-  letter-spacing: 0;
+  composes: pretendard-medium-14 from global;
+  color: var(--color-gray-600);
 }
 
 .notes {
@@ -123,15 +99,22 @@
   align-items: flex-start;
 }
 
+.noteTitle {
+  composes: pretendard-medium-12 from global;
+}
+
+.noteText {
+  composes: pretendard-medium-12 from global;
+}
+
+.stepText {
+  composes: pretendard-medium-12 from global;
+}
+
 .noteTitle,
 .noteText,
 .stepText {
-  color: #848da0;
-  font-family: var(--font-sans);
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 18px;
-  letter-spacing: 0;
+  color: var(--color-gray-400);
 }
 
 .stepText {

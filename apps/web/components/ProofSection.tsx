@@ -1,4 +1,5 @@
 import { CardCarousel } from "./CardCarousel";
+import { ProofPartnerLogoBanner } from "./ProofPartnerLogoBanner";
 import { ProofMetrics } from "./ProofMetrics";
 import { SectionShell } from "./SectionShell";
 import styles from "./ProofSection.module.css";
@@ -72,27 +73,30 @@ export function ProofSection() {
       title="왜 47.2%가 다시 찾을까요?"
     >
       <div className={styles.content} data-node-id="138:4549">
-        <ProofMetrics items={metrics} />
-        <CardCarousel bleed={20} snapAlign="center">
-          {reviews.map((review) => (
-            <article className={styles.reviewCard} key={review.name}>
-              <div className={styles.reviewBody}>
-                <p className={styles.stars}>★★★★★</p>
-                <p className={styles.quote}>
-                  {review.quote.map((line) => (
-                    <span key={line}>{line}</span>
-                  ))}
-                </p>
-              </div>
-              <div className={styles.reviewer}>
-                <p className={styles.reviewerName}>{review.name}</p>
-                <p className={styles.reviewerMeta}>
-                  {review.company} · MVP 개발
-                </p>
-              </div>
-            </article>
-          ))}
-        </CardCarousel>
+        <div className={styles.proofBody}>
+          <ProofMetrics items={metrics} />
+          <CardCarousel bleed={20} snapAlign="center">
+            {reviews.map((review) => (
+              <article className={styles.reviewCard} key={review.name}>
+                <div className={styles.reviewBody}>
+                  <p className={styles.stars}>★★★★★</p>
+                  <p className={styles.quote}>
+                    {review.quote.map((line) => (
+                      <span key={line}>{line}</span>
+                    ))}
+                  </p>
+                </div>
+                <div className={styles.reviewer}>
+                  <p className={styles.reviewerName}>{review.name}</p>
+                  <p className={styles.reviewerMeta}>
+                    {review.company} · MVP 개발
+                  </p>
+                </div>
+              </article>
+            ))}
+          </CardCarousel>
+        </div>
+        <ProofPartnerLogoBanner />
       </div>
     </SectionShell>
   );

@@ -1,8 +1,8 @@
 .footer {
   width: 100%;
   padding: 52px 20px;
-  border-top: 1px solid #e9ecf2;
-  background: #f6f8fb;
+  border-top: 1px solid var(--color-gray-100);
+  background: var(--color-gray-50);
   display: flex;
   justify-content: center;
 }
@@ -25,19 +25,22 @@
 .divider {
   width: 100%;
   height: 0;
-  border-top: 1px dashed #e9ecf2;
+  border-top: 1px dashed var(--color-gray-100);
   display: block;
+}
+
+.policyGroup {
+  composes: pretendard-medium-12-16 from global;
+}
+
+.companyGroup {
+  composes: pretendard-medium-12-16 from global;
 }
 
 .policyGroup,
 .companyGroup {
   width: 100%;
-  color: #3f4759;
-  font-family: var(--font-sans);
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 16px;
-  letter-spacing: 0;
+  color: var(--color-gray-600);
   word-break: keep-all;
   overflow-wrap: break-word;
 }
@@ -59,7 +62,7 @@
 }
 
 .bold {
-  font-weight: 700;
+  composes: pretendard-bold-12-16 from global;
 }
 
 .mobileOnly,

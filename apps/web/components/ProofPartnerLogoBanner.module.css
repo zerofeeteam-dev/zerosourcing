@@ -1,0 +1,99 @@
+.root {
+  --proof-partner-logo-gap: 20px;
+  --proof-partner-logo-duration: 10s;
+
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 104px 0;
+}
+
+.title {
+  composes: pretendard-medium-16 from global;
+  width: 100%;
+  color: var(--color-gray-600);
+  text-align: center;
+}
+
+.viewport {
+  width: 100%;
+  overflow: hidden;
+}
+
+.track {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: var(--proof-partner-logo-gap);
+}
+
+.logoGroup {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: var(--proof-partner-logo-gap);
+}
+
+.logoGroup[aria-hidden="true"] {
+  display: none;
+}
+
+.logoSlot {
+  width: var(--proof-partner-logo-width);
+  height: 52px;
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+@media (max-width: 720px) {
+  .track {
+    width: max-content;
+    justify-content: flex-start;
+    animation: proofPartnerLogoRoll var(--proof-partner-logo-duration) linear infinite;
+  }
+
+  .logoGroup[aria-hidden="true"] {
+    display: flex;
+  }
+}
+
+@media (max-width: 720px) and (prefers-reduced-motion: reduce) {
+  .viewport {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .viewport::-webkit-scrollbar {
+    display: none;
+  }
+
+  .track {
+    animation: none;
+  }
+
+  .logoGroup[aria-hidden="true"] {
+    display: none;
+  }
+}
+
+@keyframes proofPartnerLogoRoll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(calc(-50% - var(--proof-partner-logo-gap) / 2));
+  }
+}

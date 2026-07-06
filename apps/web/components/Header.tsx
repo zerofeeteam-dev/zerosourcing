@@ -7,6 +7,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@repo/ui/button";
 
+import { GlassSurface } from "./GlassSurface";
 import { Icon } from "./Icon";
 import { emitCtaClick } from "./cta-events";
 import styles from "./Header.module.css";
@@ -14,7 +15,7 @@ import styles from "./Header.module.css";
 const imgLogo = "/figma-icons/ZerosourcingLogo.svg";
 
 const navItems = [
-  { href: "/", label: "About" },
+  { href: "/about", label: "About" },
   { href: "/service/mvp", label: "Service" },
   { href: "/", label: "Blog" },
   { href: "/", label: "Portfolio" },
@@ -37,11 +38,13 @@ export function Header() {
 
   return (
     <>
-      <header
-        className={`${styles.header} glassSurface glassSurfacePill glassSurfaceGradientBorder glassSurfaceLiquid`}
+      <GlassSurface
+        as="header"
+        className={styles.header}
+        radius={40}
+        refract
         data-node-id="269:32520"
       >
-        <div aria-hidden className="glassLiquidEffect" />
         <div className={styles.left}>
           <Link className={styles.logo} href="/" aria-label="ZeroSourcing home">
             <Image
@@ -56,21 +59,31 @@ export function Header() {
           <nav className={styles.nav} aria-label="Primary navigation">
             {navItems.map((item) => {
               const isServiceItem = item.label === "Service";
-              const isActive = isServiceItem && pathname.startsWith("/service");
+              const isActive = isServiceItem
+                ? pathname.startsWith("/service")
+                : item.href !== "/" && pathname === item.href;
               const navLink = (
-                <Link
-                  className={isActive ? styles.activeNavLink : styles.navLink}
-                  href={item.href}
-                >
-                  {item.label}
-                  {isServiceItem ? (
+                isServiceItem ? (
+                  <button
+                    aria-haspopup="menu"
+                    className={isActive ? styles.activeNavLink : styles.navLink}
+                    type="button"
+                  >
+                    {item.label}
                     <Icon
                       className={styles.chevron}
                       name="chevron-down"
                       size={20}
                     />
-                  ) : null}
-                </Link>
+                  </button>
+                ) : (
+                  <Link
+                    className={isActive ? styles.activeNavLink : styles.navLink}
+                    href={item.href}
+                  >
+                    {item.label}
+                  </Link>
+                )
               );
 
               if (!isServiceItem) {
@@ -80,10 +93,7 @@ export function Header() {
               return (
                 <div className={styles.serviceNavItem} key={item.label}>
                   {navLink}
-                  <div
-                    className={`${styles.serviceDropdown} glassSurface glassSurfaceGradientBorder`}
-                    data-node-id="14:1287"
-                  >
+                  <div className={styles.serviceDropdown} data-node-id="14:1287">
                     {serviceItems.map((serviceItem) => (
                       <Link
                         className={
@@ -137,34 +147,7 @@ export function Header() {
         >
           <Icon name="menu-01" size={24} />
         </button>
-      </header>
-
-      <svg aria-hidden style={{ display: "none" }}>
-        <filter
-          id="glass-distortion"
-          x="0%"
-          y="0%"
-          width="100%"
-          height="100%"
-          filterUnits="objectBoundingBox"
-        >
-          <feTurbulence
-            type="fractalNoise"
-            baseFrequency="0.01 0.01"
-            numOctaves="1"
-            seed="5"
-            result="turbulence"
-          />
-          <feGaussianBlur in="turbulence" stdDeviation="3" result="softMap" />
-          <feDisplacementMap
-            in="SourceGraphic"
-            in2="softMap"
-            scale="80"
-            xChannelSelector="R"
-            yChannelSelector="G"
-          />
-        </filter>
-      </svg>
+      </GlassSurface>
 
       <nav
         aria-hidden={!isMenuOpen}
@@ -184,13 +167,19 @@ export function Header() {
         </button>
         {navItems.map((item) => (
           <div className={styles.mobileMenuGroup} key={item.label}>
-            <Link
-              className={styles.mobileMenuItem}
-              href={item.href}
-              onClick={closeMobileMenu}
-            >
-              {item.label}
-            </Link>
+            {item.label === "Service" ? (
+              <button className={styles.mobileMenuItem} type="button">
+                {item.label}
+              </button>
+            ) : (
+              <Link
+                className={styles.mobileMenuItem}
+                href={item.href}
+                onClick={closeMobileMenu}
+              >
+                {item.label}
+              </Link>
+            )}
             {item.label === "Service"
               ? serviceItems.map((serviceItem) => (
                   <Link

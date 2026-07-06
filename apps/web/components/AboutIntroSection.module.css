@@ -1,0 +1,54 @@
+.section {
+  --section-inner-gap: 52px;
+}
+
+.descriptionBlock {
+  display: block;
+}
+
+.descriptionBlock + .descriptionBlock {
+  padding-top: 8px;
+}
+
+.quote {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  color: var(--color-gray-800);
+}
+
+.quoteIcon {
+  display: block;
+  flex: 0 0 auto;
+  color: var(--color-gray-800);
+}
+
+.quoteIconEnd {
+  transform: rotate(180deg);
+}
+
+.quoteText {
+  composes: pretendard-medium-32 from global;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-gray-800);
+}
+
+.highlight {
+  composes: pretendard-bold-32 from global;
+  display: inline-flex;
+  align-items: center;
+  background: var(--color-brand-500);
+  color: #f8faff;
+}
+
+@media (max-width: 768px) {
+  .quoteText,
+  .highlight {
+    font-size: 24px;
+    line-height: 32px;
+  }
+}

@@ -10,13 +10,9 @@
 }
 
 .title {
+  composes: pretendard-medium-16 from global;
   width: 100%;
-  color: #3f4759;
-  font-family: var(--font-sans);
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 24px;
-  letter-spacing: 0;
+  color: var(--color-gray-600);
   text-align: center;
 }
 

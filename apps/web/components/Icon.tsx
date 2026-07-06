@@ -16,21 +16,34 @@ export type IconName =
   | "arrow-left"
   | "arrow-right"
   | "arrow-right-banner"
+  | "arrow-refresh-04"
+  | "bell-02"
   | "calendar-02"
+  | "camera-lens"
+  | "card-02"
   | "check"
   | "chevron-right"
+  | "code-02"
   | "component"
   | "chevron-down"
+  | "currency-coin-dollar"
   | "device-mobile"
   | "edit-03"
   | "file-edit-02"
   | "headphones"
   | "home-02"
+  | "image-03"
   | "line-chart-up-02"
+  | "map-02"
   | "menu-01"
   | "message-typing"
   | "package-02"
+  | "pen-tool-03"
   | "quote-left"
+  | "share"
+  | "stars"
+  | "user-profile-03"
+  | "webcam"
   | "wrench"
   | "x-03"
   | "arrow-curve-left-down"
@@ -315,6 +328,288 @@ function ComponentIcon({ size = 24, ...props }: Omit<IconProps, "name">) {
   );
 }
 
+function Bell02Icon({ size = 24, ...props }: Omit<IconProps, "name">) {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      height={size}
+      viewBox="0 0 24 24"
+      width={size}
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M8 17.5H16M10 19.5C10.4 20.1 11.1 20.5 12 20.5C12.9 20.5 13.6 20.1 14 19.5M6.5 17.5C7.4 16.7 8 15.7 8 14.4V10.5C8 8.3 9.8 6.5 12 6.5C14.2 6.5 16 8.3 16 10.5V14.4C16 15.7 16.6 16.7 17.5 17.5H6.5Z"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+    </svg>
+  );
+}
+
+function Card02Icon({ size = 24, ...props }: Omit<IconProps, "name">) {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      height={size}
+      viewBox="0 0 24 24"
+      width={size}
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M4.5 7.5C4.5 6.7 5.2 6 6 6H18C18.8 6 19.5 6.7 19.5 7.5V16.5C19.5 17.3 18.8 18 18 18H6C5.2 18 4.5 17.3 4.5 16.5V7.5Z"
+        stroke="currentColor"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+      <path
+        d="M4.8 10H19.2M7.5 14.5H11"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeWidth="1.8"
+      />
+    </svg>
+  );
+}
+
+function Map02Icon({ size = 24, ...props }: Omit<IconProps, "name">) {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      height={size}
+      viewBox="0 0 24 24"
+      width={size}
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M8 18.5L4.5 20V6L8 4.5M8 18.5V4.5M8 18.5L16 20M8 4.5L16 6M16 20L19.5 18.5V4.5L16 6M16 20V6"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+      <path
+        d="M14 10.5C14 11.6 13.1 12.5 12 12.5C10.9 12.5 10 11.6 10 10.5C10 9.4 10.9 8.5 12 8.5C13.1 8.5 14 9.4 14 10.5Z"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+    </svg>
+  );
+}
+
+function CameraLensIcon({ size = 24, ...props }: Omit<IconProps, "name">) {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      height={size}
+      viewBox="0 0 24 24"
+      width={size}
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M12 20.5C16.7 20.5 20.5 16.7 20.5 12C20.5 7.3 16.7 3.5 12 3.5C7.3 3.5 3.5 7.3 3.5 12C3.5 16.7 7.3 20.5 12 20.5Z"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+      <path
+        d="M12 8L16 15H8L12 8ZM6.4 11.5H17.6M9 5.4L15 18.6"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+    </svg>
+  );
+}
+
+function WebcamIcon({ size = 24, ...props }: Omit<IconProps, "name">) {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      height={size}
+      viewBox="0 0 24 24"
+      width={size}
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M9 8.5C9 6.84315 10.3431 5.5 12 5.5C13.6569 5.5 15 6.84315 15 8.5V12C15 13.6569 13.6569 15 12 15C10.3431 15 9 13.6569 9 12V8.5Z"
+        stroke="currentColor"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+      <path
+        d="M6.5 11.5V12C6.5 15.0376 8.96243 17.5 12 17.5M17.5 11.5V12C17.5 15.0376 15.0376 17.5 12 17.5M12 17.5V20M9.5 20H14.5"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+    </svg>
+  );
+}
+
+function UserProfile03Icon({ size = 24, ...props }: Omit<IconProps, "name">) {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      height={size}
+      viewBox="0 0 24 24"
+      width={size}
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M15.5 8.5C15.5 10.433 13.933 12 12 12C10.067 12 8.5 10.433 8.5 8.5C8.5 6.567 10.067 5 12 5C13.933 5 15.5 6.567 15.5 8.5Z"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+      <path
+        d="M5.5 19C6.6 16.8 8.9 15.5 12 15.5C15.1 15.5 17.4 16.8 18.5 19"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeWidth="1.8"
+      />
+    </svg>
+  );
+}
+
+function Image03Icon({ size = 24, ...props }: Omit<IconProps, "name">) {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      height={size}
+      viewBox="0 0 24 24"
+      width={size}
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M5 6.5C5 5.7 5.7 5 6.5 5H17.5C18.3 5 19 5.7 19 6.5V17.5C19 18.3 18.3 19 17.5 19H6.5C5.7 19 5 18.3 5 17.5V6.5Z"
+        stroke="currentColor"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+      <path
+        d="M8 15L10.6 12.4L13 14.7L14.4 13.3L17 16M8.5 9H8.6"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+    </svg>
+  );
+}
+
+function ShareIcon({ size = 24, ...props }: Omit<IconProps, "name">) {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      height={size}
+      viewBox="0 0 24 24"
+      width={size}
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M16.5 8.5L12 4M12 4L7.5 8.5M12 4V15M6 12.5V18C6 18.8 6.7 19.5 7.5 19.5H16.5C17.3 19.5 18 18.8 18 18V12.5"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+    </svg>
+  );
+}
+
+function ArrowRefresh04Icon({ size = 24, ...props }: Omit<IconProps, "name">) {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      height={size}
+      viewBox="0 0 24 24"
+      width={size}
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M8 19.3688C5.60879 17.9836 4 15.3947 4 12.4295C4 9.06753 6.06817 6.18925 9 5.00085M9 16.9357V20.9412H5M16 5.57241C18.3912 6.95754 20 9.54646 20 12.5117C20 15.8736 17.9318 18.7519 15 19.9403M15 8.00548V3.99999H19"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+      />
+    </svg>
+  );
+}
+
+function Code02Icon({ size = 24, ...props }: Omit<IconProps, "name">) {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      height={size}
+      viewBox="0 0 24 24"
+      width={size}
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M9 8L5 12L9 16M15 8L19 12L15 16M13.5 5.5L10.5 18.5"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+      />
+    </svg>
+  );
+}
+
+function CurrencyCoinDollarIcon({
+  size = 24,
+  ...props
+}: Omit<IconProps, "name">) {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      height={size}
+      viewBox="0 0 24 24"
+      width={size}
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21Z"
+        stroke="currentColor"
+        strokeLinejoin="round"
+        strokeWidth="2"
+      />
+      <path
+        d="M14.5 9.5C14.1 8.7 13.2 8 12 8C10.6 8 9.5 8.8 9.5 10C9.5 11.2 10.6 11.6 12 12C13.4 12.4 14.5 12.8 14.5 14C14.5 15.2 13.4 16 12 16C10.8 16 9.9 15.3 9.5 14.5M12 6.5V8M12 16V17.5"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+      />
+    </svg>
+  );
+}
+
 function LineChartUp02Icon({ size = 24, ...props }: Omit<IconProps, "name">) {
   return (
     <svg
@@ -354,6 +649,34 @@ function Edit03Icon({ size = 24, ...props }: Omit<IconProps, "name">) {
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="2"
+      />
+    </svg>
+  );
+}
+
+function PenTool03Icon({ size = 24, ...props }: Omit<IconProps, "name">) {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      height={size}
+      viewBox="0 0 24 24"
+      width={size}
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M12 4L19.5 11.5L15.2 18.8L12 20L8.8 18.8L4.5 11.5L12 4Z"
+        stroke="currentColor"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+      <path
+        d="M12 4V10.5M12 10.5L9.5 17.5M12 10.5L14.5 17.5M9.5 17.5H14.5"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
       />
     </svg>
   );
@@ -420,6 +743,27 @@ function X03Icon({ size = 24, ...props }: Omit<IconProps, "name">) {
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="2"
+      />
+    </svg>
+  );
+}
+
+function StarsIcon({ size = 24, ...props }: Omit<IconProps, "name">) {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      height={size}
+      viewBox="0 0 24 24"
+      width={size}
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M9.5 4.5L10.9 8.1L14.5 9.5L10.9 10.9L9.5 14.5L8.1 10.9L4.5 9.5L8.1 8.1L9.5 4.5ZM16.5 12L17.4 14.1L19.5 15L17.4 15.9L16.5 18L15.6 15.9L13.5 15L15.6 14.1L16.5 12Z"
+        stroke="currentColor"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
       />
     </svg>
   );
@@ -524,21 +868,34 @@ const icons = {
   "arrow-left": ArrowLeftIcon,
   "arrow-right": ArrowRightIcon,
   "arrow-right-banner": ArrowRightBannerIcon,
+  "arrow-refresh-04": ArrowRefresh04Icon,
+  "bell-02": Bell02Icon,
   "calendar-02": Calendar02Icon,
+  "camera-lens": CameraLensIcon,
+  "card-02": Card02Icon,
   check: CheckIcon,
   "chevron-right": ChevronRightIcon,
+  "code-02": Code02Icon,
   component: ComponentIcon,
   "chevron-down": ChevronDownIcon,
+  "currency-coin-dollar": CurrencyCoinDollarIcon,
   "device-mobile": DeviceMobileIcon,
   "edit-03": Edit03Icon,
   "file-edit-02": FileEdit02Icon,
   headphones: HeadphonesIcon,
   "home-02": Home02Icon,
+  "image-03": Image03Icon,
   "line-chart-up-02": LineChartUp02Icon,
+  "map-02": Map02Icon,
   "menu-01": Menu01Icon,
   "message-typing": MessageTypingIcon,
   "package-02": Package02Icon,
+  "pen-tool-03": PenTool03Icon,
   "quote-left": QuoteLeftIcon,
+  share: ShareIcon,
+  stars: StarsIcon,
+  "user-profile-03": UserProfile03Icon,
+  webcam: WebcamIcon,
   wrench: WrenchIcon,
   "x-03": X03Icon,
   "arrow-curve-left-down": SavedArrowCurveLeftDownIcon,

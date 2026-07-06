@@ -41,9 +41,7 @@ export function BottomCtaBanner({
       <div className={styles.content}>
         <div className={styles.copy}>
           {eyebrow ? (
-            <div
-              className={`${styles.eyebrowChip} glassSurface glassSurfacePill glassSurfaceGradientBorder`}
-            >
+            <div className={styles.eyebrowChip}>
               <p className={styles.eyebrow}>{eyebrow}</p>
             </div>
           ) : null}

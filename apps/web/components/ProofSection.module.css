@@ -2,6 +2,13 @@
   width: 100%;
   display: flex;
   flex-direction: column;
+  gap: 52px;
+}
+
+.proofBody {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
   gap: 32px;
 }
 
@@ -12,7 +19,7 @@
   gap: 24px;
   padding: 24px 32px;
   border-radius: 16px;
-  background: #f6f8fb;
+  background: var(--color-gray-50);
 }
 
 .reviewBody {
@@ -23,23 +30,15 @@
 }
 
 .stars {
-  color: #ffa91f;
-  font-family: var(--font-sans);
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 30px;
-  letter-spacing: 0;
+  composes: pretendard-bold-20 from global;
+  color: var(--color-warning-500);
 }
 
 .quote {
+  composes: pretendard-medium-14 from global;
   display: flex;
   flex-direction: column;
-  color: #1b1f2a;
-  font-family: var(--font-sans);
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 21px;
-  letter-spacing: 0;
+  color: var(--color-gray-800);
 }
 
 .reviewer {
@@ -50,24 +49,20 @@
 }
 
 .reviewerName {
-  color: #1b1f2a;
-  font-family: var(--font-sans);
-  font-size: 14px;
-  font-weight: 700;
-  line-height: 21px;
-  letter-spacing: 0;
+  composes: pretendard-bold-14 from global;
+  color: var(--color-gray-800);
 }
 
 .reviewerMeta {
-  color: #3f4759;
-  font-family: var(--font-sans);
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 21px;
-  letter-spacing: 0;
+  composes: pretendard-medium-14 from global;
+  color: var(--color-gray-600);
 }
 
 @media (max-width: 560px) {
+  .content {
+    gap: 36px;
+  }
+
   .reviewCard {
     padding: 24px;
   }

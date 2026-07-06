@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import { SectionShell } from "./SectionShell";
 import { ServiceCard } from "./ServiceCard";
 import styles from "./BusinessTypesSection.module.css";
@@ -35,20 +37,31 @@ const services = [
   },
 ];
 
-export function BusinessTypesSection() {
+type BusinessTypesSectionProps = {
+  description?: ReactNode;
+  label?: string;
+  order?: string;
+  title?: ReactNode;
+};
+
+export function BusinessTypesSection({
+  description = (
+    <>
+      MVP 개발부터 하이브리드 앱, 기업 홈페이지, 강의 플랫폼, 온라인 쇼핑몰까지.
+      <br />
+      검증할 제품부터 자리 잡은 비즈니스의 무대까지, 필요한 만큼만 만듭니다.
+    </>
+  ),
+  label = "이런 걸 만듭니다",
+  order = "02",
+  title = "비즈니스 형태에 맞춰",
+}: BusinessTypesSectionProps) {
   return (
     <SectionShell
-      description={
-        <>
-          MVP 개발부터 하이브리드 앱, 기업 홈페이지, 강의 플랫폼, 온라인
-          쇼핑몰까지.
-          <br />
-          검증할 제품부터 자리 잡은 비즈니스의 무대까지, 필요한 만큼만 만듭니다.
-        </>
-      }
-      label="이런 걸 만듭니다"
-      order="02"
-      title="비즈니스 형태에 맞춰"
+      description={description}
+      label={label}
+      order={order}
+      title={title}
     >
       <div className={styles.grid} data-node-id="138:4510">
         {services.map((service) => (

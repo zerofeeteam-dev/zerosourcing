@@ -15,7 +15,7 @@
 .divider {
   align-self: center;
   height: 72px;
-  border-left: 1px dashed #e9ecf2;
+  border-left: 1px dashed var(--color-gray-100);
 }
 
 .valueGroup {
@@ -25,23 +25,22 @@
   gap: 4px;
 }
 
+.label {
+  composes: pretendard-medium-16 from global;
+}
+
+.note {
+  composes: pretendard-medium-16 from global;
+}
+
 .label,
 .note {
   color: #475569;
-  font-family: var(--font-sans);
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 24px;
-  letter-spacing: 0;
 }
 
 .value {
+  composes: pretendard-bold-36-48 from global;
   color: #1e293b;
-  font-family: var(--font-sans);
-  font-size: 36px;
-  font-weight: 700;
-  line-height: 48px;
-  letter-spacing: 0;
 }
 
 @media (max-width: 1080px) {

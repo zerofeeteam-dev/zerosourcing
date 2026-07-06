@@ -72,7 +72,7 @@ export function FaqSection({
                 <span className={styles.question}>Q. {faq.question}</span>
                 <Icon className={styles.chevron} name="chevron-down" size={20} />
               </summary>
-              <p className={styles.answer}>A. {faq.answer}</p>
+              <p className={styles.answer}>{faq.answer}</p>
             </details>
             {index < items.length - 1 ? (
               <span aria-hidden="true" className={styles.divider} />

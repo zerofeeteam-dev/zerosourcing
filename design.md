@@ -35,6 +35,28 @@ weights:
 | 프리텐다드 / M / 32 / 40 | `pretendard-medium-32` | Pretendard |    500 | 32px |        40px |
 | 프리텐다드 / B / 32 / 40 | `pretendard-bold-32`   | Pretendard |    700 | 32px |        40px |
 
+## Typography Utilities
+
+These additional utilities centralize existing UI text styles that do not fit the main scale.
+
+| Label                       | Token                         | Font       | Weight | Size | Line height |
+| --------------------------- | ----------------------------- | ---------- | -----: | ---: | ----------: |
+| 프리텐다드 / B / 10 / tight | `pretendard-bold-10-tight`    | Pretendard |    700 | 10px |           1 |
+| 프리텐다드 / M / 12 / 16    | `pretendard-medium-12-16`     | Pretendard |    500 | 12px |        16px |
+| 프리텐다드 / B / 12 / 16    | `pretendard-bold-12-16`       | Pretendard |    700 | 12px |        16px |
+| 프리텐다드 / M / 13 / auto  | `pretendard-medium-13-normal` | Pretendard |    500 | 13px |      normal |
+| 프리텐다드 / M / 14 / 24    | `pretendard-medium-14-24`     | Pretendard |    500 | 14px |        24px |
+| 프리텐다드 / B / 14 / 24    | `pretendard-bold-14-24`       | Pretendard |    700 | 14px |        24px |
+| 프리텐다드 / M / 16 / 20    | `pretendard-medium-16-20`     | Pretendard |    500 | 16px |        20px |
+| 프리텐다드 / B / 36 / 48    | `pretendard-bold-36-48`       | Pretendard |    700 | 36px |        48px |
+
+## Typography And Color Rules
+
+- Text styles in CSS modules must use typography classes from `design-system.css` with `composes: ... from global` instead of writing local `font-family`, `font-size`, `font-weight`, `line-height`, or `letter-spacing` declarations.
+- Responsive overrides may keep local `font-size` and `line-height` only when they adjust an already composed typography class.
+- Colors must use `var(--color-...)` when the exact hex value already exists in `design-system.css`.
+- Raw hex values are allowed only when the value is not in the current palette.
+
 # Iconography
 
 Icons must be implemented as SVG only. Do not use PNG, JPG, webfont, emoji, or rasterized icon sources for product UI icons.
@@ -134,24 +156,6 @@ Gradient buttons must use the shared `Button` component with `variant="gradient"
 - 개별 페이지나 컴포넌트에서 gradient button의 `background-image`, `background-clip`, `background-origin`을 직접 작성하지 않는다.
 - CTA 버튼은 `Link`로 감싸거나 `Button` 내부에 `Link`를 넣지 않는다.
 - CTA 동작은 반드시 `Button` 자체의 `onClick`에 연결한다. 페이지 이동이 필요한 일반 내비게이션 메뉴에만 `Link`를 사용한다.
-
-# Glassmorphism
-
-Glassmorphism styles must use the shared `glassSurface` utilities from `apps/web/app/glass.css`. Do not write one-off `backdrop-filter`, translucent background, border, or shadow values directly in page or component CSS when the shared glass style covers the case.
-
-Use glass surfaces only for floating UI layers such as headers, toolbars, overlays, and panels. Keep component-specific CSS focused on layout, size, typography, and spacing.
-
-## 글라스모피즘 규칙
-
-- 기본 사용: `glassSurface`
-- pill 형태의 header/toolbar: `glassSurfacePill`
-- hover 반응이 필요한 glass surface: `glassSurfaceInteractive`
-- 기본 Glass 설정은 Figma 기준 `Light -45deg / 80%`, `Refraction 80`, `Depth 20`, `Dispersion 50`, `Frost 10`, `Splay 0`을 따른다.
-- `Frost 10`은 `backdrop-filter: blur(10px)`로 구현한다.
-- `Light`, `Refraction`, `Depth`는 `apps/web/app/glass.css`의 shared token과 pseudo layer로만 구현한다.
-- `Splay 0`이므로 색 분산 오프셋이나 레이어 밀림 효과를 추가하지 않는다.
-- `backdrop-filter`는 반투명 배경과 함께 써야 효과가 보인다.
-- 새 glass 변형이 필요하면 먼저 `apps/web/app/glass.css`의 토큰으로 해결 가능한지 확인한다.
 
 # Figma Decoration
 
