@@ -19,6 +19,8 @@ body {
   background: var(--background);
   font-family: var(--font-sans);
   font-synthesis: none;
+  overflow-wrap: break-word;
+  word-break: keep-all;
   -webkit-font-smoothing: antialiased;
 }
 
