@@ -6,8 +6,8 @@
   --zs-glass-depth-shadow: 0 20px 48px rgb(15 23 42 / 10%);
   --zs-glass-inner-light: inset 0 1px 0 rgb(255 255 255 / 72%);
   --zs-glass-refraction-edge: inset 0 -1px 0 rgb(255 255 255 / 20%);
-  --zs-glass-frost: 20px;
-  --zs-glass-liquid-frost: 3px;
+  --zs-glass-frost: 10px;
+  --zs-glass-liquid-frost: var(--zs-glass-frost);
   --zs-glass-light-angle: -45deg;
   --zs-glass-light-opacity: 80%;
 }
@@ -72,7 +72,7 @@
    The distortion only renders in Chromium; other engines fall back
    to the plain backdrop blur on .glassLiquidEffect. */
 .glassSurfaceLiquid {
-  --zs-glass-bg: rgb(255 255 255 / 25%);
+  --zs-glass-bg: rgb(255 255 255 / 10%);
 
   -webkit-backdrop-filter: none;
   backdrop-filter: none;

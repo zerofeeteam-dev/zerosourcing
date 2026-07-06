@@ -1,0 +1,162 @@
+.section {
+  --section-inner-gap: 52px;
+  --section-inner-gap-mobile: 32px;
+  --section-padding-y: 104px;
+  --section-padding-y-mobile: 72px;
+  --section-title-size: 28px;
+  --section-title-line-height: 36px;
+  --section-title-size-mobile: 24px;
+  --section-title-line-height-mobile: 32px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.alert {
+  padding: 16px 20px;
+  border-radius: 16px;
+  background: #fef5f5;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.alertTitle {
+  margin: 0;
+  color: #f53333;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 24px;
+  letter-spacing: 0;
+}
+
+.alertText {
+  color: #3f4759;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 21px;
+  letter-spacing: 0;
+}
+
+.alertText strong {
+  font-weight: 700;
+}
+
+.programGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.programCard {
+  padding: 24px 32px;
+  border-radius: 16px;
+  background: #f6f8fb;
+}
+
+.programInner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.programTag {
+  height: 24px;
+  padding: 0 8px;
+  border-radius: 32px;
+  background: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #0360ef;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+.programCopy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.programTitle {
+  margin: 0;
+  color: #1b1f2a;
+  font-family: var(--font-sans);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 26px;
+  letter-spacing: 0;
+}
+
+.programDescription {
+  color: #3f4759;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 21px;
+  letter-spacing: 0;
+}
+
+.notes {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.noteGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.noteTitle,
+.noteText,
+.stepText {
+  color: #848da0;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+  letter-spacing: 0;
+}
+
+.stepText {
+  margin: 0;
+  padding: 0 12px;
+  white-space: normal;
+}
+
+@media (max-width: 1280px) {
+  .content {
+    gap: 8px;
+  }
+
+  .programGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .programCard {
+    padding: 16px 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .programGrid {
+    grid-template-columns: 1fr;
+  }
+}

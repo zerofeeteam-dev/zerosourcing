@@ -4,6 +4,7 @@ import type { CSSProperties } from "react";
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Button } from "@repo/ui/button";
 
 import { Icon } from "./Icon";
@@ -12,14 +13,25 @@ import styles from "./Header.module.css";
 
 const imgLogo = "/figma-icons/ZerosourcingLogo.svg";
 
-const navItems = ["About", "Service", "Blog", "Portfolio", "FAQ"];
-const serviceItems = ["MVP 개발", "어플리케이션 개발", "기업 홈페이지"];
+const navItems = [
+  { href: "/", label: "About" },
+  { href: "/service/mvp", label: "Service" },
+  { href: "/", label: "Blog" },
+  { href: "/", label: "Portfolio" },
+  { href: "/", label: "FAQ" },
+];
+const serviceItems = [
+  { href: "/service/mvp", label: "MVP 개발" },
+  { href: "/service/app", label: "어플리케이션 개발" },
+  { href: "/service/company-homepage", label: "기업 홈페이지" },
+];
 const ctaButtonStyle = {
   borderRadius: 32,
   padding: "8px 20px",
 } satisfies CSSProperties;
 
 export function Header() {
+  const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const closeMobileMenu = () => setIsMenuOpen(false);
 
@@ -43,15 +55,15 @@ export function Header() {
 
           <nav className={styles.nav} aria-label="Primary navigation">
             {navItems.map((item) => {
+              const isServiceItem = item.label === "Service";
+              const isActive = isServiceItem && pathname.startsWith("/service");
               const navLink = (
                 <Link
-                  className={
-                    item === "About" ? styles.activeNavLink : styles.navLink
-                  }
-                  href="/"
+                  className={isActive ? styles.activeNavLink : styles.navLink}
+                  href={item.href}
                 >
-                  {item}
-                  {item === "Service" ? (
+                  {item.label}
+                  {isServiceItem ? (
                     <Icon
                       className={styles.chevron}
                       name="chevron-down"
@@ -61,28 +73,28 @@ export function Header() {
                 </Link>
               );
 
-              if (item !== "Service") {
-                return <span key={item}>{navLink}</span>;
+              if (!isServiceItem) {
+                return <span key={item.label}>{navLink}</span>;
               }
 
               return (
-                <div className={styles.serviceNavItem} key={item}>
+                <div className={styles.serviceNavItem} key={item.label}>
                   {navLink}
                   <div
                     className={`${styles.serviceDropdown} glassSurface glassSurfaceGradientBorder`}
                     data-node-id="14:1287"
                   >
-                    {serviceItems.map((serviceItem, index) => (
+                    {serviceItems.map((serviceItem) => (
                       <Link
                         className={
-                          index === 0
+                          pathname === serviceItem.href
                             ? styles.activeServiceDropdownItem
                             : styles.serviceDropdownItem
                         }
-                        href="/"
-                        key={serviceItem}
+                        href={serviceItem.href}
+                        key={serviceItem.href}
                       >
-                        {serviceItem}
+                        {serviceItem.label}
                       </Link>
                     ))}
                   </div>
@@ -147,7 +159,7 @@ export function Header() {
           <feDisplacementMap
             in="SourceGraphic"
             in2="softMap"
-            scale="150"
+            scale="80"
             xChannelSelector="R"
             yChannelSelector="G"
           />
@@ -171,23 +183,23 @@ export function Header() {
           <Icon name="x-03" size={24} />
         </button>
         {navItems.map((item) => (
-          <div className={styles.mobileMenuGroup} key={item}>
+          <div className={styles.mobileMenuGroup} key={item.label}>
             <Link
               className={styles.mobileMenuItem}
-              href="/"
+              href={item.href}
               onClick={closeMobileMenu}
             >
-              {item}
+              {item.label}
             </Link>
-            {item === "Service"
+            {item.label === "Service"
               ? serviceItems.map((serviceItem) => (
                   <Link
                     className={`${styles.mobileMenuItem} ${styles.mobileServiceItem}`}
-                    href="/"
-                    key={serviceItem}
+                    href={serviceItem.href}
+                    key={serviceItem.href}
                     onClick={closeMobileMenu}
                   >
-                    {serviceItem}
+                    {serviceItem.label}
                   </Link>
                 ))
               : null}

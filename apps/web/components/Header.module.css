@@ -1,4 +1,6 @@
 .header {
+  --zs-glass-bg: transparent;
+
   position: relative;
   width: min(1360px, 100%);
   height: 80px;

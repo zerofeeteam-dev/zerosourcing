@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import { Icon } from "./Icon";
 import { SectionShell } from "./SectionShell";
 import styles from "./FaqSection.module.css";
@@ -45,15 +47,25 @@ const faqs: readonly FaqItem[] = [
   },
 ];
 
-export function FaqSection() {
+type FaqSectionProps = {
+  items?: readonly FaqItem[];
+  order?: string;
+  title?: ReactNode;
+};
+
+export function FaqSection({
+  items = faqs,
+  order = "08",
+  title = "MVP 개발 외주, 가장 많이 묻는 질문",
+}: FaqSectionProps = {}) {
   return (
     <SectionShell
       label="자주 묻는 질문"
-      order="08"
-      title="MVP 개발 외주, 가장 많이 묻는 질문"
+      order={order}
+      title={title}
     >
       <div className={styles.list}>
-        {faqs.map((faq, index) => (
+        {items.map((faq, index) => (
           <div className={styles.row} key={faq.question}>
             <details className={styles.item}>
               <summary className={styles.summary}>
@@ -62,7 +74,7 @@ export function FaqSection() {
               </summary>
               <p className={styles.answer}>A. {faq.answer}</p>
             </details>
-            {index < faqs.length - 1 ? (
+            {index < items.length - 1 ? (
               <span aria-hidden="true" className={styles.divider} />
             ) : null}
           </div>

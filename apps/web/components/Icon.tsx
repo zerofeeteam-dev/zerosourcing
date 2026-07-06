@@ -15,6 +15,7 @@ import {
 export type IconName =
   | "arrow-left"
   | "arrow-right"
+  | "arrow-right-banner"
   | "calendar-02"
   | "check"
   | "chevron-right"
@@ -91,6 +92,31 @@ function ArrowRightIcon({ size = 24, ...props }: Omit<IconProps, "name">) {
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="1.5"
+      />
+    </svg>
+  );
+}
+
+function ArrowRightBannerIcon({
+  size = 24,
+  ...props
+}: Omit<IconProps, "name">) {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      height={size}
+      viewBox="0 0 24 24"
+      width={size}
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M12.9167 17L17.5 12L12.9167 7M17.5 12L6.5 12"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
       />
     </svg>
   );
@@ -497,6 +523,7 @@ function QuoteLeftIcon({ size = 24, ...props }: Omit<IconProps, "name">) {
 const icons = {
   "arrow-left": ArrowLeftIcon,
   "arrow-right": ArrowRightIcon,
+  "arrow-right-banner": ArrowRightBannerIcon,
   "calendar-02": Calendar02Icon,
   check: CheckIcon,
   "chevron-right": ChevronRightIcon,

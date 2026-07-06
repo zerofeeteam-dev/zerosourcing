@@ -7,22 +7,29 @@ import { Icon } from "./Icon";
 import { type CtaAction, emitCtaClick } from "./cta-events";
 import styles from "./VideoBanner.module.css";
 
-type BannerActionIcon = "edit-03" | "message-typing";
+type BannerActionIcon =
+  | "arrow-right"
+  | "arrow-right-banner"
+  | "edit-03"
+  | "message-typing";
 type BannerAlign = "center" | "left";
 type BannerActionsPosition = "below" | "bottom";
+type BannerActionIconPosition = "left" | "right";
 
 type BannerAction = {
   id: CtaAction;
   title: string;
   icon?: BannerActionIcon;
+  iconPosition?: BannerActionIconPosition;
   variant?: ButtonColor;
+  width?: number;
 };
 
 type VideoBannerProps = {
   actions?: BannerAction[];
   actionsPosition?: BannerActionsPosition;
   align?: BannerAlign;
-  description?: string;
+  description?: ReactNode;
   eyebrow?: string;
   title: ReactNode;
 };
@@ -72,21 +79,30 @@ export function VideoBanner({
         </div>
         {actions.length > 0 ? (
           <div className={styles.actions}>
-            {actions.map((action) => (
-              <Button
-                color={action.variant ?? "blue"}
-                iconSize={24}
-                key={action.id}
-                leftIcon={
-                  action.icon ? <Icon name={action.icon} size={24} /> : null
-                }
-                onClick={() => emitCtaClick(action.id)}
-                style={actionButtonStyle}
-                variant="gradient"
-              >
-                {action.title}
-              </Button>
-            ))}
+            {actions.map((action) => {
+              const icon = action.icon ? (
+                <Icon name={action.icon} size={24} />
+              ) : null;
+
+              return (
+                <Button
+                  color={action.variant ?? "blue"}
+                  iconSize={24}
+                  key={action.id}
+                  leftIcon={action.iconPosition === "right" ? null : icon}
+                  onClick={() => emitCtaClick(action.id)}
+                  rightIcon={action.iconPosition === "right" ? icon : null}
+                  style={
+                    action.width
+                      ? { ...actionButtonStyle, width: action.width }
+                      : actionButtonStyle
+                  }
+                  variant="gradient"
+                >
+                  {action.title}
+                </Button>
+              );
+            })}
           </div>
         ) : null}
       </div>

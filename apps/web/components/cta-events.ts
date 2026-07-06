@@ -1,4 +1,4 @@
-export type CtaAction = "outsource" | "quick";
+export type CtaAction = "outsource" | "quick" | "cases";
 
 export function emitCtaClick(action: CtaAction) {
   if (typeof window === "undefined") {

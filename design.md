@@ -146,8 +146,8 @@ Use glass surfaces only for floating UI layers such as headers, toolbars, overla
 - 기본 사용: `glassSurface`
 - pill 형태의 header/toolbar: `glassSurfacePill`
 - hover 반응이 필요한 glass surface: `glassSurfaceInteractive`
-- 기본 Glass 설정은 Figma 기준 `Light -45deg / 80%`, `Refraction 80`, `Depth 20`, `Dispersion 50`, `Frost 20`, `Splay 0`을 따른다.
-- `Frost 20`은 `backdrop-filter: blur(20px)`로 구현한다.
+- 기본 Glass 설정은 Figma 기준 `Light -45deg / 80%`, `Refraction 80`, `Depth 20`, `Dispersion 50`, `Frost 10`, `Splay 0`을 따른다.
+- `Frost 10`은 `backdrop-filter: blur(10px)`로 구현한다.
 - `Light`, `Refraction`, `Depth`는 `apps/web/app/glass.css`의 shared token과 pseudo layer로만 구현한다.
 - `Splay 0`이므로 색 분산 오프셋이나 레이어 밀림 효과를 추가하지 않는다.
 - `backdrop-filter`는 반투명 배경과 함께 써야 효과가 보인다.

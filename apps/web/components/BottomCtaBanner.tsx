@@ -18,7 +18,8 @@ type BottomCtaAction = {
 
 type BottomCtaBannerProps = {
   actions: BottomCtaAction[];
-  description?: string;
+  description?: ReactNode;
+  descriptionSize?: "default" | "large";
   eyebrow?: string;
   title: ReactNode;
 };
@@ -31,6 +32,7 @@ const actionButtonStyle = {
 export function BottomCtaBanner({
   actions,
   description,
+  descriptionSize = "default",
   eyebrow,
   title,
 }: BottomCtaBannerProps) {
@@ -48,7 +50,13 @@ export function BottomCtaBanner({
           <div className={styles.text}>
             <h2 className={styles.title}>{title}</h2>
             {description ? (
-              <p className={styles.description}>{description}</p>
+              <p
+                className={`${styles.description} ${
+                  descriptionSize === "large" ? styles.descriptionLarge : ""
+                }`}
+              >
+                {description}
+              </p>
             ) : null}
           </div>
         </div>

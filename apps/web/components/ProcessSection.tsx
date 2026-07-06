@@ -1,5 +1,7 @@
 "use client";
 
+import type { CSSProperties } from "react";
+
 import { Icon, type IconName } from "./Icon";
 import { ProcessStepCard } from "./ProcessStepCard";
 import { emitCtaClick } from "./cta-events";
@@ -43,9 +45,26 @@ const steps: Array<{
   },
 ];
 
-export function ProcessSection() {
+type ProcessSectionProps = {
+  order?: string;
+  paddingTop?: number;
+};
+
+type ProcessSectionStyle = CSSProperties & {
+  "--process-section-padding-top"?: string;
+};
+
+export function ProcessSection({
+  order = "05",
+  paddingTop,
+}: ProcessSectionProps) {
+  const style: ProcessSectionStyle | undefined =
+    paddingTop === undefined
+      ? undefined
+      : { "--process-section-padding-top": `${paddingTop}px` };
+
   return (
-    <section className={styles.section} data-node-id="291:54485">
+    <section className={styles.section} data-node-id="291:54485" style={style}>
       <div className={styles.inner}>
         <div className={styles.header}>
           <div className={styles.heading}>
@@ -53,7 +72,7 @@ export function ProcessSection() {
               <span
                 className={`${styles.orderChip} glassSurface glassSurfacePill glassSurfaceGradientBorder`}
               >
-                <span className={styles.orderText}>05</span>
+                <span className={styles.orderText}>{order}</span>
               </span>
               <p className={styles.label}>진행 프로세스</p>
             </div>
