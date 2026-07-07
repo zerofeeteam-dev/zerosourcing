@@ -20,12 +20,19 @@ type CategoryNavProps = {
   groups: readonly FaqCategoryNavGroup[];
 };
 
+const NAV_STICKY_TOP = 128;
+
 export function CategoryNav({ groups }: CategoryNavProps) {
   const ids = useMemo(
     () => groups.flatMap((group) => group.items.map((item) => item.id)),
     [groups],
   );
   const [activeId, setActiveId] = useState(ids[0] ?? "");
+  const [stickyMode, setStickyMode] = useState<
+    "normal" | "pinned" | "stopped"
+  >("normal");
+  const sidebarRef = useRef<HTMLElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const pendingIdRef = useRef<string | null>(null);
   const idleTimerRef = useRef<number | null>(null);
 
@@ -72,15 +79,42 @@ export function CategoryNav({ groups }: CategoryNavProps) {
       setActiveId(fallbackId);
     };
 
+    const readStickyMode = () => {
+      const sidebar = sidebarRef.current;
+      const panel = panelRef.current;
+
+      if (!sidebar || !panel) {
+        return;
+      }
+
+      const sidebarTop = sidebar.getBoundingClientRect().top;
+      const layoutBottom =
+        sidebar.parentElement?.getBoundingClientRect().bottom ?? 0;
+      const panelBottom = NAV_STICKY_TOP + panel.offsetHeight;
+      const nextMode =
+        layoutBottom <= panelBottom
+          ? "stopped"
+          : sidebarTop <= NAV_STICKY_TOP
+            ? "pinned"
+            : "normal";
+
+      setStickyMode((currentMode) =>
+        currentMode === nextMode ? currentMode : nextMode,
+      );
+    };
+
     const releasePendingAfterIdle = () => {
       clearIdleTimer();
       idleTimerRef.current = window.setTimeout(() => {
         pendingIdRef.current = null;
         readActiveSection();
+        readStickyMode();
       }, 140);
     };
 
     const handleScroll = () => {
+      readStickyMode();
+
       if (pendingIdRef.current) {
         releasePendingAfterIdle();
         return;
@@ -90,11 +124,14 @@ export function CategoryNav({ groups }: CategoryNavProps) {
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", readStickyMode);
     window.addEventListener("resize", readActiveSection);
     readActiveSection();
+    readStickyMode();
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", readStickyMode);
       window.removeEventListener("resize", readActiveSection);
       clearIdleTimer();
     };
@@ -111,9 +148,20 @@ export function CategoryNav({ groups }: CategoryNavProps) {
     });
   };
 
+  const panelClassName =
+    stickyMode === "pinned"
+      ? `${styles.navPanel} ${styles.navPanelPinned}`
+      : stickyMode === "stopped"
+        ? `${styles.navPanel} ${styles.navPanelStopped}`
+        : styles.navPanel;
+
   return (
-    <aside className={styles.sidebar} aria-label="FAQ 카테고리">
-      <div className={styles.navPanel}>
+    <aside
+      className={styles.sidebar}
+      aria-label="FAQ 카테고리"
+      ref={sidebarRef}
+    >
+      <div className={panelClassName} ref={panelRef}>
         {groups.map((group) => (
           <div className={styles.navGroup} key={group.title}>
             <p className={styles.navGroupTitle}>{group.title}</p>
