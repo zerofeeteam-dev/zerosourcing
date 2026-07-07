@@ -1,0 +1,111 @@
+import Link from "next/link";
+import { notFound } from "next/navigation";
+
+import { Footer } from "../../../components/Footer";
+import { Header } from "../../../components/Header";
+import pageStyles from "../../page.module.css";
+import { portfolioDetails } from "../portfolio-items";
+import { PortfolioDetailCtaButton } from "./PortfolioDetailCtaButton";
+import styles from "./portfolio-detail.module.css";
+
+type PortfolioDetailPageProps = {
+  params: Promise<{ slug: string }>;
+};
+
+export function generateStaticParams() {
+  return portfolioDetails.map((item) => ({ slug: item.slug }));
+}
+
+export default async function PortfolioDetailPage({
+  params,
+}: PortfolioDetailPageProps) {
+  const { slug } = await params;
+  const portfolio = portfolioDetails.find((item) => item.slug === slug);
+
+  if (!portfolio) {
+    notFound();
+  }
+
+  return (
+    <main className={pageStyles.page}>
+      <div className={pageStyles.headerLayer}>
+        <Header />
+      </div>
+
+      <section className={styles.section} data-node-id="74:4248">
+        <div className={styles.inner}>
+          <div className={styles.overview}>
+            <header className={styles.hero}>
+              <div className={styles.heading}>
+                <div className={styles.kicker}>
+                  <span className={styles.kickerChip}>포트폴리오</span>
+                  <p className={styles.breadcrumb}>
+                    Index / Portfolio / {portfolio.title}
+                  </p>
+                </div>
+                <h1 className={styles.title}>{portfolio.title}</h1>
+              </div>
+              <p className={styles.description}>{portfolio.description}</p>
+            </header>
+
+            <div className={styles.summary}>
+              <div className={styles.summaryRow}>
+                <div className={styles.summaryItem}>
+                  <p className={styles.summaryLabel}>견적</p>
+                  <p className={styles.summaryValue}>{portfolio.estimate}</p>
+                </div>
+                <div className={styles.summaryItem}>
+                  <p className={styles.summaryLabel}>개발 기간</p>
+                  <p className={styles.summaryValue}>{portfolio.period}</p>
+                </div>
+              </div>
+              <div className={styles.detailRow}>
+                <div className={styles.detailItem}>
+                  <p className={styles.summaryLabel}>핵심 기능</p>
+                  <div className={styles.tagList}>
+                    {portfolio.features.map((feature) => (
+                      <span key={feature}>{feature}</span>
+                    ))}
+                  </div>
+                </div>
+                <div className={styles.detailItem}>
+                  <p className={styles.summaryLabel}>작업 범위</p>
+                  <div className={styles.tagList}>
+                    {portfolio.scope.map((scope) => (
+                      <span key={scope}>{scope}</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.htmlPreview}>
+            <p>HTML</p>
+          </div>
+
+          <section className={styles.ctaBanner}>
+            <div className={styles.ctaCopy}>
+              <h2 className={styles.ctaTitle}>
+                부담은 제로, 출시는 현실로
+                <br />
+                MVP·홈페이지 개발 파트너, 제로소싱
+              </h2>
+              <p className={styles.ctaDescription}>
+                과한 스펙도, 긴 일정도 없이. 핵심만 담아 빠르게 검증하는 MVP
+                개발 파트너.
+              </p>
+            </div>
+            <PortfolioDetailCtaButton />
+          </section>
+
+          <Link className={styles.backLink} href="/portfolio">
+            목록으로
+          </Link>
+        </div>
+      </section>
+
+      <Footer />
+    </main>
+  );
+}

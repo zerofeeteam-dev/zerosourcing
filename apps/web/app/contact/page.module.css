@@ -1,0 +1,239 @@
+.section {
+  position: relative;
+  min-width: 0;
+  width: 100%;
+  padding: 188px 20px 104px;
+  background: #ffffff;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.section::before {
+  position: absolute;
+  inset: 0;
+  background-image: url("/figma-assets/contact-background.png");
+  background-position: center;
+  background-size: cover;
+  content: "";
+  opacity: 0.5;
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+  width: min(100%, 1360px);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 20px;
+}
+
+.copy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.title {
+  composes: pretendard-bold-28 from global;
+  margin: 0;
+  color: var(--color-gray-800);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.formCard {
+  min-width: 0;
+  width: 100%;
+  padding: 24px 32px;
+  border: 0;
+  border-radius: 32px;
+  background: #ffffff;
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 52px;
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.twoColumn {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.field,
+.methodGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.methodGroup {
+  padding: 0;
+  border: 0;
+}
+
+.label {
+  composes: pretendard-medium-14 from global;
+  color: var(--color-gray-800);
+}
+
+.control,
+.budgetControl,
+.textarea {
+  composes: pretendard-medium-14 from global;
+  min-width: 0;
+  width: 100%;
+  border: 1px solid var(--color-gray-100);
+  border-radius: 16px;
+  background: var(--color-gray-50);
+  color: var(--color-gray-800);
+}
+
+.control,
+.budgetControl {
+  height: 52px;
+}
+
+.control {
+  padding: 0 16px;
+}
+
+.control::placeholder,
+.budgetInput::placeholder,
+.textarea::placeholder {
+  color: var(--color-gray-400);
+  opacity: 1;
+}
+
+.budgetControl {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+}
+
+.budgetInput {
+  composes: pretendard-medium-14 from global;
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--color-gray-800);
+}
+
+.budgetUnit {
+  composes: pretendard-medium-14 from global;
+  flex: 0 0 auto;
+  color: var(--color-gray-800);
+}
+
+.textarea {
+  height: 160px;
+  padding: 14px 16px;
+  resize: none;
+}
+
+.radioList {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.radioItem,
+.checkboxItem {
+  composes: pretendard-medium-14 from global;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-gray-800);
+}
+
+.radioItem {
+  width: 136px;
+}
+
+.radioInput,
+.checkboxInput {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 auto;
+  accent-color: var(--color-brand-500);
+  cursor: pointer;
+}
+
+.privacyRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.privacyLink {
+  composes: pretendard-medium-14 from global;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-gray-400);
+  cursor: pointer;
+}
+
+@media (max-width: 1439px) {
+  .section {
+    padding-top: 188px;
+  }
+
+  .inner {
+    width: min(100%, 840px);
+    grid-template-columns: 1fr;
+    gap: 52px;
+  }
+}
+
+@media (max-width: 767px) {
+  .section {
+    padding: 156px 20px 40px;
+  }
+
+  .inner {
+    gap: 32px;
+  }
+
+  .title {
+    font-size: 24px;
+    line-height: 32px;
+  }
+
+  .formCard {
+    padding: 16px 20px;
+  }
+
+  .twoColumn {
+    grid-template-columns: 1fr;
+  }
+
+  .radioList {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .textarea::placeholder {
+    white-space: normal;
+  }
+}

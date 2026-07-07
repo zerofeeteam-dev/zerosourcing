@@ -1,0 +1,350 @@
+.page {
+  position: relative;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.headerLayer {
+  position: fixed;
+  top: 20px;
+  left: 0;
+  z-index: 1000;
+  width: 100%;
+  padding: 0 40px;
+}
+
+.blogSection {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 156px 0 104px;
+}
+
+.inner {
+  width: min(calc(100% - 40px), 1080px);
+  display: flex;
+  flex-direction: column;
+  gap: 52px;
+}
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.kicker {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.kickerChip {
+  composes: pretendard-medium-12 from global;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-gray-800) 4%, transparent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-gray-800);
+}
+
+.kickerText {
+  composes: pretendard-medium-14 from global;
+  margin: 0;
+  color: var(--color-gray-800);
+}
+
+.title {
+  composes: pretendard-bold-28 from global;
+  margin: 0;
+  color: var(--color-gray-800);
+}
+
+.description {
+  composes: pretendard-medium-16 from global;
+  margin: 0;
+  color: var(--color-gray-600);
+}
+
+.featuredCard {
+  height: 320px;
+  border-radius: 16px;
+  background:
+    linear-gradient(180deg, rgba(27, 31, 42, 0) 0%, rgba(27, 31, 42, 0.8) 100%),
+    var(--color-gray-50);
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  padding: 24px 32px;
+}
+
+.featuredCopy {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.featuredText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.featuredTitle {
+  composes: pretendard-bold-16 from global;
+  margin: 0;
+  overflow: hidden;
+  color: #f8faff;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.featuredDescription {
+  composes: pretendard-medium-14 from global;
+  width: min(100%, 640px);
+  margin: 0;
+  color: var(--color-gray-100);
+}
+
+.topCard {
+  display: flex;
+  flex-direction: column;
+  color: inherit;
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.topThumbnail {
+  position: relative;
+  height: 240px;
+  border-radius: 16px;
+  background: var(--color-gray-100);
+}
+
+.newBadge {
+  composes: pretendard-medium-12-16 from global;
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.5);
+  color: var(--color-brand-500);
+  backdrop-filter: blur(5px);
+}
+
+.topCopy {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 8px 0 0;
+}
+
+.topText {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.categoryChip {
+  composes: pretendard-medium-12-16 from global;
+  align-self: flex-start;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: var(--color-brand-50);
+  color: var(--color-brand-500);
+}
+
+.topTitleGroup,
+.listTitleGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.postTitle {
+  composes: pretendard-bold-16 from global;
+  margin: 0;
+  overflow: hidden;
+  color: var(--color-gray-800);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.topDescription {
+  composes: pretendard-medium-14 from global;
+  margin: 0;
+  overflow: hidden;
+  color: var(--color-gray-600);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.meta {
+  composes: pretendard-medium-12-16 from global;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--color-gray-600);
+  white-space: nowrap;
+}
+
+.meta strong {
+  font-weight: 700;
+}
+
+.metaMark {
+  composes: pretendard-bold-10-tight from global;
+  width: 16px;
+  height: 16px;
+  border-radius: 2px;
+  background: var(--color-brand-500);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+}
+
+.contentGrid {
+  display: flex;
+  align-items: flex-start;
+  gap: 21px;
+}
+
+.listColumn {
+  width: 713px;
+  display: flex;
+  flex: 0 1 713px;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.postList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.listCard {
+  display: flex;
+  align-items: center;
+  color: inherit;
+  gap: 20px;
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.listThumbnail {
+  width: 240px;
+  height: 166px;
+  border-radius: 16px;
+  background: var(--color-gray-100);
+  flex: 0 0 240px;
+}
+
+.listCopy {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.listText {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.listDescription {
+  composes: pretendard-medium-14 from global;
+  margin: 0;
+  color: var(--color-gray-600);
+}
+
+.emptyText {
+  composes: pretendard-medium-14 from global;
+  margin: 0;
+  padding: 52px 0;
+  color: var(--color-gray-500);
+  text-align: center;
+}
+
+.stickyColumn {
+  position: sticky;
+  top: 120px;
+  height: 360px;
+  border-radius: 16px;
+  background: var(--color-gray-100);
+  flex: 1 1 auto;
+}
+
+@media (max-width: 1080px) {
+  .contentGrid {
+    display: block;
+  }
+
+  .listColumn {
+    width: 100%;
+  }
+
+  .stickyColumn {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .headerLayer {
+    padding: 0 16px;
+  }
+
+  .blogSection {
+    padding: 128px 0 72px;
+  }
+
+  .inner {
+    gap: 40px;
+  }
+
+  .featuredCard {
+    height: 280px;
+    padding: 20px;
+  }
+
+  .listCard {
+    align-items: flex-start;
+  }
+
+  .listThumbnail {
+    width: 160px;
+    height: 112px;
+    flex-basis: 160px;
+  }
+}
+
+@media (max-width: 560px) {
+  .listCard {
+    flex-direction: column;
+  }
+
+  .listThumbnail {
+    width: 100%;
+    height: 180px;
+    flex-basis: auto;
+  }
+}

@@ -17,9 +17,9 @@ const imgLogo = "/figma-icons/ZerosourcingLogo.svg";
 const navItems = [
   { href: "/about", label: "About" },
   { href: "/service/mvp", label: "Service" },
-  { href: "/", label: "Blog" },
-  { href: "/", label: "Portfolio" },
-  { href: "/", label: "FAQ" },
+  { href: "/blog", label: "Blog" },
+  { href: "/portfolio", label: "Portfolio" },
+  { href: "/faq", label: "FAQ" },
 ];
 const serviceItems = [
   { href: "/service/mvp", label: "MVP 개발" },
@@ -61,7 +61,9 @@ export function Header() {
               const isServiceItem = item.label === "Service";
               const isActive = isServiceItem
                 ? pathname.startsWith("/service")
-                : item.href !== "/" && pathname === item.href;
+                : item.href === "/blog"
+                  ? pathname.startsWith("/blog")
+                  : item.href !== "/" && pathname === item.href;
               const navLink = (
                 isServiceItem ? (
                   <button

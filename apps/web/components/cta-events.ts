@@ -1,5 +1,11 @@
 export type CtaAction = "outsource" | "quick" | "cases";
 
+const ctaHrefs = {
+  cases: "/portfolio",
+  outsource: "/contact",
+  quick: "/contact",
+} satisfies Record<CtaAction, string>;
+
 export function emitCtaClick(action: CtaAction) {
   if (typeof window === "undefined") {
     return;
@@ -10,4 +16,6 @@ export function emitCtaClick(action: CtaAction) {
       detail: { action },
     }),
   );
+
+  window.location.href = ctaHrefs[action];
 }

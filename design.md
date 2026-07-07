@@ -45,6 +45,7 @@ These additional utilities centralize existing UI text styles that do not fit th
 | 프리텐다드 / M / 12 / 16    | `pretendard-medium-12-16`     | Pretendard |    500 | 12px |        16px |
 | 프리텐다드 / B / 12 / 16    | `pretendard-bold-12-16`       | Pretendard |    700 | 12px |        16px |
 | 프리텐다드 / M / 13 / auto  | `pretendard-medium-13-normal` | Pretendard |    500 | 13px |      normal |
+| 프리텐다드 / M / 14 / 20    | `pretendard-medium-14-20`     | Pretendard |    500 | 14px |        20px |
 | 프리텐다드 / M / 14 / 24    | `pretendard-medium-14-24`     | Pretendard |    500 | 14px |        24px |
 | 프리텐다드 / B / 14 / 24    | `pretendard-bold-14-24`       | Pretendard |    700 | 14px |        24px |
 | 프리텐다드 / M / 16 / 20    | `pretendard-medium-16-20`     | Pretendard |    500 | 16px |        20px |

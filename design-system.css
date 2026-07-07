@@ -116,6 +116,14 @@
   letter-spacing: -1.5%;
 }
 
+.pretendard-medium-14-20 {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: -1.5%;
+}
+
 .pretendard-medium-14-24 {
   font-family: var(--font-sans);
   font-size: 14px;
