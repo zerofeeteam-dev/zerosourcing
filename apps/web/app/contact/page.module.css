@@ -72,17 +72,18 @@
   gap: 20px;
 }
 
+.methodBudgetGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
 .field,
 .methodGroup {
   display: flex;
   flex-direction: column;
   align-items: stretch;
   gap: 8px;
-}
-
-.methodGroup {
-  padding: 0;
-  border: 0;
 }
 
 .label {
@@ -155,28 +156,6 @@
   gap: 20px;
 }
 
-.radioItem,
-.checkboxItem {
-  composes: pretendard-medium-14 from global;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--color-gray-800);
-}
-
-.radioItem {
-  width: 136px;
-}
-
-.radioInput,
-.checkboxInput {
-  width: 24px;
-  height: 24px;
-  flex: 0 0 auto;
-  accent-color: var(--color-brand-500);
-  cursor: pointer;
-}
-
 .privacyRow {
   display: flex;
   align-items: center;
@@ -191,6 +170,19 @@
   background: transparent;
   color: var(--color-gray-400);
   cursor: pointer;
+}
+
+.statusMessage {
+  composes: pretendard-medium-14 from global;
+  color: var(--color-gray-500);
+}
+
+.statusSuccess {
+  color: var(--color-success-600);
+}
+
+.statusError {
+  color: var(--color-error-500);
 }
 
 @media (max-width: 1439px) {
@@ -225,6 +217,10 @@
 
   .twoColumn {
     grid-template-columns: 1fr;
+  }
+
+  .methodBudgetGroup {
+    flex-direction: column-reverse;
   }
 
   .radioList {

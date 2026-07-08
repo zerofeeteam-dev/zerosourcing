@@ -71,6 +71,19 @@
 }
 
 @media (max-width: 480px) {
+  .footer {
+    padding: 40px 20px;
+  }
+
+  .inner {
+    width: 100%;
+    gap: 16px;
+  }
+
+  .policyGroup {
+    gap: 12px;
+  }
+
   .desktopOnly {
     display: none;
   }

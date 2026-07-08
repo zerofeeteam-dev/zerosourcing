@@ -1,7 +1,14 @@
 "use client";
 
-import type { CSSProperties, FormEvent } from "react";
+import {
+  type ChangeEvent,
+  type CSSProperties,
+  type FormEvent,
+  useState,
+} from "react";
 import { Button } from "@repo/ui/button";
+import { Checkbox } from "@repo/ui/checkbox";
+import { Radio } from "@repo/ui/radio";
 
 import { Footer } from "../../components/Footer";
 import { Header } from "../../components/Header";
@@ -48,26 +55,65 @@ const submitButtonStyle = {
   width: "100%",
 } satisfies CSSProperties;
 
+const contactMethodStyle = {
+  width: 136,
+} satisfies CSSProperties;
+
+const privacyCheckboxStyle = {
+  width: "auto",
+} satisfies CSSProperties;
+
+type SubmitStatus = "error" | "idle" | "success";
+
+function formatBudgetInput(value: string) {
+  return value.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 export default function ContactPage() {
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<SubmitStatus>("idle");
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const formData = new FormData(event.currentTarget);
-    const body = [
-      ["기업명", formData.get("company")],
-      ["담당자 성함", formData.get("name")],
-      ["이메일", formData.get("email")],
-      ["연락처", formData.get("phone")],
-      ["연락 방법", formData.get("contactMethod")],
-      ["예산", formData.get("budget")],
-      ["추가 내용", formData.get("message")],
-    ]
-      .map(([label, value]) => `${label}: ${value || ""}`)
-      .join("\n");
+    if (isSubmitting) return;
 
-    window.location.href = `mailto:contact@zerofee.kr?subject=${encodeURIComponent(
-      "[제로소싱] 외주 문의",
-    )}&body=${encodeURIComponent(body)}`;
+    const formData = new FormData(event.currentTarget);
+    const payload = {
+      budget: formData.get("budget"),
+      company: formData.get("company"),
+      contactMethod: formData.get("contactMethod"),
+      email: formData.get("email"),
+      message: formData.get("message"),
+      name: formData.get("name"),
+      phone: formData.get("phone"),
+      privacyConsent: formData.get("privacyConsent") === "true",
+    };
+
+    setIsSubmitting(true);
+    setSubmitStatus("idle");
+
+    try {
+      const response = await fetch("/api/contact", {
+        body: JSON.stringify(payload),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+      });
+
+      if (!response.ok) throw new Error("Failed to submit contact form");
+
+      setSubmitStatus("success");
+    } catch {
+      setSubmitStatus("error");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
+  function handleBudgetChange(event: ChangeEvent<HTMLInputElement>) {
+    event.currentTarget.value = formatBudgetInput(event.currentTarget.value);
   }
 
   return (
@@ -125,40 +171,48 @@ export default function ContactPage() {
                 ))}
               </div>
 
-              <fieldset className={styles.methodGroup}>
-                <legend className={styles.label}>연락 방법*</legend>
-                <div className={styles.radioList}>
-                  {contactMethods.map((method, index) => (
-                    <label className={styles.radioItem} key={method}>
-                      <input
-                        className={styles.radioInput}
+              <div className={styles.methodBudgetGroup}>
+                <div
+                  aria-labelledby="contact-method-label"
+                  aria-required="true"
+                  className={styles.methodGroup}
+                  role="radiogroup"
+                >
+                  <span className={styles.label} id="contact-method-label">
+                    연락 방법*
+                  </span>
+                  <div className={styles.radioList}>
+                    {contactMethods.map((method, index) => (
+                      <Radio
                         defaultChecked={index === 0}
+                        key={method}
+                        label={method}
                         name="contactMethod"
                         required
-                        type="radio"
+                        style={contactMethodStyle}
                         value={method}
                       />
-                      <span>{method}</span>
-                    </label>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </fieldset>
 
-              <label className={styles.field} htmlFor="budget">
-                <span className={styles.label}>예산*</span>
-                <span className={styles.budgetControl}>
-                  <input
-                    className={styles.budgetInput}
-                    id="budget"
-                    inputMode="numeric"
-                    name="budget"
-                    placeholder="예산 범위를 입력해주세요."
-                    required
-                    type="text"
-                  />
-                  <span className={styles.budgetUnit}>만 원</span>
-                </span>
-              </label>
+                <label className={styles.field} htmlFor="budget">
+                  <span className={styles.label}>예산*</span>
+                  <span className={styles.budgetControl}>
+                    <input
+                      className={styles.budgetInput}
+                      id="budget"
+                      inputMode="numeric"
+                      name="budget"
+                      onChange={handleBudgetChange}
+                      placeholder="예산 범위를 입력해주세요."
+                      required
+                      type="text"
+                    />
+                    <span className={styles.budgetUnit}>만 원</span>
+                  </span>
+                </label>
+              </div>
 
               <label className={styles.field} htmlFor="message">
                 <span className={styles.label}>추가 내용(선택)</span>
@@ -171,25 +225,44 @@ export default function ContactPage() {
               </label>
 
               <div className={styles.privacyRow}>
-                <label className={styles.checkboxItem}>
-                  <input className={styles.checkboxInput} required type="checkbox" />
-                  <span>개인정보 수집 및 이용 동의</span>
-                </label>
+                <Checkbox
+                  label="개인정보 수집 및 이용 동의"
+                  name="privacyConsent"
+                  required
+                  style={privacyCheckboxStyle}
+                  value="true"
+                />
                 <button className={styles.privacyLink} type="button">
                   보기
                 </button>
               </div>
+              {submitStatus !== "idle" ? (
+                <p
+                  aria-live="polite"
+                  className={[
+                    styles.statusMessage,
+                    submitStatus === "success"
+                      ? styles.statusSuccess
+                      : styles.statusError,
+                  ].join(" ")}
+                >
+                  {submitStatus === "success"
+                    ? "문의가 접수되었습니다."
+                    : "문의 접수에 실패했습니다. 잠시 후 다시 시도해주세요."}
+                </p>
+              ) : null}
             </div>
 
             <Button
               color="blue"
+              disabled={isSubmitting}
               iconSize={24}
               leftIcon={<Icon name="edit-03" size={24} />}
               style={submitButtonStyle}
               type="submit"
               variant="gradient"
             >
-              외주 문의하기
+              {isSubmitting ? "접수 중..." : "외주 문의하기"}
             </Button>
           </form>
         </div>

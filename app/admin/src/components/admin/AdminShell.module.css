@@ -1,0 +1,154 @@
+.shell {
+  background: var(--color-gray-50);
+  color: var(--color-gray-900);
+  display: flex;
+  min-height: 100dvh;
+}
+
+.sidebar {
+  background: var(--color-gray-900);
+  color: #ffffff;
+  display: flex;
+  flex: 0 0 248px;
+  flex-direction: column;
+  gap: 28px;
+  padding: 28px 20px;
+}
+
+.brand {
+  composes: pretendard-bold-20 from global;
+  color: #ffffff;
+  padding: 0 8px;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.navLink {
+  composes: pretendard-bold-14 from global;
+  align-items: center;
+  border-radius: 8px;
+  color: var(--color-gray-300);
+  display: flex;
+  gap: 10px;
+  padding: 11px 12px;
+  text-decoration: none;
+}
+
+.navLink:hover {
+  background: var(--color-gray-800);
+  color: #ffffff;
+}
+
+.navLink:focus-visible {
+  outline: 3px solid var(--color-brand-200);
+  outline-offset: 2px;
+}
+
+.navLinkActive {
+  background: var(--color-brand-500);
+  color: #ffffff;
+}
+
+.navIcon {
+  align-items: center;
+  display: inline-flex;
+  flex: 0 0 auto;
+  justify-content: center;
+}
+
+.workspace {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 24px;
+  padding: 32px;
+}
+
+.pageHeader {
+  align-items: flex-start;
+  display: flex;
+  gap: 24px;
+  justify-content: space-between;
+}
+
+.titleGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.eyebrow {
+  composes: pretendard-bold-12 from global;
+  color: var(--color-brand-500);
+  margin: 0;
+}
+
+.title {
+  composes: pretendard-bold-28 from global;
+  color: var(--color-gray-900);
+  margin: 0;
+}
+
+.description {
+  composes: pretendard-medium-14 from global;
+  color: var(--color-gray-500);
+  margin: 0;
+}
+
+.actions {
+  align-items: center;
+  display: flex;
+  flex: 0 0 auto;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.content {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.footer {
+  composes: pretendard-medium-12 from global;
+  color: var(--color-gray-400);
+}
+
+@media (max-width: 840px) {
+  .shell {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    flex-basis: auto;
+    gap: 18px;
+    padding: 20px;
+  }
+
+  .nav {
+    flex-direction: row;
+    overflow-x: auto;
+  }
+
+  .navLink {
+    flex: 0 0 auto;
+  }
+
+  .workspace {
+    padding: 24px;
+  }
+
+  .pageHeader {
+    flex-direction: column;
+  }
+
+  .actions {
+    justify-content: flex-start;
+    width: 100%;
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "schema_version": 2,
+  "active_work_id": "admin-figma-admin-pages-20260708154804",
+  "works": {
+    "admin-figma-admin-pages-20260708154804": {
+      "work_id": "admin-figma-admin-pages-20260708154804",
+      "active_plan": ".omo/plans/admin-figma-admin-pages.md",
+      "plan_name": "admin-figma-admin-pages",
+      "session_ids": [
+        "codex:7afaf741-eeb4-4adf-9c8d-92549beed96d"
+      ],
+      "status": "active",
+      "worktree_path": null
+    }
+  }
+}

@@ -1,0 +1,219 @@
+.panel {
+  background: #ffffff;
+  border: 1px solid var(--color-gray-100);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.panelHeader {
+  align-items: flex-start;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  padding: 20px 20px 0;
+}
+
+.panelTitleGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.panelTitle {
+  composes: pretendard-bold-18 from global;
+  color: var(--color-gray-900);
+  margin: 0;
+}
+
+.panelDescription {
+  composes: pretendard-medium-14 from global;
+  color: var(--color-gray-500);
+  margin: 0;
+}
+
+.panelActions {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+}
+
+.divider {
+  background: var(--color-gray-100);
+  height: 1px;
+  width: 100%;
+}
+
+.filterBar {
+  align-items: flex-end;
+  display: flex;
+  gap: 12px;
+  padding: 20px;
+}
+
+.searchField {
+  display: flex;
+  flex: 1 1 260px;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filterLabel {
+  composes: pretendard-bold-12 from global;
+  color: var(--color-gray-600);
+}
+
+.searchControl {
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid var(--color-gray-200);
+  border-radius: 8px;
+  color: var(--color-gray-400);
+  display: flex;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 12px;
+}
+
+.searchControl:focus-within {
+  border-color: var(--color-brand-500);
+  outline: 3px solid var(--color-brand-50);
+}
+
+.searchInput {
+  composes: pretendard-medium-14 from global;
+  background: transparent;
+  border: 0;
+  color: var(--color-gray-900);
+  flex: 1 1 auto;
+  outline: 0;
+}
+
+.searchInput::placeholder {
+  color: var(--color-gray-400);
+}
+
+.tableWrap {
+  overflow-x: auto;
+  padding: 0 20px 20px;
+}
+
+.table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.table th {
+  composes: pretendard-bold-12 from global;
+  background: var(--color-gray-50);
+  color: var(--color-gray-500);
+  padding: 12px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.table td {
+  composes: pretendard-medium-14 from global;
+  border-top: 1px solid var(--color-gray-100);
+  color: var(--color-gray-800);
+  padding: 14px 12px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.alignCenter {
+  text-align: center;
+}
+
+.alignRight {
+  text-align: right;
+}
+
+.emptyCell {
+  padding: 0;
+}
+
+.emptyState {
+  align-items: center;
+  color: var(--color-gray-500);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 48px 20px;
+  text-align: center;
+}
+
+.emptyIcon {
+  align-items: center;
+  background: var(--color-gray-50);
+  border: 1px solid var(--color-gray-100);
+  border-radius: 999px;
+  color: var(--color-gray-400);
+  display: flex;
+  height: 44px;
+  justify-content: center;
+  width: 44px;
+}
+
+.emptyTitle {
+  composes: pretendard-bold-16 from global;
+  color: var(--color-gray-800);
+  margin: 0;
+}
+
+.emptyDescription {
+  composes: pretendard-medium-14 from global;
+  color: var(--color-gray-500);
+  margin: 0;
+}
+
+.chip {
+  composes: pretendard-bold-12 from global;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  display: inline-flex;
+  padding: 5px 10px;
+  white-space: nowrap;
+}
+
+.chipNeutral {
+  background: var(--color-gray-50);
+  border-color: var(--color-gray-100);
+  color: var(--color-gray-600);
+}
+
+.chipInfo {
+  background: var(--color-info-50);
+  border-color: var(--color-info-200);
+  color: var(--color-info-700);
+}
+
+.chipSuccess {
+  background: var(--color-success-50);
+  border-color: var(--color-success-200);
+  color: var(--color-success-700);
+}
+
+.chipWarning {
+  background: var(--color-warning-50);
+  border-color: var(--color-warning-200);
+  color: var(--color-warning-700);
+}
+
+.chipDanger {
+  background: var(--color-error-50);
+  border-color: var(--color-error-200);
+  color: var(--color-error-700);
+}
+
+@media (max-width: 720px) {
+  .panelHeader,
+  .filterBar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .panelActions {
+    justify-content: flex-start;
+  }
+}

@@ -344,9 +344,17 @@ export default function FaqPage() {
                 <h1 className={styles.title}>개발 외주, 가장 많이 묻는 질문</h1>
                 <p className={styles.description}>
                   외주 개발을 맡기기 전 가장 많이 묻는 것들을 모았습니다.
-                  <br />
                   비용·기간부터 개발 방식, 출시 이후까지 궁금한 항목을 펼쳐
                   확인하세요.
+                </p>
+              </div>
+              <div className={styles.heroNotice} data-node-id="74:6630">
+                <p className={styles.heroNoticeTitle}>
+                  상담과 견적은 언제나 무료입니다.
+                </p>
+                <p className={styles.heroNoticeDescription}>
+                  여기서 답을 못 찾으셨다면, 편하게 문의 주세요. 아이디어만
+                  있어도 괜찮습니다.
                 </p>
               </div>
             </div>

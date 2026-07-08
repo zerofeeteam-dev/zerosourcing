@@ -128,7 +128,28 @@
 
 .description {
   composes: pretendard-medium-16 from global;
+  max-width: 436px;
   color: var(--color-gray-800);
+}
+
+.heroNotice {
+  width: 100%;
+  padding: 16px 20px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: var(--color-brand-50);
+}
+
+.heroNoticeTitle {
+  composes: pretendard-bold-16 from global;
+  color: var(--color-brand-500);
+}
+
+.heroNoticeDescription {
+  composes: pretendard-medium-14 from global;
+  color: var(--color-gray-600);
 }
 
 .categoryStack {
@@ -293,10 +314,6 @@
   .title {
     font-size: 24px;
     line-height: 32px;
-  }
-
-  .description br {
-    display: none;
   }
 
   .summary {

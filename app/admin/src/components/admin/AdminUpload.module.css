@@ -1,0 +1,110 @@
+.field {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 168px minmax(0, 1fr);
+}
+
+.fieldText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.label {
+  composes: pretendard-bold-14 from global;
+  color: var(--color-gray-800);
+}
+
+.description {
+  composes: pretendard-medium-12 from global;
+  color: var(--color-gray-500);
+  margin: 0;
+}
+
+.error {
+  composes: pretendard-medium-12 from global;
+  color: var(--color-error-500);
+  margin: 0;
+}
+
+.controlColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dropzone {
+  align-items: center;
+  background: #ffffff;
+  border: 1px dashed var(--color-gray-300);
+  border-radius: 8px;
+  display: flex;
+  gap: 12px;
+  padding: 18px;
+}
+
+.input {
+  height: 1px;
+  opacity: 0;
+  position: absolute;
+  width: 1px;
+}
+
+.input:focus-visible + .trigger {
+  outline: 3px solid var(--color-brand-100);
+  outline-offset: 2px;
+}
+
+.trigger {
+  composes: pretendard-bold-14 from global;
+  align-items: center;
+  background: var(--color-brand-50);
+  border: 1px solid var(--color-brand-100);
+  border-radius: 8px;
+  color: var(--color-brand-600);
+  cursor: pointer;
+  display: inline-flex;
+  gap: 8px;
+  min-height: 40px;
+  padding: 8px 12px;
+  white-space: nowrap;
+}
+
+.meta {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.fileName {
+  composes: pretendard-bold-14 from global;
+  color: var(--color-gray-800);
+}
+
+.accept {
+  composes: pretendard-medium-12 from global;
+  color: var(--color-gray-500);
+}
+
+.preview {
+  border: 1px solid var(--color-gray-100);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.removeRow {
+  display: flex;
+  justify-content: flex-start;
+}
+
+@media (max-width: 720px) {
+  .field {
+    grid-template-columns: 1fr;
+  }
+
+  .dropzone {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

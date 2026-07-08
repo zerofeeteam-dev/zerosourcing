@@ -17,8 +17,6 @@ export interface RadioProps extends Omit<
 
 const wrapStyle: CSSProperties = {
   width: 350,
-  height: 40,
-  padding: "8px 0",
   display: "flex",
   alignItems: "center",
   gap: 8,
@@ -41,7 +39,6 @@ const hiddenInputStyle: CSSProperties = {
 const iconStyle: CSSProperties = {
   width: 24,
   height: 24,
-  color: "#0360ef",
   flex: "0 0 auto",
 };
 
@@ -58,18 +55,22 @@ const labelTextStyle: CSSProperties = {
 };
 
 const radioCss = `
-.zs-radio__input:not(:checked):not(:disabled) ~ .zs-radio__icon,
-.zs-radio__input:not(:checked):not(:disabled) ~ .zs-radio__text {
-  opacity: 0.4;
+.zs-radio__input:not(:checked):not(:disabled) ~ .zs-radio__icon {
+  color: var(--color-gray-400);
+  opacity: 1;
 }
 
-.zs-radio__input:checked:not(:disabled) ~ .zs-radio__icon,
+.zs-radio__input:checked:not(:disabled) ~ .zs-radio__icon {
+  color: var(--color-brand-500);
+  opacity: 1;
+}
+
 .zs-radio__input:checked:not(:disabled) ~ .zs-radio__text {
   opacity: 1;
 }
 
 .zs-radio__input:disabled ~ .zs-radio__icon {
-  color: #d1d7e2;
+  color: var(--color-gray-400);
   opacity: 1;
 }
 
@@ -95,7 +96,7 @@ function RadioIcon() {
       width="24"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <circle cx="12" cy="12" r="8" stroke="currentColor" strokeWidth="4" />
+      <circle cx="12" cy="12" r="8.5" stroke="currentColor" strokeWidth="5" />
     </svg>
   );
 }
