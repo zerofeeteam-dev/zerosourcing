@@ -11,6 +11,13 @@
   color: var(--color-gray-800);
   overflow: hidden;
   transition: color 220ms ease-in-out;
+  justify-content: space-between;
+}
+
+@media (max-width: 640px) {
+  .card {
+    padding: 16px 20px;
+  }
 }
 
 .card::before {
@@ -150,10 +157,4 @@
 .card:hover .action,
 .card:focus-within .action {
   color: #f8faff;
-}
-
-@media (max-width: 768px) {
-  .card {
-    padding: 24px;
-  }
 }

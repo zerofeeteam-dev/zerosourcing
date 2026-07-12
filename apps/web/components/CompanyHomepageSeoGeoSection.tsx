@@ -75,8 +75,7 @@ export function CompanyHomepageSeoGeoSection() {
               </h3>
               <p className={styles.cardDescription}>
                 구조화된 회사·서비스 정보로, 사용자가 AI에게 물었을 때 우리
-                회사가 답변에 언급되고 인용되도록 준비합니다. 검색의 다음
-                단계까지 대비합니다.
+                회사가 답변에 언급되고 인용되도록 준비합니다. 검색의 다음 단계까지 대비합니다.
               </p>
             </div>
           </div>

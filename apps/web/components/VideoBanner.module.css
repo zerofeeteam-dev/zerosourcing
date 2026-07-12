@@ -52,15 +52,18 @@
 
 .eyebrowChip {
   display: inline-flex;
+  height: 40px;
+  padding: 8px 16px;
   align-items: center;
   justify-content: center;
-  padding: 8px 16px;
-  border-radius: 999px;
-  background: var(--color-gray-50);
+  gap: 4px;
+  border-radius: 32px;
 }
 
 .eyebrow {
   composes: pretendard-medium-14 from global;
+  position: relative;
+  z-index: 3;
   color: var(--color-gray-800);
   white-space: nowrap;
 }
@@ -91,8 +94,8 @@
 
 @media (max-width: 768px) {
   .content {
-    padding: 144px 20px 80px;
-    gap: 36px;
+    padding: 156px 20px 108px;
+    gap: 32px;
   }
 
   .title {

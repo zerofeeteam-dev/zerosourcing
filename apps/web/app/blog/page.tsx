@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { SearchInput } from "@repo/ui/search-input";
@@ -23,7 +24,12 @@ function Meta({ date }: { date: string }) {
   return (
     <p className={styles.meta}>
       <span aria-hidden="true" className={styles.metaMark}>
-        Z
+        <Image
+          alt=""
+          height={16}
+          src="/brand/zerofee-blog-mark.svg"
+          width={16}
+        />
       </span>
       제로소싱 <strong>·</strong> {date}
     </p>
@@ -130,6 +136,7 @@ export default function BlogPage() {
             carouselGap={20}
             gap={21}
             minItemWidth={346}
+            mobileItemWidth={330}
             snapAlign="center"
           >
             {topPosts.map((post) => (

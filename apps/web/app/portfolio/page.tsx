@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { Footer } from "../../components/Footer";
 import { Header } from "../../components/Header";
@@ -40,8 +40,8 @@ export default function PortfolioPage() {
               <h1 className={styles.title}>빠르게 검증하고, 현실이 된 것들</h1>
             </div>
             <p className={styles.description}>
-              아이디어가 제품이 된 순간들. MVP부터 어플리케이션, 기업
-              홈페이지까지 제로소싱이 만든 제작 사례를 모았습니다.
+              아이디어가 제품이 된 순간들. MVP부터 어플리케이션, 기업 홈페이지
+              제로소싱이 만든 제작 사례를 모았습니다.
             </p>
           </div>
 
@@ -145,6 +145,7 @@ export default function PortfolioPage() {
 }
 
 function PortfolioCard({ item }: { item: (typeof portfolioItems)[number] }) {
+  const router = useRouter();
   const content = (
     <>
       <div className={styles.cardThumbnail} aria-hidden="true" />
@@ -163,9 +164,19 @@ function PortfolioCard({ item }: { item: (typeof portfolioItems)[number] }) {
 
   if ("slug" in item) {
     return (
-      <Link className={styles.card} href={`/portfolio/${item.slug}`}>
+      <article
+        className={`${styles.card} ${styles.clickableCard}`}
+        onClick={() => router.push(`/portfolio/${item.slug}`)}
+        onKeyDown={(event) => {
+          if (event.key === "Enter") {
+            router.push(`/portfolio/${item.slug}`);
+          }
+        }}
+        role="link"
+        tabIndex={0}
+      >
         {content}
-      </Link>
+      </article>
     );
   }
 

@@ -90,7 +90,7 @@
   }
 
   .title {
-    font-size: var(--section-title-size-mobile, var(--section-title-size, 28px));
+    font-size: var(--section-title-size-mobile, var(--section-title-size, 24px));
     line-height: var(
       --section-title-line-height-mobile,
       var(--section-title-line-height, 36px)

@@ -53,3 +53,15 @@
 .viewport[data-mode="carousel"][data-snap-align="center"] .track > :last-child {
   scroll-snap-align: end;
 }
+
+@media (max-width: 1080px) {
+  .viewport[data-mode="carousel"] .track {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .viewport[data-mode="carousel"] .track > * {
+    flex-basis: min(var(--carousel-item-width-mobile), 100%);
+  }
+}

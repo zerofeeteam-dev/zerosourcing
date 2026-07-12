@@ -23,6 +23,12 @@ export type IconName =
   | "card-02"
   | "check"
   | "chevron-right"
+  | "company-building-01"
+  | "company-home-02"
+  | "company-package-02"
+  | "company-pen-tool-03"
+  | "company-stars"
+  | "company-user"
   | "code-02"
   | "component"
   | "chevron-down"
@@ -279,6 +285,75 @@ function CheckIcon({ size = 24, ...props }: Omit<IconProps, "name">) {
   );
 }
 
+function CompanyBuilding01Icon({
+  size = 24,
+  ...props
+}: Omit<IconProps, "name">) {
+  return (
+    <svg aria-hidden="true" fill="none" height={size} viewBox="0 0 24 24" width={size} xmlns="http://www.w3.org/2000/svg" {...props}>
+      <path d="M4 22H20" stroke="currentColor" strokeLinecap="round" strokeWidth="1.5" />
+      <path d="M17 9H14M18 13H14M18 17H14" stroke="currentColor" strokeLinecap="round" strokeWidth="1.5" />
+      <path d="M6 22V3.2C6 2.42385 6.47098 2 7.2 2C8.87221 2 9.70832 2 10.4079 2.1108C14.2589 2.72075 17.2793 5.74106 17.8892 9.59209C18 10.2917 18 11.1278 18 12.8V22" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" />
+    </svg>
+  );
+}
+
+function CompanyPenTool03Icon({
+  size = 24,
+  ...props
+}: Omit<IconProps, "name">) {
+  return (
+    <svg aria-hidden="true" fill="none" height={size} viewBox="0 0 24 24" width={size} xmlns="http://www.w3.org/2000/svg" {...props}>
+      <path d="M13.2852 19.3647L5.82243 20.7506C4.39103 21.0164 3.67534 21.1493 3.26303 20.737C2.85072 20.3246 2.98362 19.6089 3.24943 18.1774L4.63523 10.7143C4.85745 9.51762 4.96856 8.91925 5.36302 8.5577C5.75749 8.19616 6.47889 8.1256 7.9217 7.98448C9.31227 7.84847 10.6283 7.37177 12 6L18 12.0005C16.6283 13.3723 16.1513 14.6874 16.0151 16.0781C15.8738 17.5211 15.8031 18.2426 15.4416 18.637C15.0801 19.0314 14.4818 19.1425 13.2852 19.3647Z" stroke="currentColor" strokeLinejoin="round" strokeWidth="1.5" />
+      <path d="M11 15.2105C10.4405 15.1197 9.92895 14.8763 9.52632 14.4737M9.52632 14.4737C9.12368 14.0711 8.8803 13.5595 8.78947 13M9.52632 14.4737L4 20" stroke="currentColor" strokeLinecap="round" strokeWidth="1.5" />
+      <path d="M12 6C12.7123 4.9491 13.6771 3.1812 15.1065 3.01098C16.0822 2.89479 16.8906 3.70312 18.5072 5.31978L18.6802 5.49277C20.2969 7.10944 21.1052 7.91777 20.989 8.8935C20.8188 10.3229 19.0509 11.2877 18 12" stroke="currentColor" strokeLinejoin="round" strokeWidth="1.5" />
+    </svg>
+  );
+}
+
+function CompanyPackage02Icon({
+  size = 24,
+  ...props
+}: Omit<IconProps, "name">) {
+  return (
+    <svg aria-hidden="true" fill="none" height={size} viewBox="0 0 24 24" width={size} xmlns="http://www.w3.org/2000/svg" {...props}>
+      <path d="M10.5 14.5H7.5C6.55719 14.5 6.08579 14.5 5.79289 14.7929C5.5 15.0858 5.5 15.5572 5.5 16.5V16.5C5.5 17.4428 5.5 17.9142 5.79289 18.2071C6.08579 18.5 6.55719 18.5 7.5 18.5H10.5C11.4428 18.5 11.9142 18.5 12.2071 18.2071C12.5 17.9142 12.5 17.4428 12.5 16.5V16.5C12.5 15.5572 12.5 15.0858 12.2071 14.7929C11.9142 14.5 11.4428 14.5 10.5 14.5Z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" />
+      <path d="M21.5 13.5V8.5C21.5 7.50878 21.5 7.01317 21.3461 6.55132C21.1921 6.08947 20.8947 5.69298 20.3 4.9C19.4167 3.7223 18.9751 3.13344 18.3416 2.81672C17.7082 2.5 16.9721 2.5 15.5 2.5H8.5C7.02786 2.5 6.2918 2.5 5.65836 2.81672C5.02492 3.13344 4.58328 3.72229 3.7 4.9C3.10527 5.69298 2.8079 6.08947 2.65395 6.55132C2.5 7.01317 2.5 7.50878 2.5 8.5V13.5C2.5 17.2712 2.5 19.1569 3.67157 20.3284C4.84315 21.5 6.72876 21.5 10.5 21.5H13.5C17.2712 21.5 19.1569 21.5 20.3284 20.3284C21.5 19.1569 21.5 17.2712 21.5 13.5Z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" />
+      <path d="M3 6.5H21" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" />
+      <path d="M14.5 6.5H9.5L10.5 2.5H13.5L14.5 6.5Z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" />
+      <path d="M14.5 6.5V8.5C14.5 9.44281 14.5 9.91421 14.2071 10.2071C13.9142 10.5 13.4428 10.5 12.5 10.5H11.5C10.5572 10.5 10.0858 10.5 9.79289 10.2071C9.5 9.91421 9.5 9.44281 9.5 8.5V6.5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" />
+    </svg>
+  );
+}
+
+function CompanyUserIcon({ size = 24, ...props }: Omit<IconProps, "name">) {
+  return (
+    <svg aria-hidden="true" fill="none" height={size} viewBox="0 0 24 24" width={size} xmlns="http://www.w3.org/2000/svg" {...props}>
+      <path d="M17 8.5C17 5.73858 14.7614 3.5 12 3.5C9.23858 3.5 7 5.73858 7 8.5C7 11.2614 9.23858 13.5 12 13.5C14.7614 13.5 17 11.2614 17 8.5Z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" />
+      <path d="M19 20.5C19 16.634 15.866 13.5 12 13.5C8.13401 13.5 5 16.634 5 20.5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" />
+    </svg>
+  );
+}
+
+function CompanyStarsIcon({ size = 24, ...props }: Omit<IconProps, "name">) {
+  return (
+    <svg aria-hidden="true" fill="none" height={size} viewBox="0 0 24 24" width={size} xmlns="http://www.w3.org/2000/svg" {...props}>
+      <path d="M3 12C7.5 12 12 7.5 12 3C12 7.5 16.5 12 21 12C16.5 12 12 16.5 12 21C12 16.5 7.5 12 3 12Z" stroke="currentColor" strokeLinejoin="round" strokeWidth="1.5" />
+      <path d="M2 19.5C2.83333 19.5 4.5 17.8333 4.5 17C4.5 17.8333 6.16667 19.5 7 19.5C6.16667 19.5 4.5 21.1667 4.5 22C4.5 21.1667 2.83333 19.5 2 19.5Z" stroke="currentColor" strokeLinejoin="round" strokeWidth="1.5" />
+      <path d="M16 5C17 5 19 3 19 2C19 3 21 5 22 5C21 5 19 7 19 8C19 7 17 5 16 5Z" stroke="currentColor" strokeLinejoin="round" strokeWidth="1.5" />
+    </svg>
+  );
+}
+
+function CompanyHome02Icon({ size = 24, ...props }: Omit<IconProps, "name">) {
+  return (
+    <svg aria-hidden="true" fill="none" height={size} viewBox="0 0 24 24" width={size} xmlns="http://www.w3.org/2000/svg" {...props}>
+      <path d="M3 11.9896V14.5C3 17.7998 3 19.4497 4.02513 20.4749C5.05025 21.5 6.70017 21.5 10 21.5H14C17.2998 21.5 18.9497 21.5 19.9749 20.4749C21 19.4497 21 17.7998 21 14.5V11.9896C21 10.3083 21 9.46773 20.6441 8.74005C20.2882 8.01237 19.6247 7.49628 18.2976 6.46411L16.2976 4.90855C14.2331 3.30285 13.2009 2.5 12 2.5C10.7991 2.5 9.76689 3.30285 7.70242 4.90855L5.70241 6.46411C4.37533 7.49628 3.71179 8.01237 3.3559 8.74005C3 9.46773 3 10.3083 3 11.9896Z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" />
+      <path d="M17 17.5V13.5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" />
+    </svg>
+  );
+}
+
 function HelpCircleContainedIcon({
   size = 24,
   ...props
@@ -426,56 +501,19 @@ function Map02Icon({ size = 24, ...props }: Omit<IconProps, "name">) {
 
 function CameraLensIcon({ size = 24, ...props }: Omit<IconProps, "name">) {
   return (
-    <svg
-      aria-hidden="true"
-      fill="none"
-      height={size}
-      viewBox="0 0 24 24"
-      width={size}
-      xmlns="http://www.w3.org/2000/svg"
-      {...props}
-    >
-      <path
-        d="M12 20.5C16.7 20.5 20.5 16.7 20.5 12C20.5 7.3 16.7 3.5 12 3.5C7.3 3.5 3.5 7.3 3.5 12C3.5 16.7 7.3 20.5 12 20.5Z"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      />
-      <path
-        d="M12 8L16 15H8L12 8ZM6.4 11.5H17.6M9 5.4L15 18.6"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="1.8"
-      />
-    </svg>
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M8.5 7.9726V8.9726C8.84581 8.9726 9.16708 8.79394 9.34952 8.50016L8.5 7.9726ZM9.725 6V5C9.37919 5 9.05792 5.17867 8.87548 5.47244L9.725 6ZM14.275 6L15.1245 5.47244C14.9421 5.17867 14.6208 5 14.275 5V6ZM15.5 7.9726L14.6505 8.50016C14.8329 8.79394 15.1542 8.9726 15.5 8.9726V7.9726ZM5 16.3562H6V9.61644H5H4V16.3562H5ZM6.75 7.9726V8.9726H8.5V7.9726V6.9726H6.75V7.9726ZM8.5 7.9726L9.34952 8.50016L10.5745 6.52756L9.725 6L8.87548 5.47244L7.65048 7.44505L8.5 7.9726ZM9.725 6V7H14.275V6V5H9.725V6ZM14.275 6L13.4255 6.52756L14.6505 8.50016L15.5 7.9726L16.3495 7.44505L15.1245 5.47244L14.275 6ZM15.5 7.9726V8.9726H17.25V7.9726V6.9726H15.5V7.9726ZM19 9.61644H18V16.3562H19H20V9.61644H19ZM19 16.3562H18C18 16.6537 17.7241 17 17.25 17V18V19C18.7089 19 20 17.8744 20 16.3562H19ZM17.25 7.9726V8.9726C17.7241 8.9726 18 9.31889 18 9.61644H19H20C20 8.09825 18.7089 6.9726 17.25 6.9726V7.9726ZM5 9.61644H6C6 9.31889 6.27591 8.9726 6.75 8.9726V7.9726V6.9726C5.2911 6.9726 4 8.09825 4 9.61644H5ZM6.75 18V17C6.27591 17 6 16.6537 6 16.3562H5H4C4 17.8744 5.2911 19 6.75 19V18ZM14.625 12.5753H13.625C13.625 13.3268 12.9573 14.0411 12 14.0411V15.0411V16.0411C13.9422 16.0411 15.625 14.5475 15.625 12.5753H14.625ZM12 15.0411V14.0411C11.0427 14.0411 10.375 13.3268 10.375 12.5753H9.375H8.375C8.375 14.5475 10.0578 16.0411 12 16.0411V15.0411ZM9.375 12.5753H10.375C10.375 11.8239 11.0427 11.1096 12 11.1096V10.1096V9.10959C10.0578 9.10959 8.375 10.6032 8.375 12.5753H9.375ZM12 10.1096V11.1096C12.9573 11.1096 13.625 11.8239 13.625 12.5753H14.625H15.625C15.625 10.6032 13.9422 9.10959 12 9.10959V10.1096ZM17.25 18V17H6.75V18V19H17.25V18Z" fill="#1B1F2A"/>
+</svg>
+
   );
 }
 
 function WebcamIcon({ size = 24, ...props }: Omit<IconProps, "name">) {
   return (
-    <svg
-      aria-hidden="true"
-      fill="none"
-      height={size}
-      viewBox="0 0 24 24"
-      width={size}
-      xmlns="http://www.w3.org/2000/svg"
-      {...props}
-    >
-      <path
-        d="M9 8.5C9 6.84315 10.3431 5.5 12 5.5C13.6569 5.5 15 6.84315 15 8.5V12C15 13.6569 13.6569 15 12 15C10.3431 15 9 13.6569 9 12V8.5Z"
-        stroke="currentColor"
-        strokeLinejoin="round"
-        strokeWidth="1.8"
-      />
-      <path
-        d="M6.5 11.5V12C6.5 15.0376 8.96243 17.5 12 17.5M17.5 11.5V12C17.5 15.0376 15.0376 17.5 12 17.5M12 17.5V20M9.5 20H14.5"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="1.8"
-      />
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 16.6316C10.9391 16.6316 9.92172 16.188 9.17157 15.3983C8.42143 14.6087 8 13.5378 8 12.4211V8.21053C8 7.09383 8.42143 6.02286 9.17157 5.23323C9.92172 4.44361 10.9391 4 12 4C13.0609 4 14.0783 4.44361 14.8284 5.23323C15.5786 6.02286 16 7.09383 16 8.21053V12.4211C16 13.5378 15.5786 14.6087 14.8284 15.3983C14.0783 16.188 13.0609 16.6316 12 16.6316ZM12 16.6316V20M10.4 20H13.6M12 9.05263C12.2122 9.05263 12.4157 8.96391 12.5657 8.80598C12.7157 8.64806 12.8 8.43387 12.8 8.21053C12.8 7.98719 12.7157 7.77299 12.5657 7.61507C12.4157 7.45714 12.2122 7.36842 12 7.36842C11.7878 7.36842 11.5843 7.45714 11.4343 7.61507C11.2843 7.77299 11.2 7.98719 11.2 8.21053C11.2 8.43387 11.2843 8.64806 11.4343 8.80598C11.5843 8.96391 11.7878 9.05263 12 9.05263Z" stroke="#1B1F2A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
+    
   );
 }
 
@@ -761,21 +799,14 @@ function X03Icon({ size = 24, ...props }: Omit<IconProps, "name">) {
 
 function StarsIcon({ size = 24, ...props }: Omit<IconProps, "name">) {
   return (
-    <svg
-      aria-hidden="true"
-      fill="none"
-      height={size}
-      viewBox="0 0 24 24"
-      width={size}
-      xmlns="http://www.w3.org/2000/svg"
-      {...props}
-    >
-      <path
-        d="M9.5 4.5L10.9 8.1L14.5 9.5L10.9 10.9L9.5 14.5L8.1 10.9L4.5 9.5L8.1 8.1L9.5 4.5ZM16.5 12L17.4 14.1L19.5 15L17.4 15.9L16.5 18L15.6 15.9L13.5 15L15.6 14.1L16.5 12Z"
-        stroke="currentColor"
-        strokeLinejoin="round"
-        strokeWidth="1.8"
-      />
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M5.44472 1.58528C5.63519 1.07053 6.36324 1.07053 6.55372 1.58528L7.50177 4.14735C7.56166 4.30919 7.68925 4.43678 7.85109 4.49667L10.4132 5.44472C10.9279 5.63519 10.9279 6.36324 10.4132 6.55372L7.85109 7.50177C7.68925 7.56166 7.56166 7.68925 7.50177 7.85109L6.55372 10.4132C6.36325 10.9279 5.63519 10.9279 5.44472 10.4132L4.49667 7.85109C4.43678 7.68925 4.30919 7.56166 4.14735 7.50177L1.58528 6.55372C1.07053 6.36325 1.07053 5.63519 1.58528 5.44472L4.14735 4.49667C4.30919 4.43678 4.43678 4.30919 4.49667 4.14735L5.44472 1.58528Z" fill="url(#paint0_linear_403_18393)"/>
+    <defs>
+    <linearGradient id="paint0_linear_403_18393" x1="1.19922" y1="5.99922" x2="10.7992" y2="5.99922" gradientUnits="userSpaceOnUse">
+    <stop stopColor="#E043FF"/>
+    <stop offset="1" stopColor="#7C36FF"/>
+    </linearGradient>
+    </defs>
     </svg>
   );
 }
@@ -903,6 +934,12 @@ const icons = {
   "card-02": Card02Icon,
   check: CheckIcon,
   "chevron-right": ChevronRightIcon,
+  "company-building-01": CompanyBuilding01Icon,
+  "company-home-02": CompanyHome02Icon,
+  "company-package-02": CompanyPackage02Icon,
+  "company-pen-tool-03": CompanyPenTool03Icon,
+  "company-stars": CompanyStarsIcon,
+  "company-user": CompanyUserIcon,
   "code-02": Code02Icon,
   component: ComponentIcon,
   "chevron-down": ChevronDownIcon,

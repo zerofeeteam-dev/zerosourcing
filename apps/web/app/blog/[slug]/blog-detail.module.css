@@ -115,20 +115,17 @@
 }
 
 .metaMark {
-  composes: pretendard-bold-10-tight from global;
   width: 16px;
   height: 16px;
-  border-radius: 2px;
-  background: var(--color-brand-500);
   display: inline-flex;
+  flex: 0 0 16px;
   align-items: center;
   justify-content: center;
-  color: #ffffff;
 }
 
 .articleBody {
   composes: pretendard-medium-14 from global;
-  height: 1200px;
+  min-height: 1200px;
   border-radius: 0;
   background: var(--color-gray-100);
   display: flex;
@@ -177,6 +174,7 @@
 }
 
 .backLink {
+  max-width: 80px;
   composes: pretendard-bold-14 from global;
   height: 52px;
   border: 1px solid var(--color-gray-100);
@@ -262,6 +260,12 @@
   overflow: hidden;
   color: var(--color-gray-600);
 }
+@media (max-width: 1079px) {
+  .content {
+    gap: 32px;
+  }
+
+}
 
 @media (max-width: 768px) {
   .headerLayer {
@@ -269,21 +273,13 @@
   }
 
   .detailSection {
-    padding: 128px 0 72px;
+    padding: 120px 0 72px;
   }
 }
 
-@media (max-width: 560px) {
-  .content {
-    gap: 52px;
-  }
-
+@media (max-width: 480px) {
   .articleShell {
     gap: 32px;
-  }
-
-  .articleBody {
-    height: 720px;
   }
 
   .ctaBanner {
@@ -307,5 +303,12 @@
 
   .relatedCopy {
     width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .title {
+    font-size: 24px;
+    line-height: 32px;
   }
 }

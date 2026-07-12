@@ -1,0 +1,705 @@
+.globalError {
+  composes: pretendard-medium-14 from global;
+  background: var(--color-error-50);
+  border: 1px solid var(--color-error-200);
+  border-radius: 8px;
+  color: var(--color-error-700);
+  margin: 0;
+  padding: 12px 14px;
+}
+
+.loadingText {
+  composes: pretendard-medium-14 from global;
+  background: var(--color-info-50);
+  border: 1px solid var(--color-info-200);
+  border-radius: 8px;
+  color: var(--color-info-700);
+  margin: 0;
+  padding: 12px 14px;
+}
+
+.portfolioListSection {
+  background: #ffffff;
+  display: flex;
+  justify-content: center;
+  padding: 52px 20px 104px;
+}
+
+.portfolioListPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 52px;
+  max-width: 1400px;
+  position: relative;
+  width: 100%;
+}
+
+.portfolioListTopRow {
+  align-items: center;
+  display: flex;
+  gap: 32px;
+}
+
+.portfolioListTitle {
+  composes: pretendard-bold-18 from global;
+  color: var(--color-gray-800);
+  margin: 0;
+  white-space: nowrap;
+}
+
+.portfolioControls {
+  align-items: center;
+  display: flex;
+  gap: 32px;
+  margin-left: auto;
+}
+
+.portfolioFilter,
+.portfolioSearch {
+  align-items: center;
+  color: var(--color-gray-800);
+  display: inline-flex;
+  gap: 16px;
+  white-space: nowrap;
+}
+
+.inlineSelect,
+.searchInput,
+.bodyCell,
+.statusCell,
+.detailCell {
+  composes: pretendard-medium-14 from global;
+}
+
+.controlLabel {
+  composes: pretendard-bold-14 from global;
+  color: var(--color-gray-800);
+}
+
+.selectControl {
+  align-items: center;
+  color: var(--color-gray-800);
+  display: inline-flex;
+  gap: 4px;
+}
+
+.inlineSelect {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  color: var(--color-gray-800);
+  cursor: pointer;
+  outline: 0;
+  padding: 0;
+  field-sizing: content;
+}
+
+.portfolioSearch {
+  gap: 8px;
+}
+
+.searchControl {
+  align-items: center;
+  color: var(--color-gray-400);
+  display: inline-flex;
+  gap: 4px;
+  max-width: 224px;
+}
+
+.searchInput {
+  background: transparent;
+  border: 0;
+  color: var(--color-gray-900);
+  flex: 0 0 200px;
+  outline: 0;
+  padding: 0;
+  width: 200px;
+}
+
+.searchInput::placeholder {
+  color: var(--color-gray-400);
+}
+
+.portfolioTable {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-x: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.emptyPortfolioTable {
+  gap: 52px;
+}
+
+.portfolioTableHeader,
+.portfolioTableRow {
+  align-items: center;
+  display: grid;
+  grid-template-columns:
+    minmax(0, 120fr)
+    minmax(0, 160fr)
+    minmax(0, 600fr)
+    minmax(0, 160fr)
+    minmax(0, 120fr)
+    minmax(0, 120fr)
+    minmax(0, 120fr);
+  position: relative;
+  width: 100%;
+}
+
+.portfolioTableHeader {
+  background: var(--color-gray-50);
+  border-radius: 16px;
+  padding: 15px 0;
+}
+
+.portfolioRows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 0;
+  width: 100%;
+}
+
+.portfolioTableRow {
+  border-radius: 16px;
+  padding: 15px 0;
+}
+
+.portfolioTableRow:hover {
+  background: var(--color-gray-50);
+}
+
+.headerCell,
+.bodyCell,
+.statusCell,
+.detailCell {
+  align-items: center;
+  color: var(--color-gray-800);
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+  overflow: hidden;
+  padding: 0 16px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.headerCell,
+.titleBodyCell {
+  composes: pretendard-bold-14 from global;
+}
+
+.columnDivider {
+  border-left: 1px dotted var(--color-gray-100);
+  bottom: 10px;
+  position: absolute;
+  top: 10px;
+}
+
+.statusCell {
+  gap: 8px;
+}
+
+.statusPublished {
+  color: var(--color-brand-500);
+}
+
+.statusDraft {
+  color: var(--color-gray-800);
+}
+
+.statusDot {
+  align-self: center;
+  border-radius: 999px;
+  display: inline-flex;
+  flex: 0 0 auto;
+  padding: 2px;
+}
+
+.statusDotPublished {
+  background: var(--color-brand-500);
+}
+
+.statusDotDraft {
+  background: var(--color-gray-400);
+}
+
+.landingPublished,
+.detailButton {
+  color: var(--color-brand-500);
+}
+
+.mutedDash {
+  color: var(--color-gray-800);
+}
+
+.detailButton {
+  composes: pretendard-medium-14 from global;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+}
+
+.emptyPill {
+  composes: pretendard-medium-14-20 from global;
+  align-self: center;
+  align-items: center;
+  background: var(--color-gray-50);
+  border-radius: 16px;
+  color: var(--color-gray-400);
+  display: inline-flex;
+  height: 32px;
+  justify-content: center;
+  margin: 0;
+  max-width: 100%;
+  padding: 4px 8px;
+  width: fit-content;
+}
+
+.errorPill {
+  background: var(--color-error-50);
+  color: var(--color-error-700);
+}
+
+.newPortfolioButton {
+  composes: pretendard-bold-14 from global;
+  align-items: center;
+  background: var(--color-brand-500);
+  border: 0;
+  border-radius: 40px;
+  box-shadow: 0 8px 8px 0 rgb(27 31 42 / 6%);
+  color: #f8faff;
+  cursor: pointer;
+  display: inline-flex;
+  gap: 4px;
+  justify-content: center;
+  padding: 9px 16px;
+  align-self: flex-end;
+}
+
+.filterField {
+  display: flex;
+  flex: 0 1 180px;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filterLabel {
+  composes: pretendard-bold-12 from global;
+  color: var(--color-gray-600);
+}
+
+.filterSelect {
+  composes: pretendard-medium-14 from global;
+  appearance: none;
+  background: #ffffff;
+  border: 1px solid var(--color-gray-200);
+  border-radius: 8px;
+  color: var(--color-gray-900);
+  min-height: 44px;
+  outline: 0;
+  padding: 10px 12px;
+  width: 100%;
+}
+.titleCell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.titleText {
+  composes: pretendard-bold-14 from global;
+  color: var(--color-gray-900);
+}
+
+.slugText {
+  composes: pretendard-medium-12 from global;
+  color: var(--color-gray-500);
+}
+
+.portfolioFormSection {
+  background: #ffffff;
+  display: flex;
+  justify-content: center;
+  padding: 52px 40px 104px;
+}
+
+.portfolioFormPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 52px;
+  max-width: 640px;
+  width: 100%;
+}
+
+.portfolioFormBody,
+.portfolioFields {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.portfolioFormTitle {
+  composes: pretendard-bold-18 from global;
+  color: var(--color-brand-800);
+  margin: 0;
+}
+
+.portfolioField,
+.portfolioEditorField {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.portfolioEditorField {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.portfolioLabel {
+  composes: pretendard-medium-14-20 from global;
+  color: var(--color-brand-800);
+  padding: 0;
+}
+
+.portfolioControl {
+  composes: pretendard-medium-14-20 from global;
+}
+
+.inlineInput {
+  composes: pretendard-medium-14-20 from global;
+}
+
+.inlineInputDisabled {
+  composes: pretendard-medium-14-20 from global;
+}
+
+.portfolioControl,
+.inlineInput,
+.inlineInputDisabled {
+  background: #ffffff;
+  border: 1px solid var(--color-gray-100);
+  border-radius: 16px;
+  color: var(--color-gray-800);
+  height: 52px;
+  outline: 0;
+  padding: 0 16px;
+  width: 100%;
+}
+
+.portfolioControl[data-empty="true"] {
+  color: var(--color-gray-400);
+}
+
+.portfolioControl::placeholder,
+.inlineInput::placeholder,
+.inlineInputDisabled::placeholder {
+  color: var(--color-gray-400);
+  opacity: 1;
+}
+.portfolioControl:disabled,
+.inlineInput:disabled,
+.inlineInputDisabled {
+  background: var(--color-gray-50);
+  color: var(--color-gray-400);
+  cursor: not-allowed;
+}
+
+.portfolioFieldError {
+  composes: pretendard-medium-12 from global;
+  color: var(--color-error-500);
+  margin: 0;
+}
+
+.portfolioSelectWrap {
+  position: relative;
+}
+
+.portfolioSelectWrap select {
+  appearance: none;
+  padding-right: 48px;
+}
+
+.portfolioSelectIcon {
+  color: var(--color-brand-800);
+  display: inline-flex;
+  pointer-events: none;
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.repeatableList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.repeatableRow {
+  display: flex;
+  gap: 8px;
+}
+
+.repeatableAddButton {
+  composes: pretendard-medium-14-20 from global;
+}
+
+.repeatableAddButtonIdle {
+  composes: pretendard-medium-14-20 from global;
+}
+
+.repeatableAddButton,
+.repeatableAddButtonIdle {
+  align-items: center;
+  background: var(--color-gray-50);
+  border: 1px solid var(--color-gray-100);
+  border-radius: 16px;
+  color: var(--color-brand-800);
+  cursor: pointer;
+  display: inline-flex;
+  gap: 8px;
+  height: 52px;
+  padding: 0 16px;
+}
+
+.repeatableAddButton {
+  cursor: default;
+}
+
+.repeatableAddButtonIdle:disabled {
+  cursor: not-allowed;
+}
+
+.repeatableCheck,
+.repeatableCheckDisabled,
+.portfolioSettingsCheck,
+.portfolioSettingsCheckActive {
+  align-items: center;
+  background: var(--color-brand-500);
+  border-radius: 8px;
+  color: #ffffff;
+  display: inline-flex;
+  height: 24px;
+  justify-content: center;
+  width: 24px;
+}
+
+.repeatableCheckDisabled {
+  background: var(--color-gray-400);
+}
+
+.portfolioSettingsCheck {
+  background: var(--color-gray-400);
+}
+
+.portfolioSettingsCheckActive {
+  background: var(--color-brand-500);
+}
+
+.inlineInput,
+.inlineInputDisabled {
+  flex: 1 1 auto;
+  width: auto;
+}
+
+.portfolioEditorModes {
+  background: var(--color-gray-50);
+  border-radius: 16px;
+  display: flex;
+  gap: 4px;
+  height: 52px;
+  padding: 4px;
+}
+
+.portfolioEditorOption {
+  flex: 1 1 0;
+  position: relative;
+}
+
+.portfolioEditorOption input {
+  height: 1px;
+  opacity: 0;
+  position: absolute;
+  width: 1px;
+}
+
+.portfolioEditorText {
+  composes: pretendard-medium-14-20 from global;
+  align-items: center;
+  border-radius: 12px;
+  color: var(--color-gray-600);
+  cursor: pointer;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  padding: 0 16px;
+}
+
+.portfolioEditorOption input:checked + .portfolioEditorText {
+  background: var(--color-brand-500);
+  border-radius: 14px;
+  color: #ffffff;
+}
+
+.portfolioContentTextarea,
+.portfolioSeoTextarea {
+  padding: 16px;
+  resize: none;
+}
+
+.portfolioContentTextarea {
+  height: 400px;
+}
+
+.portfolioSeoTextarea {
+  height: 120px;
+}
+
+.portfolioSettings {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.portfolioSettingsToggle {
+  position: relative;
+}
+
+.portfolioSettingsInput {
+  height: 1px;
+  opacity: 0;
+  position: absolute;
+  width: 1px;
+}
+
+.portfolioSettingsRow {
+  align-items: center;
+  background: var(--color-gray-50);
+  border-radius: 16px;
+  cursor: pointer;
+  display: flex;
+  height: 52px;
+  justify-content: space-between;
+  padding: 0 16px;
+}
+
+.portfolioSettingsInput:disabled + .portfolioSettingsRow {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+.portfolioSettingsName {
+  composes: pretendard-medium-14-20 from global;
+}
+
+.portfolioSettingsCount {
+  composes: pretendard-medium-14-20 from global;
+}
+
+.portfolioSettingsName {
+  align-items: center;
+  color: var(--color-brand-800);
+  display: inline-flex;
+  gap: 8px;
+}
+
+.portfolioSettingsCount {
+  color: var(--color-gray-400);
+}
+
+.portfolioFormActions,
+.portfolioFormActionGroup {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+}
+
+.portfolioFormActions {
+  justify-content: space-between;
+}
+
+.portfolioFormActionButton {
+  border-radius: 16px;
+  gap: 4px;
+  height: 52px;
+  padding: 8px 16px;
+}
+
+.portfolioFormBackButton,
+.portfolioFormDraftButton {
+  width: 81px;
+}
+
+.portfolioFormSubmitButton {
+  width: 101px;
+}
+
+.portfolioFormSecondaryAction {
+  border-color: var(--color-brand-500);
+  color: var(--color-brand-500);
+}
+
+@media (max-width: 720px) {
+  .portfolioListSection {
+    padding: 40px 20px 72px;
+  }
+
+  .portfolioListTopRow,
+  .portfolioControls {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .portfolioControls {
+    gap: 16px;
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .portfolioFilter,
+  .portfolioSearch,
+  .searchControl {
+    width: 100%;
+  }
+
+  .newPortfolioButton {
+    align-self: flex-end;
+  }
+
+  .filterField {
+    flex-basis: auto;
+    width: 100%;
+  }
+
+  .portfolioFormSection {
+    padding: 40px 20px 72px;
+  }
+
+  .repeatableRow,
+  .portfolioFormActions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .repeatableAddButton,
+  .repeatableAddButtonIdle,
+  .inlineInput,
+  .inlineInputDisabled,
+  .portfolioFormActionButton {
+    width: 100%;
+  }
+
+  .portfolioFormActionGroup {
+    align-items: stretch;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    width: 100%;
+  }
+}

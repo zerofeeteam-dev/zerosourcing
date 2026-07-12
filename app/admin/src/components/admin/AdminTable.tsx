@@ -1,24 +1,34 @@
-import type { CSSProperties, InputHTMLAttributes, ReactNode } from "react";
+import type {
+  CSSProperties,
+  InputHTMLAttributes,
+  ReactNode,
+  SelectHTMLAttributes,
+} from "react";
 import { useId } from "react";
-import { AdminSearchIcon } from "./icons";
+import { AdminChevronDownIcon, AdminSearchIcon } from "./icons";
 import styles from "./AdminTable.module.css";
 
 type AdminTableAlignment = "center" | "left" | "right";
 
-export type AdminStatusTone = "danger" | "info" | "neutral" | "success" | "warning";
+export type AdminStatusTone =
+  | "danger"
+  | "info"
+  | "neutral"
+  | "success"
+  | "warning";
 
 export type AdminTableColumn<Row> = {
   readonly align?: AdminTableAlignment;
   readonly header: string;
   readonly key: string;
   readonly render: (row: Row) => ReactNode;
-  readonly width?: string;
+  readonly width: number;
 };
 
 type AdminTableShellProps = {
-  readonly actions?: ReactNode;
+  readonly action?: ReactNode;
   readonly children: ReactNode;
-  readonly description?: string;
+  readonly contentWidth: number;
   readonly filters?: ReactNode;
   readonly title: string;
   readonly titleId?: string;
@@ -32,6 +42,15 @@ type AdminSearchFieldProps = Omit<
   InputHTMLAttributes<HTMLInputElement>,
   "className" | "id" | "type"
 > & {
+  readonly id: string;
+  readonly label: string;
+};
+
+type AdminFilterSelectProps = Omit<
+  SelectHTMLAttributes<HTMLSelectElement>,
+  "className" | "id"
+> & {
+  readonly children: ReactNode;
   readonly id: string;
   readonly label: string;
 };
@@ -68,21 +87,31 @@ function chipToneClassName(tone: AdminStatusTone): string | undefined {
   return styles.chipNeutral;
 }
 
-function alignmentClassName(align: AdminTableAlignment | undefined): string | undefined {
+function alignmentClassName(
+  align: AdminTableAlignment | undefined,
+): string | undefined {
   if (align === "center") return styles.alignCenter;
+  if (align === "left") return styles.alignLeft;
   if (align === "right") return styles.alignRight;
   return undefined;
 }
 
-function widthStyle(width: string | undefined): CSSProperties | undefined {
-  if (!width) return undefined;
-  return { width };
+function tableShellStyle(contentWidth: number): CSSProperties {
+  return { "--admin-table-width": `${contentWidth}px` } as CSSProperties;
+}
+
+function tableGridStyle<Row>(
+  columns: readonly AdminTableColumn<Row>[],
+): CSSProperties {
+  return {
+    gridTemplateColumns: columns.map((column) => `${column.width}px`).join(" "),
+  };
 }
 
 export function AdminTableShell({
-  actions,
+  action,
   children,
-  description,
+  contentWidth,
   filters,
   title,
   titleId,
@@ -92,22 +121,18 @@ export function AdminTableShell({
 
   return (
     <section aria-labelledby={headingId} className={styles.panel}>
-      <div className={styles.panelHeader}>
-        <div className={styles.panelTitleGroup}>
-          <h2 className={styles.panelTitle} id={headingId}>
-            {title}
-          </h2>
-          {description ? <p className={styles.panelDescription}>{description}</p> : null}
+      <div className={styles.panelInner} style={tableShellStyle(contentWidth)}>
+        <div className={styles.panelContent}>
+          <div className={styles.panelHeader}>
+            <h2 className={styles.panelTitle} id={headingId}>
+              {title}
+            </h2>
+            {filters}
+          </div>
+          {children}
         </div>
-        {actions ? <div className={styles.panelActions}>{actions}</div> : null}
+        {action ? <div className={styles.panelAction}>{action}</div> : null}
       </div>
-      {filters ? (
-        <>
-          <span aria-hidden="true" className={styles.divider} />
-          {filters}
-        </>
-      ) : null}
-      {children}
     </section>
   );
 }
@@ -116,17 +141,43 @@ export function AdminFilterBar({ children }: AdminFilterBarProps) {
   return <div className={styles.filterBar}>{children}</div>;
 }
 
-export function AdminSearchField({ id, label, ...props }: AdminSearchFieldProps) {
+export function AdminSearchField({
+  id,
+  label,
+  ...props
+}: AdminSearchFieldProps) {
   return (
-    <div className={styles.searchField}>
-      <label className={styles.filterLabel} htmlFor={id}>
-        {label}
-      </label>
+    <label className={styles.searchField} htmlFor={id}>
+      <span className={styles.filterLabel}>{label}</span>
       <div className={styles.searchControl}>
-        <AdminSearchIcon size={16} />
-        <input {...props} className={styles.searchInput} id={id} type="search" />
+        <AdminSearchIcon size={20} />
+        <input
+          {...props}
+          className={styles.searchInput}
+          id={id}
+          type="search"
+        />
       </div>
-    </div>
+    </label>
+  );
+}
+
+export function AdminFilterSelect({
+  children,
+  id,
+  label,
+  ...props
+}: AdminFilterSelectProps) {
+  return (
+    <label className={styles.filterSelect} htmlFor={id}>
+      <span className={styles.filterLabel}>{label}</span>
+      <span className={styles.selectControl}>
+        <select {...props} className={styles.select} id={id}>
+          {children}
+        </select>
+        <AdminChevronDownIcon size={20} />
+      </span>
+    </label>
   );
 }
 
@@ -138,51 +189,76 @@ export function AdminTable<Row>({
   rows,
 }: AdminTableProps<Row>) {
   const renderedEmptyState = emptyState ?? (
-    <AdminEmptyState description="조건에 맞는 항목이 없습니다." title="표시할 데이터가 없습니다." />
+    <span role="status">조회할 데이터가 없습니다.</span>
   );
+  const gridStyle = tableGridStyle(columns);
 
   return (
     <div className={styles.tableWrap}>
-      <table aria-label={ariaLabel} className={styles.table}>
-        <thead>
-          <tr>
-            {columns.map((column) => (
-              <th
-                className={alignmentClassName(column.align)}
-                key={column.key}
-                scope="col"
-                style={widthStyle(column.width)}
+      <div aria-label={ariaLabel} className={styles.table} role="table">
+        <div className={styles.headerRow} role="row" style={gridStyle}>
+          {columns.map((column, index) => (
+            <span
+              className={classNames(
+                styles.headerCell,
+                alignmentClassName(column.align),
+              )}
+              key={column.key}
+              role="columnheader"
+            >
+              {column.header}
+              {index < columns.length - 1 ? (
+                <span aria-hidden="true" className={styles.columnDivider} />
+              ) : null}
+            </span>
+          ))}
+        </div>
+        {rows.length > 0 ? (
+          <div className={styles.rows} role="rowgroup">
+            {rows.map((row) => (
+              <div
+                className={styles.tableRow}
+                key={getRowKey(row)}
+                role="row"
+                style={gridStyle}
               >
-                {column.header}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.length > 0 ? (
-            rows.map((row) => (
-              <tr key={getRowKey(row)}>
                 {columns.map((column) => (
-                  <td className={alignmentClassName(column.align)} key={column.key}>
+                  <span
+                    className={classNames(
+                      styles.bodyCell,
+                      alignmentClassName(column.align),
+                    )}
+                    key={column.key}
+                    role="cell"
+                  >
                     {column.render(row)}
-                  </td>
+                  </span>
                 ))}
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td className={styles.emptyCell} colSpan={columns.length}>
-                {renderedEmptyState}
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className={styles.emptyRow} role="rowgroup">
+            <div
+              aria-colspan={columns.length}
+              className={styles.emptyCell}
+              role="cell"
+            >
+              {renderedEmptyState}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
 
-export function AdminEmptyState({ action, description, icon, title }: AdminEmptyStateProps) {
+export function AdminEmptyState({
+  action,
+  description,
+  icon,
+  title,
+}: AdminEmptyStateProps) {
   return (
     <div className={styles.emptyState}>
       {icon ? <span className={styles.emptyIcon}>{icon}</span> : null}
@@ -193,6 +269,13 @@ export function AdminEmptyState({ action, description, icon, title }: AdminEmpty
   );
 }
 
-export function AdminStatusChip({ children, tone = "neutral" }: AdminStatusChipProps) {
-  return <span className={classNames(styles.chip, chipToneClassName(tone))}>{children}</span>;
+export function AdminStatusChip({
+  children,
+  tone = "neutral",
+}: AdminStatusChipProps) {
+  return (
+    <span className={classNames(styles.chip, chipToneClassName(tone))}>
+      {children}
+    </span>
+  );
 }

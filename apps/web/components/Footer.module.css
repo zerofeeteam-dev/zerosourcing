@@ -72,7 +72,7 @@
 
 @media (max-width: 480px) {
   .footer {
-    padding: 40px 20px;
+    padding: 52px 20px;
   }
 
   .inner {
@@ -81,7 +81,7 @@
   }
 
   .policyGroup {
-    gap: 12px;
+    gap: 16px;
   }
 
   .desktopOnly {

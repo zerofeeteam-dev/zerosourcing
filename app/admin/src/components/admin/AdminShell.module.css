@@ -1,56 +1,59 @@
 .shell {
-  background: var(--color-gray-50);
+  background: #ffffff;
   color: var(--color-gray-900);
   display: flex;
+  flex-direction: column;
   min-height: 100dvh;
 }
 
-.sidebar {
-  background: var(--color-gray-900);
-  color: #ffffff;
+.header {
+  align-items: center;
+  background: rgb(255 255 255 / 10%);
+  border-radius: 40px;
   display: flex;
-  flex: 0 0 248px;
-  flex-direction: column;
-  gap: 28px;
-  padding: 28px 20px;
+  flex: 0 0 auto;
+  gap: 32px;
+  height: 80px;
+  margin: 20px 20px 0;
+  padding: 0 20px 0 40px;
 }
 
-.brand {
-  composes: pretendard-bold-20 from global;
-  color: #ffffff;
-  padding: 0 8px;
+.logoLink {
+  align-items: center;
+  color: var(--color-gray-900);
+  display: inline-flex;
+  text-decoration: none;
+}
+
+.logoImage,
+.footerLogo {
+  display: block;
+  height: 24px;
+  width: 168px;
 }
 
 .nav {
+  align-items: center;
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  gap: 32px;
 }
 
 .navLink {
-  composes: pretendard-bold-14 from global;
+  composes: pretendard-medium-16 from global;
   align-items: center;
-  border-radius: 8px;
-  color: var(--color-gray-300);
+  color: var(--color-gray-800);
   display: flex;
   gap: 10px;
-  padding: 11px 12px;
   text-decoration: none;
 }
 
 .navLink:hover {
-  background: var(--color-gray-800);
-  color: #ffffff;
-}
-
-.navLink:focus-visible {
-  outline: 3px solid var(--color-brand-200);
-  outline-offset: 2px;
+  color: var(--color-brand-500);
 }
 
 .navLinkActive {
-  background: var(--color-brand-500);
-  color: #ffffff;
+  composes: pretendard-bold-16 from global;
+  color: var(--color-brand-500);
 }
 
 .navIcon {
@@ -60,12 +63,10 @@
   justify-content: center;
 }
 
-.workspace {
+.headerActions {
+  align-items: center;
   display: flex;
-  flex: 1 1 auto;
-  flex-direction: column;
-  gap: 24px;
-  padding: 32px;
+  margin-left: auto;
 }
 
 .pageHeader {
@@ -73,6 +74,7 @@
   display: flex;
   gap: 24px;
   justify-content: space-between;
+  padding: 52px 20px 0;
 }
 
 .titleGroup {
@@ -97,6 +99,8 @@
   composes: pretendard-medium-14 from global;
   color: var(--color-gray-500);
   margin: 0;
+  overflow-wrap: break-word;
+  word-break: keep-all;
 }
 
 .actions {
@@ -108,25 +112,68 @@
 }
 
 .content {
-  display: flex;
   flex: 1 1 auto;
-  flex-direction: column;
-  gap: 20px;
 }
 
 .footer {
-  composes: pretendard-medium-12 from global;
-  color: var(--color-gray-400);
+  align-items: flex-start;
+  background: var(--color-gray-50);
+  border-top: 1px solid var(--color-gray-100);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 52px 20px;
+}
+
+.footerLogo {
+  flex: 0 0 auto;
+}
+
+.divider {
+  border-top: 1px dashed var(--color-gray-100);
+  display: block;
+  height: 0;
+  width: 100%;
+}
+
+.policyGroup,
+.companyGroup {
+  composes: pretendard-medium-12-16 from global;
+  color: var(--color-gray-600);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  word-break: keep-all;
+}
+
+.policyGroup {
+  gap: 16px;
+}
+
+.customerGroup,
+.companyGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.policyGroup p,
+.customerGroup p,
+.companyGroup p {
+  margin: 0;
+}
+
+.bold {
+  composes: pretendard-bold-12-16 from global;
 }
 
 @media (max-width: 840px) {
-  .shell {
+  .header {
+    align-items: flex-start;
     flex-direction: column;
-  }
-
-  .sidebar {
-    flex-basis: auto;
-    gap: 18px;
+    gap: 16px;
+    height: auto;
+    margin: 20px 20px 0;
     padding: 20px;
   }
 
@@ -137,10 +184,6 @@
 
   .navLink {
     flex: 0 0 auto;
-  }
-
-  .workspace {
-    padding: 24px;
   }
 
   .pageHeader {

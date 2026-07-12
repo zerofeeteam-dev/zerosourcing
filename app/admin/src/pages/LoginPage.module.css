@@ -1,0 +1,246 @@
+.page {
+  background: #ffffff;
+  color: var(--color-gray-900);
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.header {
+  align-items: center;
+  background: #ffffff;
+  display: flex;
+  gap: 32px;
+  height: 100px;
+  padding: 20px 20px 0 60px;
+}
+
+.logoLink,
+.centerLogo {
+  align-items: center;
+  color: var(--color-gray-900);
+  display: inline-flex;
+  text-decoration: none;
+}
+
+.logoImage,
+.footerLogo {
+  display: block;
+  height: 24px;
+  width: 168px;
+}
+
+.nav {
+  align-items: center;
+  display: flex;
+  gap: 32px;
+}
+
+.navLink {
+  composes: pretendard-medium-16 from global;
+  color: var(--color-gray-800);
+  text-decoration: none;
+}
+
+.loginSection {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  height: 545px;
+  justify-content: center;
+  padding: 104px 20px;
+}
+
+.form {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: 20px;
+  width: 480px;
+}
+
+.formHeader {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+}
+
+.title {
+  composes: pretendard-medium-14 from global;
+  color: var(--color-gray-600);
+  margin: 0;
+}
+
+.setupNotice,
+.authError {
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+}
+
+.setupNotice {
+  background: var(--color-warning-50);
+  border: 1px solid var(--color-warning-200);
+  color: var(--color-warning-800);
+}
+
+.noticeTitle {
+  composes: pretendard-bold-14 from global;
+}
+
+.noticeMessage {
+  composes: pretendard-medium-12 from global;
+}
+
+.authError {
+  composes: pretendard-medium-14 from global;
+  background: var(--color-error-50);
+  border: 1px solid var(--color-error-200);
+  color: var(--color-error-700);
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  composes: pretendard-medium-14-20 from global;
+  color: var(--color-gray-800);
+}
+
+.input {
+  composes: pretendard-medium-14-20 from global;
+  background: #ffffff;
+  border: 1px solid var(--color-gray-100);
+  border-radius: 16px;
+  color: var(--color-gray-900);
+  height: 52px;
+  outline: 0;
+  padding: 16px;
+  width: 100%;
+}
+
+.input::placeholder {
+  color: var(--color-gray-400);
+}
+
+.input:disabled {
+  background: var(--color-gray-50);
+  color: var(--color-gray-400);
+  cursor: not-allowed;
+}
+
+.input[aria-invalid="true"] {
+  border-color: var(--color-error-400);
+}
+
+.errorText {
+  composes: pretendard-medium-12 from global;
+  color: var(--color-error-500);
+  margin: 0;
+}
+
+.submitButton {
+  composes: pretendard-bold-14 from global;
+  background: var(--color-brand-500);
+  border: 0;
+  border-radius: 16px;
+  color: #ffffff;
+  cursor: pointer;
+  height: 52px;
+  padding: 8px 16px;
+}
+
+.submitButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+.footer {
+  align-items: flex-start;
+  background: var(--color-gray-50);
+  border-top: 1px solid var(--color-gray-100);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 52px 20px 49px;
+}
+
+.footerLogo {
+  flex: 0 0 auto;
+}
+
+.divider {
+  border-top: 1px dashed var(--color-gray-100);
+  display: block;
+  height: 0;
+  width: 100%;
+}
+
+.policyGroup,
+.companyGroup {
+  composes: pretendard-medium-12-16 from global;
+  color: var(--color-gray-600);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  word-break: keep-all;
+}
+
+.policyGroup {
+  gap: 16px;
+}
+
+.customerGroup,
+.companyGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.policyGroup p,
+.customerGroup p,
+.companyGroup p {
+  margin: 0;
+}
+
+.bold {
+  composes: pretendard-bold-12-16 from global;
+}
+
+@media (max-width: 720px) {
+  .header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 16px;
+    height: auto;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 20px;
+  }
+
+  .nav {
+    gap: 20px;
+  }
+
+  .loginSection {
+    height: auto;
+    padding: 72px 20px;
+  }
+
+  .form {
+    flex-basis: auto;
+    width: 100%;
+  }
+
+  .companyGroup {
+    word-break: keep-all;
+  }
+}

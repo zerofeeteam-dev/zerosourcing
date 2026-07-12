@@ -1,12 +1,15 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import styles from "./AdminButton.module.css";
 
-export type AdminButtonSize = "sm" | "md";
+export type AdminButtonSize = "sm" | "md" | "figma";
 export type AdminButtonVariant = "danger" | "ghost" | "primary" | "secondary";
 
 type NativeButtonType = "button" | "reset" | "submit";
 
-type AdminButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "type"> & {
+type AdminButtonProps = Omit<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  "type"
+> & {
   readonly children: ReactNode;
   readonly icon?: ReactNode;
   readonly iconPosition?: "left" | "right";
@@ -49,7 +52,12 @@ export function AdminButton({
   return (
     <button
       {...props}
-      className={classNames(styles.button, styles[size], styles[variant], className)}
+      className={classNames(
+        styles.button,
+        styles[size],
+        styles[variant],
+        className,
+      )}
       type={type}
     >
       {iconPosition === "left" ? iconElement : null}

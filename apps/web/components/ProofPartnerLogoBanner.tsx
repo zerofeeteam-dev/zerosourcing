@@ -10,9 +10,12 @@ const proofPartnerLogos = partnerLogos.filter(({ alt }) =>
   ),
 );
 
-export function ProofPartnerLogoBanner() {
+export function ProofPartnerLogoBanner({ compact = false }: { compact?: boolean }) {
   return (
-    <div className={styles.root} data-node-id="138:4612">
+    <div
+      className={compact ? `${styles.root} ${styles.compact}` : styles.root}
+      data-node-id="138:4612"
+    >
       <p className={styles.title}>신뢰할 수 있는 파트너와 함께합니다</p>
       <div className={styles.viewport}>
         <div className={styles.track}>

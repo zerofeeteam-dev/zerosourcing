@@ -67,4 +67,22 @@ export const partnerLogos: PartnerLogo[] = [
     width: 180,
     height: 52,
   },
+  {
+    alt: "토스페이먼츠 제로소싱 고객사",
+    src: "/images/partners/tosspayments-partners-logo.png",
+    width: 220,
+    height: 52,
+  },
+  {
+    alt: "나이스페이 제로소싱 고객사",
+    src: "/images/partners/nicepay-partners-logo.png",
+    width: 180,
+    height: 52,
+  },
+  {
+    alt: "고양특례시 제로소싱 고객사",
+    src: "/images/partners/goyang-city-partners-logo.png",
+    width: 160,
+    height: 52,
+  },
 ];

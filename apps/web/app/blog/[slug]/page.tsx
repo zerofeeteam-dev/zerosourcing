@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -30,7 +31,12 @@ function Meta({ post }: { post: BlogPost }) {
   return (
     <p className={styles.meta}>
       <span aria-hidden="true" className={styles.metaMark}>
-        Z
+        <Image
+          alt=""
+          height={16}
+          src="/brand/zerofee-blog-mark.svg"
+          width={16}
+        />
       </span>
       {post.author} <strong>·</strong> {post.date}
     </p>

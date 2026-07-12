@@ -81,26 +81,6 @@ create table if not exists public.blog_posts (
   constraint blog_posts_banner_sections_json_check check (jsonb_typeof(banner_sections) in ('array', 'object'))
 );
 
-create table if not exists public.link_payments (
-  id uuid primary key default gen_random_uuid(),
-  status text not null default 'pending',
-  customer_name text not null,
-  payment_name text not null,
-  amount_krw integer not null,
-  payment_url text,
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now(),
-  deleted_at timestamptz,
-  constraint link_payments_status_check check (status in ('pending', 'paid')),
-  constraint link_payments_customer_name_not_blank check (length(btrim(customer_name)) > 0),
-  constraint link_payments_payment_name_not_blank check (length(btrim(payment_name)) > 0),
-  constraint link_payments_amount_check check (amount_krw > 0),
-  constraint link_payments_payment_url_check check (
-    payment_url is null
-    or payment_url ~ '^https?://[^[:space:]]+$'
-  )
-);
-
 create index if not exists admin_users_email_idx
   on public.admin_users (email);
 
@@ -122,13 +102,6 @@ create index if not exists blog_posts_published_date_idx
 create index if not exists blog_posts_deleted_at_idx
   on public.blog_posts (deleted_at);
 
-create index if not exists link_payments_active_list_idx
-  on public.link_payments (status, updated_at desc)
-  where deleted_at is null;
-
-create index if not exists link_payments_deleted_at_idx
-  on public.link_payments (deleted_at);
-
 drop trigger if exists set_admin_users_updated_at on public.admin_users;
 create trigger set_admin_users_updated_at
   before update on public.admin_users
@@ -144,12 +117,6 @@ create trigger set_portfolios_updated_at
 drop trigger if exists set_blog_posts_updated_at on public.blog_posts;
 create trigger set_blog_posts_updated_at
   before update on public.blog_posts
-  for each row
-  execute function public.set_updated_at();
-
-drop trigger if exists set_link_payments_updated_at on public.link_payments;
-create trigger set_link_payments_updated_at
-  before update on public.link_payments
   for each row
   execute function public.set_updated_at();
 
@@ -173,7 +140,6 @@ grant execute on function public.current_user_is_admin() to authenticated;
 alter table public.admin_users enable row level security;
 alter table public.portfolios enable row level security;
 alter table public.blog_posts enable row level security;
-alter table public.link_payments enable row level security;
 
 drop policy if exists "admin users can read own membership" on public.admin_users;
 create policy "admin users can read own membership"
@@ -248,35 +214,6 @@ create policy "admins can delete blog posts"
   to authenticated
   using (public.current_user_is_admin());
 
-drop policy if exists "admins can read link payments" on public.link_payments;
-create policy "admins can read link payments"
-  on public.link_payments
-  for select
-  to authenticated
-  using (public.current_user_is_admin());
-
-drop policy if exists "admins can insert link payments" on public.link_payments;
-create policy "admins can insert link payments"
-  on public.link_payments
-  for insert
-  to authenticated
-  with check (public.current_user_is_admin());
-
-drop policy if exists "admins can update link payments" on public.link_payments;
-create policy "admins can update link payments"
-  on public.link_payments
-  for update
-  to authenticated
-  using (public.current_user_is_admin())
-  with check (public.current_user_is_admin());
-
-drop policy if exists "admins can delete link payments" on public.link_payments;
-create policy "admins can delete link payments"
-  on public.link_payments
-  for delete
-  to authenticated
-  using (public.current_user_is_admin());
-
 insert into storage.buckets (
   id,
   name,
@@ -285,8 +222,8 @@ insert into storage.buckets (
   allowed_mime_types
 )
 values (
-  'blog-thumbnails',
-  'blog-thumbnails',
+  'zerosourcing',
+  'zerosourcing',
   true,
   52428800,
   array['image/png', 'image/jpeg', 'image/webp']
@@ -297,14 +234,12 @@ set
   file_size_limit = excluded.file_size_limit,
   allowed_mime_types = excluded.allowed_mime_types;
 
-alter table storage.objects enable row level security;
-
 drop policy if exists "public can read blog thumbnails" on storage.objects;
 create policy "public can read blog thumbnails"
   on storage.objects
   for select
   to public
-  using (bucket_id = 'blog-thumbnails');
+  using (bucket_id = 'zerosourcing');
 
 drop policy if exists "admins can upload blog thumbnails" on storage.objects;
 create policy "admins can upload blog thumbnails"
@@ -312,7 +247,7 @@ create policy "admins can upload blog thumbnails"
   for insert
   to authenticated
   with check (
-    bucket_id = 'blog-thumbnails'
+    bucket_id = 'zerosourcing'
     and public.current_user_is_admin()
   );
 
@@ -322,11 +257,11 @@ create policy "admins can update blog thumbnails"
   for update
   to authenticated
   using (
-    bucket_id = 'blog-thumbnails'
+    bucket_id = 'zerosourcing'
     and public.current_user_is_admin()
   )
   with check (
-    bucket_id = 'blog-thumbnails'
+    bucket_id = 'zerosourcing'
     and public.current_user_is_admin()
   );
 
@@ -336,6 +271,6 @@ create policy "admins can delete blog thumbnails"
   for delete
   to authenticated
   using (
-    bucket_id = 'blog-thumbnails'
+    bucket_id = 'zerosourcing'
     and public.current_user_is_admin()
   );

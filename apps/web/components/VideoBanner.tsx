@@ -3,6 +3,7 @@
 import type { CSSProperties, ReactNode } from "react";
 import { Button, type ButtonColor } from "@repo/ui/button";
 
+import { GlassSurface } from "./GlassSurface";
 import { Icon } from "./Icon";
 import { type CtaAction, emitCtaClick } from "./cta-events";
 import styles from "./VideoBanner.module.css";
@@ -30,6 +31,7 @@ type VideoBannerProps = {
   actionsPosition?: BannerActionsPosition;
   align?: BannerAlign;
   description?: ReactNode;
+  descriptionMaxWidth?: number;
   eyebrow?: string;
   title: ReactNode;
 };
@@ -45,6 +47,7 @@ export function VideoBanner({
   actionsPosition = "below",
   align = "center",
   description,
+  descriptionMaxWidth,
   eyebrow,
   title,
 }: VideoBannerProps) {
@@ -64,14 +67,33 @@ export function VideoBanner({
       >
         <div className={styles.copy}>
           {eyebrow ? (
-            <div className={styles.eyebrowChip}>
+            <GlassSurface
+              as="div"
+              bezel={10}
+              blur={2}
+              className={styles.eyebrowChip}
+              radius={32}
+              refract
+              saturate={1.4}
+              scale={30}
+              tone="light"
+            >
               <p className={styles.eyebrow}>{eyebrow}</p>
-            </div>
+            </GlassSurface>
           ) : null}
           <div className={styles.text}>
             <h1 className={styles.title}>{title}</h1>
             {description ? (
-              <p className={styles.description}>{description}</p>
+              <p
+                className={styles.description}
+                style={
+                  descriptionMaxWidth
+                    ? { maxWidth: descriptionMaxWidth }
+                    : undefined
+                }
+              >
+                {description}
+              </p>
             ) : null}
           </div>
         </div>

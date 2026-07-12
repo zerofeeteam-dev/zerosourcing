@@ -3,7 +3,6 @@
 import type { CSSProperties } from "react";
 
 import { Icon, type IconName } from "./Icon";
-import { ProcessStepCard } from "./ProcessStepCard";
 import { emitCtaClick } from "./cta-events";
 import styles from "./ProcessSection.module.css";
 
@@ -72,17 +71,13 @@ export function ProcessSection({
               <span className={styles.orderChip}>
                 <span className={styles.orderText}>{order}</span>
               </span>
-              <p className={styles.label}>진행 프로세스</p>
+              <p className={styles.label}>진행 방식</p>
             </div>
-            <h2 className={styles.title}>제로에서 현실까지, 5단계</h2>
+            <h2 className={styles.title}>왜 4주가 가능할까요?</h2>
           </div>
           <div className={styles.description}>
             <p className={styles.descriptionMain}>
-              &apos;빠르다&apos;는 약속을, 눈에 보이는 단계로 증명합니다.
-            </p>
-            <p className={styles.descriptionNote}>
-              ※ MVP 개발 기준으로 산정된 일정입니다. 자세한 일정은 아래 버튼을
-              통해 문의해주시면 감사하겠습니다.
+              &apos;빠르다&apos;는 약속을, 기간이 적힌 단계로 증명합니다.
             </p>
           </div>
         </div>
@@ -91,7 +86,18 @@ export function ProcessSection({
           <div className={styles.rail}>
             {steps.map((step, index) => (
               <div className={styles.stepSlot} key={step.title}>
-                <ProcessStepCard {...step} />
+                <article className={styles.stepCard}>
+                  <div className={styles.stepHeading}>
+                    <span className={styles.stepIconFrame} aria-hidden="true">
+                      <Icon name={step.iconName} size={20} />
+                    </span>
+                    <h3 className={styles.stepTitle}>{step.title}</h3>
+                  </div>
+                  <div className={styles.stepBody}>
+                    <p className={styles.stepDescription}>{step.description}</p>
+                    <p className={styles.stepDuration}>{step.duration}</p>
+                  </div>
+                </article>
                 {index < steps.length - 1 ? (
                   <Icon
                     className={styles.arrow}

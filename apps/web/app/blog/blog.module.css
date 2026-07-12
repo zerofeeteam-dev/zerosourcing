@@ -116,7 +116,11 @@
   composes: pretendard-medium-14 from global;
   width: min(100%, 640px);
   margin: 0;
+  overflow: hidden;
   color: var(--color-gray-100);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .topCard {
@@ -209,15 +213,12 @@
 }
 
 .metaMark {
-  composes: pretendard-bold-10-tight from global;
   width: 16px;
   height: 16px;
-  border-radius: 2px;
-  background: var(--color-brand-500);
   display: inline-flex;
+  flex: 0 0 16px;
   align-items: center;
   justify-content: center;
-  color: #ffffff;
 }
 
 .contentGrid {
@@ -294,7 +295,7 @@
   flex: 1 1 auto;
 }
 
-@media (max-width: 1080px) {
+@media (max-width: 1079px) {
   .contentGrid {
     display: block;
   }
@@ -303,37 +304,52 @@
     width: 100%;
   }
 
+  .listDescription {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
   .stickyColumn {
     display: none;
   }
 }
 
 @media (max-width: 768px) {
+  .title {
+    font-size: 24px;
+    line-height: 32px;
+  }
+
   .headerLayer {
     padding: 0 16px;
   }
 
   .blogSection {
-    padding: 128px 0 72px;
+    padding: 120px 0 72px;
   }
 
   .inner {
-    gap: 40px;
+    gap: 32px;
   }
 
-  .featuredCard {
-    height: 280px;
-    padding: 20px;
+  .postList {
+    gap: 52px;
   }
 
   .listCard {
-    align-items: flex-start;
+    align-items: center;
   }
 
   .listThumbnail {
-    width: 160px;
-    height: 112px;
-    flex-basis: 160px;
+    width: 220px;
+    height: 152px;
+    flex-basis: 220px;
+  }
+
+  .listDescription {
+    line-height: 20px;
   }
 }
 
@@ -346,5 +362,27 @@
     width: 100%;
     height: 180px;
     flex-basis: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .headerLayer {
+    padding-inline: 20px;
+  }
+
+  .topThumbnail {
+    height: 220px;
+  }
+
+  .topCopy {
+    padding-block: 8px;
+  }
+
+  .topDescription {
+    line-height: 20px;
+  }
+
+  .listThumbnail {
+    height: 240px;
   }
 }

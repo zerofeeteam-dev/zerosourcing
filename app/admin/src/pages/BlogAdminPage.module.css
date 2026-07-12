@@ -1,0 +1,258 @@
+.listStatus {
+  align-items: center;
+  display: inline-flex;
+  gap: 8px;
+}
+
+.listStatusPublished,
+.listPublished,
+.listDetailButton {
+  color: var(--color-brand-500);
+}
+
+.listStatusDraft,
+.listMuted {
+  color: var(--color-gray-800);
+}
+
+.listStatusDot {
+  border-radius: 999px;
+  display: inline-flex;
+  flex: 0 0 auto;
+  padding: 2px;
+}
+
+.listStatusDotPublished {
+  background: var(--color-brand-500);
+}
+
+.listStatusDotDraft {
+  background: var(--color-gray-400);
+}
+
+.listTitle {
+  composes: pretendard-bold-14 from global;
+  color: var(--color-gray-800);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.listDetailButton {
+  composes: pretendard-medium-14 from global;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+}
+
+.newBlogButton {
+  composes: pretendard-bold-14 from global;
+  align-items: center;
+  background: var(--color-brand-500);
+  border: 0;
+  border-radius: 40px;
+  box-shadow: 0 8px 8px 0 rgb(27 31 42 / 6%);
+  color: #f8faff;
+  cursor: pointer;
+  display: inline-flex;
+  gap: 4px;
+  height: 40px;
+  justify-content: center;
+  padding: 8px 16px;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.filterSelect {
+  display: flex;
+  flex: 0 0 180px;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filterLabel {
+  composes: pretendard-bold-12 from global;
+  color: var(--color-gray-600);
+}
+
+.select,
+.checkboxLabel {
+  composes: pretendard-medium-14 from global;
+}
+
+.select {
+  appearance: none;
+  background: #ffffff;
+  border: 1px solid var(--color-gray-200);
+  border-radius: 8px;
+  color: var(--color-gray-900);
+  min-height: 44px;
+  outline: 0;
+  padding: 10px 12px;
+}
+
+.titleCell {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.titleText {
+  composes: pretendard-bold-14 from global;
+  color: var(--color-gray-900);
+}
+
+.slugText,
+.mutedText,
+.messageText {
+  composes: pretendard-medium-12 from global;
+  color: var(--color-gray-500);
+}
+
+.message {
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+}
+
+.messageError {
+  background: var(--color-error-50);
+  border: 1px solid var(--color-error-200);
+}
+
+.messageSuccess {
+  background: var(--color-success-50);
+  border: 1px solid var(--color-success-200);
+}
+
+.messageTitle {
+  composes: pretendard-bold-14 from global;
+  color: var(--color-gray-900);
+  margin: 0;
+}
+
+.messageText {
+  margin: 0;
+}
+
+.checkboxGrid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.checkboxLabel {
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid var(--color-gray-200);
+  border-radius: 8px;
+  color: var(--color-gray-800);
+  display: flex;
+  gap: 8px;
+  padding: 11px 12px;
+}
+
+.checkbox {
+  accent-color: var(--color-brand-500);
+  height: 16px;
+  width: 16px;
+}
+
+.thumbnailPreview {
+  display: block;
+  height: 100%;
+  object-fit: contain;
+  width: 100%;
+}
+
+.thumbnailEmpty {
+  composes: pretendard-medium-14 from global;
+  align-items: center;
+  background: var(--color-gray-50);
+  border: 1px dashed var(--color-gray-200);
+  border-radius: 8px;
+  color: var(--color-gray-500);
+  display: flex;
+  justify-content: center;
+  padding: 32px 16px;
+}
+
+.formActions {
+  display: flex;
+  gap: 8px;
+}
+
+.blogFormFields {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.thumbnailGroup,
+.contentField,
+.settingsRows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.contentTextarea,
+.seoTextarea {
+  padding: 16px;
+  resize: none;
+}
+
+.contentTextarea {
+  height: 480px;
+}
+
+.seoTextarea {
+  height: 120px;
+}
+
+.formActionButton {
+  border-color: var(--color-brand-500);
+  border-radius: 16px;
+  color: var(--color-brand-500);
+  height: 52px;
+  padding: 8px 16px;
+}
+
+.submitActionButton {
+  color: #ffffff;
+}
+
+.deleteActionButton {
+  border-color: var(--color-error-200);
+  color: var(--color-error-600);
+}
+
+@media (max-width: 720px) {
+  .filterSelect {
+    flex-basis: auto;
+  }
+
+  .filterSelect,
+  .formActions {
+    width: 100%;
+  }
+
+  .checkboxGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .formActions {
+    flex-direction: column-reverse;
+  }
+
+  .formActionButton {
+    width: 100%;
+  }
+}

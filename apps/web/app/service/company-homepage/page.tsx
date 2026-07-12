@@ -1,11 +1,11 @@
 import { BottomCtaBanner } from "../../../components/BottomCtaBanner";
-import { CompanyHomepagePortfolioSection } from "../../../components/CompanyHomepagePortfolioSection";
 import { CompanyHomepageSeoGeoSection } from "../../../components/CompanyHomepageSeoGeoSection";
 import { CompanyHomepageScopeSection } from "../../../components/CompanyHomepageScopeSection";
 import { CompanyHomepageTypesSection } from "../../../components/CompanyHomepageTypesSection";
 import { FaqSection } from "../../../components/FaqSection";
 import { Footer } from "../../../components/Footer";
 import { Header } from "../../../components/Header";
+import { ServicePortfolioSection } from "../../../components/ServicePortfolioSection";
 import { VideoBanner } from "../../../components/VideoBanner";
 import styles from "../../page.module.css";
 
@@ -67,6 +67,7 @@ export default function CompanyHomepageServicePage() {
           },
         ]}
         description="회사의 얼굴이 되는 홈페이지. 어떤 기기에서도 단정하게, 검색에도 잘 잡히게. 기획·디자인·개발부터 도메인·서버까지 한 번에 만듭니다."
+        descriptionMaxWidth={400}
         eyebrow="기업 홈페이지 개발"
         title={
           <>
@@ -76,7 +77,19 @@ export default function CompanyHomepageServicePage() {
           </>
         }
       />
-      <CompanyHomepagePortfolioSection />
+      <ServicePortfolioSection
+        contentNodeId="49:4212"
+        description={
+          <>
+            기업 홈페이지는 &apos;잘 만든 것&apos;을 보여주는 게 곧 설명입니다.
+            <br />
+            제로소싱이 만든 다양한 업종의 홈페이지를 먼저 보세요.
+          </>
+        }
+        label="기업 홈페이지 제작 사례"
+        order="01"
+        title="업종별 기업 홈페이지 제작 사례"
+      />
       <CompanyHomepageTypesSection />
       <CompanyHomepageSeoGeoSection />
       <CompanyHomepageScopeSection />

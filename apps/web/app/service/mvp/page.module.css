@@ -1,0 +1,239 @@
+.introSection {
+  --section-inner-gap: 52px;
+}
+
+.introCards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.infoCard {
+  width: 100%;
+  padding: 24px 32px;
+  border-radius: 16px;
+  background: var(--color-gray-50);
+}
+
+.infoCardInner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.infoCardEyebrow {
+  composes: pretendard-bold-12 from global;
+  color: var(--color-brand-500);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.infoCardCopy {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.infoCardTitle {
+  composes: pretendard-bold-18 from global;
+  width: 100%;
+  margin: 0;
+  color: var(--color-gray-800);
+}
+
+.infoCardDescription {
+  composes: pretendard-medium-14 from global;
+  width: 100%;
+  color: var(--color-gray-600);
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+.infoCardDescription span {
+  display: block;
+}
+
+.introCardDescription {
+  max-width: 296px;
+}
+
+.fundingSection {
+  --section-inner-gap: 52px;
+  --section-inner-gap-mobile: 32px;
+  --section-padding-y: 104px;
+  --section-padding-y-mobile: 72px;
+  --section-title-size: 28px;
+  --section-title-line-height: 36px;
+  --section-title-size-mobile: 24px;
+  --section-title-line-height-mobile: 32px;
+}
+
+.fundingContent {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.fundingAlert {
+  padding: 16px 20px;
+  border-radius: 16px;
+  background: var(--color-error-50);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.fundingAlertTitle {
+  composes: pretendard-bold-16 from global;
+  margin: 0;
+  color: var(--color-error-500);
+}
+
+.fundingAlertText {
+  composes: pretendard-medium-14 from global;
+  color: var(--color-gray-600);
+}
+
+.fundingProgramGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.fundingProgramCard {
+  padding: 24px 32px;
+  border-radius: 16px;
+  background: var(--color-gray-50);
+}
+
+.fundingProgramInner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.fundingProgramTag {
+  composes: pretendard-medium-12 from global;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: 32px;
+  background: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-brand-500);
+  white-space: nowrap;
+}
+
+.fundingProgramCopy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.fundingProgramTitle {
+  composes: pretendard-bold-18 from global;
+  margin: 0;
+  color: var(--color-gray-800);
+}
+
+.fundingProgramDescription {
+  composes: pretendard-medium-14 from global;
+  color: var(--color-gray-600);
+}
+
+.fundingNotes {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.fundingNoteGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.fundingNoteTitle {
+  composes: pretendard-medium-12 from global;
+  color: var(--color-gray-400);
+}
+
+.fundingNoteText {
+  composes: pretendard-medium-12 from global;
+  color: var(--color-gray-400);
+}
+
+.fundingStepText {
+  composes: pretendard-medium-12 from global;
+  color: var(--color-gray-400);
+  margin: 0;
+  padding: 0 12px;
+  white-space: normal;
+}
+
+.includedSection {
+  --section-inner-gap: 52px;
+  --section-inner-gap-mobile: 32px;
+  --section-title-size-mobile: 24px;
+  --section-title-line-height-mobile: 32px;
+}
+
+.includedCards {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 20px;
+}
+
+@media (max-width: 1440px) {
+  .fundingProgramGrid,
+  .includedCards {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 1081px) {
+  .introCards {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 1079px) {
+  .fundingProgramGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .fundingProgramCard {
+    padding: 16px 20px;
+  }
+
+  .includedCards {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .includedCards .infoCard {
+    padding: 16px 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .infoCard {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 639px) {
+  .introCards,
+  .fundingProgramGrid {
+    grid-template-columns: 1fr;
+  }
+}

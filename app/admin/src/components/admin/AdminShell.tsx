@@ -1,7 +1,9 @@
 import type { MouseEvent, ReactNode } from "react";
 import styles from "./AdminShell.module.css";
 
-export type AdminNavKey = "blog" | "linkPay" | "portfolio";
+const logoSrc = "/figma-assets/zerosourcing-logo.svg";
+
+export type AdminNavKey = "blog" | "portfolio";
 
 export type AdminNavItem = {
   readonly href: string;
@@ -11,15 +13,14 @@ export type AdminNavItem = {
 };
 
 export const adminNavItems = [
-  { href: "/portfolio", key: "portfolio", label: "Portfolio" },
   { href: "/blog", key: "blog", label: "Blog" },
-  { href: "/link-pay", key: "linkPay", label: "Link Pay" },
+  { href: "/portfolio", key: "portfolio", label: "Portfolio" },
 ] as const satisfies readonly AdminNavItem[];
 
 type AdminShellProps = {
   readonly activeItem: AdminNavKey;
+  readonly accountActions?: ReactNode;
   readonly children: ReactNode;
-  readonly footer?: ReactNode;
   readonly navItems?: readonly AdminNavItem[];
   readonly onNavigate?: (item: AdminNavItem) => void;
 };
@@ -36,9 +37,9 @@ function classNames(...values: readonly (string | undefined)[]): string {
 }
 
 export function AdminShell({
+  accountActions,
   activeItem,
   children,
-  footer,
   navItems = adminNavItems,
   onNavigate,
 }: AdminShellProps) {
@@ -50,8 +51,10 @@ export function AdminShell({
 
   return (
     <div className={styles.shell}>
-      <aside aria-label="Admin navigation" className={styles.sidebar}>
-        <strong className={styles.brand}>Zerosourcing</strong>
+      <header className={styles.header}>
+        <a aria-label="Zerosourcing Admin" className={styles.logoLink} href="/portfolio">
+          <img alt="zeroSourcing" className={styles.logoImage} height={24} src={logoSrc} width={168} />
+        </a>
         <nav aria-label="Primary admin sections" className={styles.nav}>
           {navItems.map((item) => {
             const isActive = item.key === activeItem;
@@ -74,11 +77,36 @@ export function AdminShell({
             );
           })}
         </nav>
-      </aside>
-      <div className={styles.workspace}>
-        <div className={styles.content}>{children}</div>
-        {footer ? <footer className={styles.footer}>{footer}</footer> : null}
-      </div>
+        {accountActions ? <div className={styles.headerActions}>{accountActions}</div> : null}
+      </header>
+
+      <main className={styles.content}>{children}</main>
+
+      <footer className={styles.footer}>
+        <img alt="zeroSourcing" className={styles.footerLogo} height={24} src={logoSrc} width={168} />
+
+        <span aria-hidden="true" className={styles.divider} />
+
+        <div className={styles.policyGroup}>
+          <p>이용약관</p>
+          <p className={styles.bold}>개인정보처리방침</p>
+          <div className={styles.customerGroup}>
+            <p>고객센터</p>
+            <p>전화번호 : 010-3242-8118</p>
+            <p>주중 09~18시 (점심시간 12~13시 30분 / 주말 및 공휴일 제외)</p>
+          </div>
+        </div>
+
+        <span aria-hidden="true" className={styles.divider} />
+
+        <div className={styles.companyGroup}>
+          <p>제로피(제로소싱) | 사업자등록번호 : 487-28-01888 | 대표 : 이동규</p>
+          <p>주소 : 경기도 고양시 덕양구 동축로70, A동 9층 901호(동산동, 현대프리미어캠퍼스)</p>
+          <p>개인정보처리담당자 : 이동규 | 통신판매업신고번호 : 2026-고양덕양구-1043</p>
+          <p>메일 : contact@zerofee.kr</p>
+          <p className={styles.bold}>Copyright ⓒ 2026 zerofee. All rights reserved.</p>
+        </div>
+      </footer>
     </div>
   );
 }

@@ -5,6 +5,7 @@ export type AdminEditorMode = "html" | "text";
 type AdminEditorModeSegmentedControlProps = {
   readonly description?: string;
   readonly disabled?: boolean;
+  readonly fullWidth?: boolean;
   readonly id: string;
   readonly label: string;
   readonly name: string;
@@ -24,6 +25,7 @@ function descriptionId(id: string): string {
 export function AdminEditorModeSegmentedControl({
   description,
   disabled,
+  fullWidth = false,
   id,
   label,
   name,
@@ -31,16 +33,22 @@ export function AdminEditorModeSegmentedControl({
   value,
 }: AdminEditorModeSegmentedControlProps) {
   return (
-    <fieldset className={styles.segmentedField}>
+    <fieldset className={`${styles.segmentedField} ${fullWidth ? styles.segmentedFieldFull : ""}`}>
       <legend className={styles.legend}>{label}</legend>
       {description ? (
         <p className={styles.description} id={descriptionId(id)}>
           {description}
         </p>
       ) : null}
-      <div aria-describedby={description ? descriptionId(id) : undefined} className={styles.segmentGroup}>
+      <div
+        aria-describedby={description ? descriptionId(id) : undefined}
+        className={`${styles.segmentGroup} ${fullWidth ? styles.segmentGroupFull : ""}`}
+      >
         {editorModeOptions.map((option) => (
-          <label className={styles.segmentOption} key={option.value}>
+          <label
+            className={`${styles.segmentOption} ${fullWidth ? styles.segmentOptionFull : ""}`}
+            key={option.value}
+          >
             <input
               checked={option.value === value}
               className={styles.segmentInput}
@@ -50,7 +58,9 @@ export function AdminEditorModeSegmentedControl({
               type="radio"
               value={option.value}
             />
-            <span className={styles.segmentText}>{option.label}</span>
+            <span className={`${styles.segmentText} ${fullWidth ? styles.segmentTextFull : ""}`}>
+              {option.label}
+            </span>
           </label>
         ))}
       </div>

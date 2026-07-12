@@ -1,8 +1,8 @@
 .section {
   --section-inner-gap: 52px;
-  --section-inner-gap-mobile: 52px;
+  --section-inner-gap-mobile: 32px;
   --section-padding-y: 104px;
-  --section-padding-y-mobile: 104px;
+  --section-padding-y-mobile: 72px;
   --section-title-size-mobile: 28px;
   --section-title-line-height-mobile: 36px;
 }
@@ -60,7 +60,7 @@
 
 .cardDescription {
   composes: pretendard-medium-14 from global;
-  width: 392px;
+  width: 400px;
   color: var(--color-gray-800);
 }
 
@@ -196,7 +196,7 @@
 
 @media (max-width: 640px) {
   .card {
-    padding: 24px 32px;
+    padding: 16px 20px;
   }
 
   .cardDescription,

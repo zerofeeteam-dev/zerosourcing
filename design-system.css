@@ -1,5 +1,5 @@
 :root {
-  --font-sans: 'Pretendard', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+  --font-sans: "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
 
   --color-brand-50: #f2f7ff;
   --color-brand-100: #adccff;
@@ -73,7 +73,7 @@
   font-size: 10px;
   font-weight: 700;
   line-height: 1;
-  letter-spacing: -1.5%;
+  letter-spacing: -0.015em;
 }
 
 .pretendard-medium-12 {
@@ -81,7 +81,7 @@
   font-size: 12px;
   font-weight: 500;
   line-height: 18px;
-  letter-spacing: -1.5%;
+  letter-spacing: -0.015em;
 }
 
 .pretendard-medium-12-16 {
@@ -89,7 +89,7 @@
   font-size: 12px;
   font-weight: 500;
   line-height: 16px;
-  letter-spacing: -1.5%;
+  letter-spacing: -0.015em;
 }
 
 .pretendard-bold-12-16 {
@@ -97,7 +97,7 @@
   font-size: 12px;
   font-weight: 700;
   line-height: 16px;
-  letter-spacing: -1.5%;
+  letter-spacing: -0.015em;
 }
 
 .pretendard-bold-12 {
@@ -105,7 +105,7 @@
   font-size: 12px;
   font-weight: 700;
   line-height: 18px;
-  letter-spacing: -1.5%;
+  letter-spacing: -0.015em;
 }
 
 .pretendard-medium-14 {
@@ -113,7 +113,7 @@
   font-size: 14px;
   font-weight: 500;
   line-height: 21px;
-  letter-spacing: -1.5%;
+  letter-spacing: -0.015em;
 }
 
 .pretendard-medium-14-20 {
@@ -121,7 +121,15 @@
   font-size: 14px;
   font-weight: 500;
   line-height: 20px;
-  letter-spacing: -1.5%;
+  letter-spacing: -0.015em;
+}
+
+.pretendard-bold-14-20 {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 20px;
+  letter-spacing: 0;
 }
 
 .pretendard-medium-14-24 {
@@ -129,7 +137,7 @@
   font-size: 14px;
   font-weight: 500;
   line-height: 24px;
-  letter-spacing: -1.5%;
+  letter-spacing: -0.015em;
 }
 
 .pretendard-bold-14-24 {
@@ -137,7 +145,7 @@
   font-size: 14px;
   font-weight: 700;
   line-height: 24px;
-  letter-spacing: -1.5%;
+  letter-spacing: -0.015em;
 }
 
 .pretendard-bold-14 {
@@ -145,7 +153,7 @@
   font-size: 14px;
   font-weight: 700;
   line-height: 21px;
-  letter-spacing: -1.5%;
+  letter-spacing: -0.015em;
 }
 
 .pretendard-medium-13-normal {
@@ -153,7 +161,7 @@
   font-size: 13px;
   font-weight: 500;
   line-height: normal;
-  letter-spacing: -1.5%;
+  letter-spacing: -0.015em;
 }
 
 .pretendard-medium-16 {
@@ -161,7 +169,7 @@
   font-size: 16px;
   font-weight: 500;
   line-height: 24px;
-  letter-spacing: -1.5%;
+  letter-spacing: -0.015em;
 }
 
 .pretendard-medium-16-20 {
@@ -169,7 +177,7 @@
   font-size: 16px;
   font-weight: 500;
   line-height: 20px;
-  letter-spacing: -1.5%;
+  letter-spacing: -0.015em;
 }
 
 .pretendard-bold-16 {
@@ -177,7 +185,7 @@
   font-size: 16px;
   font-weight: 700;
   line-height: 24px;
-  letter-spacing: -1.5%;
+  letter-spacing: -0.015em;
 }
 
 .pretendard-medium-18 {
@@ -185,7 +193,7 @@
   font-size: 18px;
   font-weight: 500;
   line-height: 26px;
-  letter-spacing: -1.5%;
+  letter-spacing: -0.015em;
 }
 
 .pretendard-bold-18 {
@@ -193,7 +201,7 @@
   font-size: 18px;
   font-weight: 700;
   line-height: 26px;
-  letter-spacing: -1.5%;
+  letter-spacing: -0.015em;
 }
 
 .pretendard-medium-20 {
@@ -201,7 +209,7 @@
   font-size: 20px;
   font-weight: 500;
   line-height: 30px;
-  letter-spacing: -1.5%;
+  letter-spacing: -0.015em;
 }
 
 .pretendard-bold-20 {
@@ -209,7 +217,7 @@
   font-size: 20px;
   font-weight: 700;
   line-height: 30px;
-  letter-spacing: -1.5%;
+  letter-spacing: -0.015em;
 }
 
 .pretendard-medium-22 {
@@ -217,7 +225,7 @@
   font-size: 22px;
   font-weight: 500;
   line-height: 32px;
-  letter-spacing: -1.5%;
+  letter-spacing: -0.015em;
 }
 
 .pretendard-bold-22 {
@@ -225,7 +233,7 @@
   font-size: 22px;
   font-weight: 700;
   line-height: 32px;
-  letter-spacing: -1.5%;
+  letter-spacing: -0.015em;
 }
 
 .pretendard-medium-24 {
@@ -233,7 +241,7 @@
   font-size: 24px;
   font-weight: 500;
   line-height: 32px;
-  letter-spacing: -1.5%;
+  letter-spacing: -0.015em;
 }
 
 .pretendard-bold-24 {
@@ -241,7 +249,7 @@
   font-size: 24px;
   font-weight: 700;
   line-height: 32px;
-  letter-spacing: -1.5%;
+  letter-spacing: -0.015em;
 }
 
 .pretendard-medium-28 {
@@ -249,7 +257,7 @@
   font-size: 28px;
   font-weight: 500;
   line-height: 36px;
-  letter-spacing: -1.5%;
+  letter-spacing: -0.015em;
 }
 
 .pretendard-bold-28 {
@@ -257,7 +265,7 @@
   font-size: 28px;
   font-weight: 700;
   line-height: 36px;
-  letter-spacing: -1.5%;
+  letter-spacing: -0.015em;
 }
 
 .pretendard-medium-32 {
@@ -265,7 +273,7 @@
   font-size: 32px;
   font-weight: 500;
   line-height: 40px;
-  letter-spacing: -1.5%;
+  letter-spacing: -0.015em;
 }
 
 .pretendard-bold-32 {
@@ -273,7 +281,7 @@
   font-size: 32px;
   font-weight: 700;
   line-height: 40px;
-  letter-spacing: -1.5%;
+  letter-spacing: -0.015em;
 }
 
 .pretendard-bold-36-48 {
@@ -281,5 +289,5 @@
   font-size: 36px;
   font-weight: 700;
   line-height: 48px;
-  letter-spacing: -1.5%;
+  letter-spacing: -0.015em;
 }

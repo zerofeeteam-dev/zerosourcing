@@ -1,0 +1,445 @@
+.appBuildSection {
+  --section-inner-gap: 52px;
+  --section-inner-gap-mobile: 32px;
+  --section-padding-y: 104px;
+  --section-padding-y-mobile: 72px;
+  --section-title-size-mobile: 24px;
+  --section-title-line-height-mobile: 32px;
+}
+
+.appBuildFlow {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 24px minmax(0, 1fr) 24px minmax(0, 1fr);
+  align-items: center;
+  gap: 20px;
+}
+
+.appBuildCard {
+  width: 100%;
+  padding: 24px 32px;
+  border-radius: 16px;
+  background: var(--color-gray-50);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.appBuildBrandCard {
+  background: linear-gradient(
+    90deg,
+    var(--color-brand-300) 0%,
+    var(--color-brand-500) 100%
+  );
+}
+
+.appBuildEyebrow {
+  composes: pretendard-bold-12 from global;
+  color: var(--color-brand-500);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.appBuildCopy {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.appBuildCardTitle {
+  composes: pretendard-bold-18 from global;
+  width: 100%;
+  margin: 0;
+  color: var(--color-gray-800);
+}
+
+.appBuildCardDescription {
+  composes: pretendard-medium-14 from global;
+  width: 100%;
+  color: var(--color-gray-600);
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+.appBuildBrandCard .appBuildEyebrow,
+.appBuildBrandCard .appBuildCardTitle {
+  color: #f8faff;
+}
+
+.appBuildBrandCard .appBuildCardDescription {
+  color: var(--color-gray-100);
+}
+
+.appBuildArrow {
+  color: var(--color-gray-800);
+}
+
+.appBuildStoreStack {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.appAdvantageList {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.appAdvantageCard {
+  width: 100%;
+  padding: 24px 32px;
+  border-radius: 16px;
+  background: var(--color-gray-50);
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.appAdvantageIconBox {
+  width: 52px;
+  height: 52px;
+  flex: 0 0 52px;
+  border-radius: 20px;
+  background: linear-gradient(
+    90deg,
+    var(--color-brand-300) 0%,
+    var(--color-brand-500) 100%
+  );
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.appAdvantageCopy {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.appAdvantageCardTitle {
+  composes: pretendard-bold-16 from global;
+  width: 100%;
+  margin: 0;
+  color: var(--color-gray-800);
+}
+
+.appAdvantageDescription {
+  composes: pretendard-medium-14 from global;
+  width: 100%;
+  max-width: 795px;
+  color: var(--color-gray-600);
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+.appNativeSection {
+  --section-description-size: 14px;
+  --section-description-line-height: 21px;
+  --section-title-size-mobile: 24px;
+  --section-title-line-height-mobile: 32px;
+}
+
+.appNativeFeatureGrid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.appNativeFeatureCard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 24px 32px;
+  border-radius: 16px;
+  background: var(--color-gray-50);
+}
+
+.appNativeFeatureHeading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.appNativeFeatureIconFrame {
+  width: 40px;
+  height: 40px;
+  border-radius: 16px;
+  background: #ffffff;
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-gray-800);
+}
+
+.appNativeFeatureCardTitle {
+  composes: pretendard-bold-18 from global;
+  margin: 0;
+  color: var(--color-gray-800);
+}
+
+.appNativeFeatureCardDescription {
+  composes: pretendard-medium-14 from global;
+  color: var(--color-gray-600);
+}
+
+.appScopeSection {
+  --section-inner-gap: 52px;
+  --section-inner-gap-mobile: 32px;
+  --section-padding-y: 104px;
+  --section-padding-y-mobile: 72px;
+  --section-title-size-mobile: 24px;
+  --section-title-line-height-mobile: 32px;
+}
+
+.appScopeContent {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.appScopeIncluded {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.appScopeIncludedLabel {
+  composes: pretendard-medium-14 from global;
+}
+
+.appScopePlus {
+  composes: pretendard-medium-14 from global;
+}
+
+.appScopeIncludedChip {
+  composes: pretendard-medium-14 from global;
+}
+
+.appScopeIncludedLabel,
+.appScopePlus,
+.appScopeIncludedChip {
+  color: var(--color-gray-800);
+  white-space: nowrap;
+}
+
+.appScopeIncludedItems,
+.appScopeIncludedPair {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.appScopeIncludedChip {
+  height: 32px;
+  padding: 0 16px;
+  border-radius: 16px;
+  background: var(--color-gray-50);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.appScopeCards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.appScopeCard {
+  padding: 24px 32px;
+  border-radius: 16px;
+  background: var(--color-gray-50);
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  overflow: hidden;
+}
+
+.appScopeCardHeader,
+.appScopeTitleGroup,
+.appScopeCardBody,
+.appScopeNotice {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.appScopeCardHeader {
+  gap: 8px;
+}
+
+.appScopeTitleGroup {
+  gap: 0;
+}
+
+.appScopeEyebrow {
+  composes: pretendard-medium-14 from global;
+  color: var(--color-brand-500);
+}
+
+.appScopeCardTitle {
+  composes: pretendard-bold-18 from global;
+  margin: 0;
+  color: var(--color-gray-800);
+}
+
+.appScopeSubtitle {
+  composes: pretendard-medium-12 from global;
+  color: var(--color-gray-600);
+}
+
+.appScopeCardBody {
+  width: 100%;
+  gap: 16px;
+}
+
+.appScopeSummary {
+  composes: pretendard-medium-14 from global;
+  color: var(--color-gray-800);
+}
+
+.appScopeItemList {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  list-style: none;
+}
+
+.appScopeItem {
+  composes: pretendard-medium-12 from global;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-gray-800);
+  white-space: nowrap;
+}
+
+.appScopeZMark {
+  width: 16px;
+  height: 16px;
+  display: block;
+  flex: 0 0 auto;
+}
+
+.appScopeNotice {
+  gap: 4px;
+  padding: 16px 20px;
+  border-radius: 16px;
+  background: var(--color-brand-50);
+}
+
+.appScopeNoticeTitle {
+  composes: pretendard-bold-16 from global;
+  margin: 0;
+  color: var(--color-brand-500);
+}
+
+.appScopeNoticeText {
+  composes: pretendard-medium-14 from global;
+  color: var(--color-gray-600);
+}
+
+.appScopeNoticeText strong {
+  color: var(--color-gray-800);
+}
+
+@media (max-width: 1440px) {
+  .appBuildFlow {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 1080px) {
+  .appAdvantageList {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 1079px) {
+  .appScopeContent {
+    gap: 8px;
+  }
+
+  .appScopeCards {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 900px) {
+  .appBuildFlow {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .appBuildArrow {
+    display: none;
+  }
+
+  .appNativeFeatureGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .appNativeFeatureCard {
+    padding: 16px 20px;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 768px) {
+  .appAdvantageCard {
+    align-items: flex-start;
+    padding: 16px 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .appBuildCard {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 639px) {
+  .appScopeCard {
+    gap: 20px;
+  }
+
+  .appScopeIncluded {
+    flex-wrap: wrap;
+  }
+
+  .appScopeItemList {
+    grid-template-columns: 1fr;
+  }
+
+  .appScopeItem {
+    white-space: normal;
+  }
+}
+
+@media (max-width: 560px) {
+  .appNativeFeatureGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .appAdvantageCard {
+    flex-direction: column;
+  }
+}

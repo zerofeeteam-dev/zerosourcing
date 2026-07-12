@@ -15,11 +15,6 @@
   opacity: 0.48;
 }
 
-.button:focus-visible {
-  outline: 3px solid var(--color-brand-100);
-  outline-offset: 2px;
-}
-
 .md {
   min-height: 44px;
   padding: 10px 16px;
@@ -29,6 +24,12 @@
   composes: pretendard-bold-12 from global;
   min-height: 36px;
   padding: 8px 12px;
+}
+
+.figma {
+  composes: pretendard-bold-14-20 from global;
+  height: 52px;
+  padding: 8px 16px;
 }
 
 .primary {

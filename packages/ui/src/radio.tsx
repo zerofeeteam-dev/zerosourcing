@@ -78,12 +78,6 @@ const radioCss = `
   color: #d1d7e2;
   opacity: 1;
 }
-
-.zs-radio__input:focus-visible ~ .zs-radio__icon {
-  outline: 2px solid #0360ef;
-  outline-offset: 2px;
-  border-radius: 999px;
-}
 `;
 
 function RadioIcon() {

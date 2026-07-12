@@ -67,7 +67,7 @@ export default function AboutPage() {
         }
       />
       <AboutCompanySection />
-      <ProofPartnerLogoBanner />
+      <ProofPartnerLogoBanner compact />
       <BottomCtaBanner
         actions={[
           {

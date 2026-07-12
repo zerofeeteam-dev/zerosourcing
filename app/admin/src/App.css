@@ -1,3 +1,11 @@
+@font-face {
+  font-display: swap;
+  font-family: "Pretendard";
+  font-style: normal;
+  font-weight: 45 920;
+  src: url("/fonts/PretendardVariable.woff2") format("woff2-variations");
+}
+
 * {
   box-sizing: border-box;
 }
@@ -9,168 +17,45 @@ body {
 }
 
 button,
-a {
+a,
+input {
   font: inherit;
 }
 
-.admin-shell {
-  display: grid;
-  grid-template-columns: 240px 1fr;
-  min-height: 100vh;
-}
-
-.sidebar {
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-  padding: 28px;
-  background: var(--color-gray-900);
-  color: white;
-}
-
-.brand {
-  color: white;
-}
-
-.nav {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.nav a {
-  border-radius: 8px;
-  color: var(--color-gray-300);
-  padding: 10px 12px;
-  text-decoration: none;
-}
-
-.nav a[aria-current="page"] {
-  background: var(--color-brand-500);
-  color: white;
-}
-
-.content {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  padding: 40px;
-}
-
-.topbar {
+.app-state {
   align-items: center;
+  background: var(--color-gray-50);
+  color: var(--color-gray-900);
   display: flex;
-  justify-content: space-between;
-  gap: 24px;
-}
-
-.topbar div,
-.metric-card,
-.table-panel,
-.request-list {
-  display: flex;
-  flex-direction: column;
-}
-
-.topbar div {
-  gap: 6px;
-}
-
-.eyebrow,
-.topbar h1,
-.metric-card p,
-.table-panel h2 {
-  margin: 0;
-}
-
-.eyebrow {
-  color: var(--color-brand-500);
-}
-
-.primary-button {
-  border: 0;
-  border-radius: 8px;
-  background: var(--color-brand-500);
-  color: white;
-  cursor: pointer;
-  padding: 12px 18px;
-}
-
-.metric-grid {
-  display: grid;
-  gap: 16px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.metric-card,
-.table-panel {
-  border: 1px solid var(--color-gray-100);
-  border-radius: 8px;
-  background: white;
-}
-
-.metric-card {
-  gap: 10px;
-  padding: 22px;
-}
-
-.metric-card span,
-.metric-card p,
-.request-row span {
-  color: var(--color-gray-500);
-}
-
-.table-panel {
-  gap: 18px;
+  min-height: 100dvh;
   padding: 24px;
 }
 
-.request-list {
-  gap: 10px;
-}
-
-.request-row {
-  align-items: center;
+.app-state-panel {
+  background: #ffffff;
   border: 1px solid var(--color-gray-100);
   border-radius: 8px;
-  display: grid;
-  gap: 16px;
-  grid-template-columns: 1fr 1fr auto;
-  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 560px;
+  padding: 24px;
 }
 
-.status {
-  border-radius: 999px;
-  background: var(--color-brand-50);
-  color: var(--color-brand-600);
-  padding: 6px 10px;
+.app-state-eyebrow,
+.app-state-title,
+.app-state-copy {
+  margin: 0;
 }
 
-@media (max-width: 840px) {
-  .admin-shell {
-    grid-template-columns: 1fr;
-  }
+.app-state-eyebrow {
+  color: var(--color-brand-500);
+}
 
-  .sidebar {
-    gap: 18px;
-  }
+.app-state-title {
+  color: var(--color-gray-900);
+}
 
-  .nav {
-    flex-direction: row;
-    overflow-x: auto;
-  }
-
-  .content {
-    padding: 24px;
-  }
-
-  .topbar {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .metric-grid,
-  .request-row {
-    grid-template-columns: 1fr;
-  }
+.app-state-copy {
+  color: var(--color-gray-600);
 }

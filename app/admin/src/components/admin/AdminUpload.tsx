@@ -1,6 +1,6 @@
-import type { InputHTMLAttributes, ReactNode } from "react";
+import { useState, type DragEvent, type InputHTMLAttributes, type ReactNode } from "react";
 import { AdminButton } from "./AdminButton";
-import { AdminTrashIcon, AdminUploadIcon } from "./icons";
+import { AdminFolderUpIcon, AdminTrashIcon, AdminUploadIcon } from "./icons";
 import styles from "./AdminUpload.module.css";
 
 type AdminUploadControlProps = Omit<
@@ -13,8 +13,11 @@ type AdminUploadControlProps = Omit<
   readonly fileName?: string;
   readonly id: string;
   readonly label: string;
+  readonly labelHidden?: boolean;
+  readonly onFiles?: (files: FileList | null) => void;
   readonly onRemove?: () => void;
   readonly preview?: ReactNode;
+  readonly variant?: "default" | "dropzone";
 };
 
 function descriptionId(id: string): string {
@@ -43,15 +46,85 @@ export function AdminUploadControl({
   fileName,
   id,
   label,
+  labelHidden = false,
+  onFiles,
   onRemove,
   preview,
+  variant = "default",
   ...props
 }: AdminUploadControlProps) {
+  const [isDragging, setIsDragging] = useState(false);
   const visibleFileName = fileName ?? "선택된 파일 없음";
+
+  const handleDrag = (event: DragEvent<HTMLDivElement>, active: boolean) => {
+    event.preventDefault();
+    if (props.disabled) return;
+    setIsDragging(active);
+  };
+
+  const handleDrop = (event: DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setIsDragging(false);
+    if (props.disabled) return;
+    onFiles?.(event.dataTransfer.files);
+  };
+
+  if (variant === "dropzone") {
+    return (
+      <div className={styles.fieldDropzone}>
+        <label className={labelHidden ? styles.labelHidden : styles.label} htmlFor={id}>
+          {label}
+        </label>
+        <div className={styles.controlColumn}>
+          <div
+            className={`${styles.figmaDropzone} ${isDragging ? styles.figmaDropzoneActive : ""}`}
+            onDragEnter={(event) => handleDrag(event, true)}
+            onDragLeave={(event) => handleDrag(event, false)}
+            onDragOver={(event) => handleDrag(event, true)}
+            onDrop={handleDrop}
+          >
+            <input
+              {...props}
+              aria-describedby={describedBy(id, description, errorMessage)}
+              aria-invalid={errorMessage ? true : undefined}
+              className={styles.input}
+              id={id}
+              type="file"
+            />
+            <label className={styles.figmaTrigger} htmlFor={id}>
+              {preview ? (
+                <span className={styles.figmaPreview}>{preview}</span>
+              ) : (
+                <>
+                  <span aria-hidden="true" className={styles.figmaIconBubble}>
+                    <AdminFolderUpIcon size={20} />
+                  </span>
+                  <span className={styles.figmaCopy}>
+                    <span>파일을 드래그 또는 클릭 후 파일 업로드 (0/1)</span>
+                    <span className={styles.figmaAccept}>{acceptLabel}</span>
+                  </span>
+                </>
+              )}
+            </label>
+            {fileName && onRemove ? (
+              <button aria-label={`${label} 삭제`} className={styles.previewRemove} onClick={onRemove} type="button">
+                <AdminTrashIcon size={16} />
+              </button>
+            ) : null}
+          </div>
+          {errorMessage ? (
+            <p className={styles.error} id={errorId(id)}>
+              {errorMessage}
+            </p>
+          ) : null}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.field}>
-      <div className={styles.fieldText}>
+      <div className={labelHidden ? styles.labelHidden : styles.fieldText}>
         <label className={styles.label} htmlFor={id}>
           {label}
         </label>

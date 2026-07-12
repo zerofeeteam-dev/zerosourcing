@@ -10,6 +10,10 @@
   padding: 104px 0;
 }
 
+.compact {
+  padding: 72px 0;
+}
+
 .title {
   composes: pretendard-medium-16 from global;
   width: 100%;

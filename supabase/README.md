@@ -4,8 +4,8 @@ This project uses Supabase directly from the Vite admin app:
 
 - Supabase Auth email/password for sign-in.
 - `public.admin_users` as the admin authorization gate.
-- `public.portfolios`, `public.blog_posts`, and `public.link_payments` for admin data.
-- Supabase Storage bucket `blog-thumbnails` for public thumbnail reads and admin writes.
+- `public.portfolios` and `public.blog_posts` for admin data.
+- Supabase Storage bucket `zerosourcing` for public thumbnail reads and admin writes.
 
 The frontend must use only `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, and `VITE_SUPABASE_STORAGE_BUCKET`.
 
@@ -49,14 +49,14 @@ Run these in Supabase SQL editor after migrations:
 select tablename, rowsecurity
 from pg_tables
 where schemaname = 'public'
-  and tablename in ('admin_users', 'portfolios', 'blog_posts', 'link_payments')
+  and tablename in ('admin_users', 'portfolios', 'blog_posts')
 order by tablename;
 ```
 
 ```sql
 select schemaname, tablename, policyname, cmd
 from pg_policies
-where (schemaname = 'public' and tablename in ('admin_users', 'portfolios', 'blog_posts', 'link_payments'))
+where (schemaname = 'public' and tablename in ('admin_users', 'portfolios', 'blog_posts'))
   or (schemaname = 'storage' and tablename = 'objects')
 order by schemaname, tablename, policyname;
 ```
@@ -64,7 +64,7 @@ order by schemaname, tablename, policyname;
 ```sql
 select id, public, file_size_limit, allowed_mime_types
 from storage.buckets
-where id = 'blog-thumbnails';
+where id = 'zerosourcing';
 ```
 
 Use these transaction checks to verify the happy and denied paths. Replace UUIDs with real Auth user IDs.

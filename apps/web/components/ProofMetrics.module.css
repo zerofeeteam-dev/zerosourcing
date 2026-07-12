@@ -43,7 +43,7 @@
   color: #1e293b;
 }
 
-@media (max-width: 1080px) {
+@media (max-width: 1079px) {
   .metrics {
     grid-template-columns: 1fr auto 1fr;
     row-gap: 32px;

@@ -2,41 +2,19 @@ import { BottomCtaBanner } from "../../../components/BottomCtaBanner";
 import { FaqSection } from "../../../components/FaqSection";
 import { Footer } from "../../../components/Footer";
 import { Header } from "../../../components/Header";
-import { MvpFundingSection } from "../../../components/MvpFundingSection";
-import { MvpIncludedSection } from "../../../components/MvpIncludedSection";
-import { MvpIntroSection } from "../../../components/MvpIntroSection";
-import { MvpPortfolioSection } from "../../../components/MvpPortfolioSection";
 import { ProcessSection } from "../../../components/ProcessSection";
+import { SectionShell } from "../../../components/SectionShell";
+import { ServicePortfolioSection } from "../../../components/ServicePortfolioSection";
 import { VideoBanner } from "../../../components/VideoBanner";
 import styles from "../../page.module.css";
-
-const mvpFaqs = [
-  {
-    question: "MVP에 기능은 보통 몇 개나 넣나요?",
-    answer:
-      "보통 1~3개의 핵심 기능만 넣습니다. 회원가입, 결제, 관리자처럼 검증에 꼭 필요한 기능을 먼저 정하고, 있어도 없어도 되는 기능은 다음 단계로 미룹니다.",
-  },
-  {
-    question: "MVP만 만들고 끝나면, 나중에 확장은 어떻게 하나요?",
-    answer:
-      "처음부터 확장 가능한 구조를 염두에 두고 개발합니다. 검증 후 사용자 반응과 데이터를 기준으로 기능을 추가하거나 정식 서비스로 고도화할 수 있습니다.",
-  },
-  {
-    question: "MVP라서 디자인 완성도는 떨어지나요?",
-    answer:
-      "검증에 필요한 화면은 실제 서비스처럼 사용할 수 있게 만듭니다. 과한 장식보다 핵심 흐름, 신뢰감, 사용성을 우선해 MVP 단계에 맞는 완성도로 정리합니다.",
-  },
-  {
-    question: "MVP 결과물로 투자 유치나 정부지원사업에 활용할 수 있나요?",
-    answer:
-      "가능합니다. 데모, 중간점검, 발표에서 보여줄 수 있는 작동형 결과물과 화면 흐름을 목표에 맞춰 준비합니다.",
-  },
-  {
-    question: "정부지원금으로 MVP 개발비를 낼 수 있나요?",
-    answer:
-      "가능합니다. 지원사업 요구에 맞춰 견적서, 계약서, 증빙 서류 협조가 필요한 경우 진행 단계에 맞춰 도와드립니다.",
-  },
-] as const;
+import {
+  fundingPrograms,
+  mvpFaqs,
+  mvpIncludedCards,
+  mvpIntroCards,
+  supportStepText,
+} from "./content";
+import mvpStyles from "./page.module.css";
 
 export default function MvpServicePage() {
   return (
@@ -73,11 +51,164 @@ export default function MvpServicePage() {
         eyebrow="MVP 개발"
         title="MVP 개발, 평균 4주 만에 검증까지"
       />
-      <MvpIntroSection />
-      <MvpFundingSection />
-      <MvpIncludedSection />
+      <SectionShell
+        className={mvpStyles.introSection}
+        description={
+          <>
+            MVP(Minimum Viable Product)는 &apos;최소 기능 제품&apos;입니다.
+            <br />
+            모든 걸 다 만드는 게 아니라, 시장에 던질 가설을 검증할 최소한만
+            빠르게 만드는 것이 핵심입니다.
+          </>
+        }
+        label="MVP란 무엇인가"
+        order="01"
+        title={
+          <>
+            완성품을 싸게가 아니라,
+            <br />
+            핵심만 제대로
+          </>
+        }
+      >
+        <div className={mvpStyles.introCards} data-node-id="291:55423">
+          {mvpIntroCards.map((card) => (
+            <article className={mvpStyles.infoCard} key={card.eyebrow}>
+              <div className={mvpStyles.infoCardInner}>
+                <p className={mvpStyles.infoCardEyebrow}>{card.eyebrow}</p>
+                <div className={mvpStyles.infoCardCopy}>
+                  <h3 className={mvpStyles.infoCardTitle}>{card.title}</h3>
+                  <p
+                    className={`${mvpStyles.infoCardDescription} ${mvpStyles.introCardDescription}`}
+                  >
+                    {card.description.map((line) => (
+                      <span key={line}>{line}</span>
+                    ))}
+                  </p>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </SectionShell>
+      <SectionShell
+        className={mvpStyles.fundingSection}
+        description={
+          <>
+            예비창업패키지·초기창업패키지·청년창업사관학교처럼 경쟁률 높은
+            사업일수록,
+            <br />
+            아이디어를 &apos;작동하는 형태&apos;로 보여주는 팀이 유리합니다.
+            그리고 그 MVP는, 받은 지원금으로 만들 수 있습니다.
+          </>
+        }
+        label="정부지원사업과 MVP"
+        order="02"
+        title={
+          <>
+            지원사업 합격에도,
+            <br />
+            MVP가 무기가 됩니다
+          </>
+        }
+      >
+        <div className={mvpStyles.fundingContent} data-node-id="30:1562">
+          <div className={mvpStyles.fundingAlert} data-node-id="30:1536">
+            <h3 className={mvpStyles.fundingAlertTitle}>
+              창업 지원금으로 MVP 제작비 집행 가능
+            </h3>
+            <p className={mvpStyles.fundingAlertText}>
+              대부분의 창업지원사업은{" "}
+              <strong>사업화 자금으로 외주 개발비(MVP 제작비) 집행</strong>을
+              허용합니다.
+              <br />
+              즉, 내 돈을 들이지 않고도 검증 가능한 제품을 손에 쥘 수 있습니다.
+              제로소싱은 사업비 집행에 필요한 견적서·증빙 서류를 함께 준비해
+              드립니다.
+            </p>
+          </div>
+
+          <div className={mvpStyles.fundingProgramGrid} data-node-id="30:1539">
+            {fundingPrograms.map((program) => (
+              <article
+                className={mvpStyles.fundingProgramCard}
+                key={program.title}
+              >
+                <div className={mvpStyles.fundingProgramInner}>
+                  <span className={mvpStyles.fundingProgramTag}>
+                    {program.tag}
+                  </span>
+                  <div className={mvpStyles.fundingProgramCopy}>
+                    <h3 className={mvpStyles.fundingProgramTitle}>
+                      {program.title}
+                    </h3>
+                    <p className={mvpStyles.fundingProgramDescription}>
+                      {program.description}
+                    </p>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+
+          <div className={mvpStyles.fundingNotes} data-node-id="30:1688">
+            <div className={mvpStyles.fundingNoteGroup}>
+              <p className={mvpStyles.fundingNoteTitle}>
+                ※ 제로소싱이 지원사업을 돕는 방식
+              </p>
+              <p className={mvpStyles.fundingStepText}>{supportStepText}</p>
+            </div>
+            <p className={mvpStyles.fundingNoteText}>
+              ※ 지원 규모와 사업비 집행 가능 항목은 사업·연도별 공고에 따라
+              다릅니다. 선정 후 해당 사업의 집행 기준을 함께 확인해 드리며,
+              제로소싱은 지원사업의 선정을 보장하지 않습니다.
+            </p>
+          </div>
+        </div>
+      </SectionShell>
+      <SectionShell
+        className={mvpStyles.includedSection}
+        description={
+          <>
+            &apos;만들어 주는 것&apos;에서 끝나지 않습니다. 기획부터 영구
+            보장까지, 다섯 단계가 한 번에 들어갑니다.
+          </>
+        }
+        label="무엇이 포함되나요"
+        order="03"
+        title={
+          <>
+            MVP 하나에,
+            <br />
+            출시와 보장까지 한 묶음
+          </>
+        }
+      >
+        <div className={mvpStyles.includedCards} data-node-id="30:1108">
+          {mvpIncludedCards.map((card) => (
+            <article className={mvpStyles.infoCard} key={card.eyebrow}>
+              <div className={mvpStyles.infoCardInner}>
+                <p className={mvpStyles.infoCardEyebrow}>{card.eyebrow}</p>
+                <div className={mvpStyles.infoCardCopy}>
+                  <h3 className={mvpStyles.infoCardTitle}>{card.title}</h3>
+                  <p className={mvpStyles.infoCardDescription}>
+                    {card.description.map((line) => (
+                      <span key={line}>{line}</span>
+                    ))}
+                  </p>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </SectionShell>
       <ProcessSection order="04" paddingTop={104} />
-      <MvpPortfolioSection />
+      <ServicePortfolioSection
+        contentNodeId="291:55618"
+        label="MVP 포트폴리오"
+        order="05"
+        title="MVP 개발 사례"
+      />
       <FaqSection items={mvpFaqs} order="06" />
       <BottomCtaBanner
         actions={[

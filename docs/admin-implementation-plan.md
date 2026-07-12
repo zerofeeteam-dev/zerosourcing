@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Build the `app/admin` product admin from the provided Figma admin frames. The current admin app is only a single dashboard mock, so the first real boundary is not a dashboard: it is authentication plus content/payment management for Portfolio, Blog, and Link Pay.
+Build the `app/admin` product admin from the provided Figma admin frames. The current admin app is only a single dashboard mock, so the first real boundary is not a dashboard: it is authentication plus content management for Portfolio and Blog.
 
 ## Source Frames
 
@@ -17,10 +17,6 @@ Build the `app/admin` product admin from the provided Figma admin frames. The cu
 | `77:3833` | 블로그_P | Blog list with rows |
 | `77:4857` | 블로그등록_P | Blog create form, empty thumbnail upload |
 | `77:9550` | 블로그등록_P | Blog edit form, thumbnail preview |
-| `210:9309` | 링크페이_P | Link Pay list empty state |
-| `210:8534` | 링크페이_P | Link Pay list with rows |
-| `210:8874` | 링크페이등록_P | Link Pay create form |
-
 Skip all Figma nodes named `Chrome Desktop`; they are browser preview decoration, not product UI.
 
 ## Product Routes
@@ -34,16 +30,12 @@ Skip all Figma nodes named `Chrome Desktop`; they are browser preview decoration
 | `/blog` | Blog list | Admin |
 | `/blog/new` | Blog create | Admin |
 | `/blog/:slug` | Blog edit/detail | Admin |
-| `/link-pay` | Link Pay list | Admin |
-| `/link-pay/new` | Link Pay create | Admin |
-| `/link-pay/:id` | Link Pay detail/edit | Admin, needed because list has `상세` |
-
 Use a tiny app-local route map first. Do not add React Router unless nested routing, loaders, or route-level data APIs become necessary.
 
 ## Shared Admin Shell
 
 - Replace the current sidebar dashboard shell with the Figma top header and footer layout.
-- Header nav: `Portfolio`, `Blog`, `Link Pay`.
+- Header nav: `Portfolio`, `Blog`.
 - Login page uses the same brand/header/footer spacing, but no authenticated nav actions.
 - Authenticated pages share one content width and table/form shell.
 - Use `design.md` and `design-system.css` typography/color utilities. CSS modules should compose typography utilities instead of redefining font styles.
@@ -95,17 +87,6 @@ For the first frontend-only version, use `localStorage` session state. Swap to A
 - `createdAt`
 - `updatedAt`
 
-### Link Payment
-
-- `id`
-- `status`: `pending` or `paid`
-- `customerName`
-- `paymentName`
-- `amount`
-- `paymentUrl`
-- `createdAt`
-- `updatedAt`
-
 ## Page Requirements
 
 ### Login
@@ -154,23 +135,6 @@ For the first frontend-only version, use `localStorage` session state. Swap to A
 - Landing settings and banner settings open nested section editors or inline lists.
 - Bottom actions: back/cancel, delete for edit mode, save/publish.
 
-### Link Pay List
-
-- Title: `링크페이 등록 현황`.
-- Filters: status.
-- Search by payment name.
-- Table columns: status, customer name, payment name, amount, created date, detail.
-- Empty state text: `조회할 데이터가 없습니다.`
-- `신규 링크페이 등록` opens `/link-pay/new`.
-- `상세` opens `/link-pay/:id`.
-
-### Link Pay Create/Detail
-
-- Fields: customer name, payment name, amount.
-- Amount input shows `원` suffix and stores numeric value only.
-- Create action generates a payment URL.
-- Detail page should show the generated URL with copy action once backend/payment URL generation exists.
-
 ## Implementation Slices
 
 1. Admin foundation
@@ -188,11 +152,7 @@ For the first frontend-only version, use `localStorage` session state. Swap to A
    - Implement list, filters, search, empty/data states.
    - Implement create/edit form, thumbnail preview/remove, and local CRUD.
 
-5. Link Pay
-   - Implement list, filters, search, empty/data states.
-   - Implement create/detail and payment URL placeholder.
-
-6. API handoff
+5. API handoff
    - Replace local repositories with API calls when backend endpoints are ready.
    - Keep the UI components and page state unchanged.
 
@@ -211,9 +171,6 @@ If this admin must persist beyond local browser state, add these minimal endpoin
 - `POST /api/admin/blog-posts`
 - `PATCH /api/admin/blog-posts/:id`
 - `DELETE /api/admin/blog-posts/:id`
-- `GET /api/admin/link-payments`
-- `POST /api/admin/link-payments`
-- `PATCH /api/admin/link-payments/:id`
 - `POST /api/admin/uploads`
 
 ## Edge Cases
@@ -221,7 +178,6 @@ If this admin must persist beyond local browser state, add these minimal endpoin
 - Duplicate slug.
 - Empty filtered/search result.
 - Invalid date.
-- Invalid amount or non-numeric amount.
 - Unsaved changes while leaving a form.
 - File type or 50MB limit violation.
 - Missing thumbnail alt when thumbnail exists.
@@ -236,7 +192,7 @@ If this admin must persist beyond local browser state, add these minimal endpoin
 
 ## Deliberate Skips
 
-- No generic CRUD framework. Portfolio, Blog, and Link Pay are similar but not identical.
+- No generic CRUD framework. Portfolio and Blog are similar but not identical.
 - No new router dependency until route behavior outgrows a small app-local route map.
 - No WYSIWYG editor dependency until content editing needs formatting beyond a textarea/Markdown field.
 - No pagination until real data volume requires it.

@@ -26,6 +26,8 @@ type CardCarouselProps = {
   gap?: number;
   /** 카드가 이 폭(px)을 유지할 수 없으면 캐러셀로 전환. 기본 330px. */
   minItemWidth?: number;
+  /** 480px 이하 캐러셀 모드에서만 사용할 카드 폭(px). */
+  mobileItemWidth?: number;
   /** 캐러셀 모드에서 카드가 멈추는 위치. 기본 start. */
   snapAlign?: "center" | "start";
 };
@@ -42,6 +44,7 @@ export function CardCarousel({
   className,
   gap = 20,
   minItemWidth = 330,
+  mobileItemWidth,
   snapAlign = "start",
 }: CardCarouselProps) {
   const viewportRef = useRef<HTMLDivElement>(null);
@@ -81,6 +84,7 @@ export function CardCarousel({
           "--carousel-gap": `${gap}px`,
           "--carousel-gap-narrow": `${carouselGap}px`,
           "--carousel-item-width": `${minItemWidth}px`,
+          "--carousel-item-width-mobile": `${mobileItemWidth ?? minItemWidth}px`,
         } as CSSProperties
       }
     >

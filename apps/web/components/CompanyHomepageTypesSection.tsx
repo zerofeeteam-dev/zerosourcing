@@ -9,32 +9,32 @@ const homepageTypes: {
 }[] = [
   {
     description: "회사·연혁·사업을 신뢰감 있게 전달.",
-    iconName: "message-typing",
+    iconName: "company-building-01",
     title: "회사 소개형",
   },
   {
     description: "비주얼 중심으로 브랜드 인상을 강하게.",
-    iconName: "pen-tool-03",
+    iconName: "company-pen-tool-03",
     title: "브랜드형",
   },
   {
     description: "제품·서비스를 보기 쉽게 정리해 문의로 연결.",
-    iconName: "package-02",
+    iconName: "company-package-02",
     title: "제품·서비스 소개형",
   },
   {
     description: "인재에게 회사의 매력과 비전을 전달.",
-    iconName: "user-profile-03",
+    iconName: "company-user",
     title: "채용 홈페이지",
   },
   {
     description: "한 페이지로 전환에 집중하는 캠페인용.",
-    iconName: "stars",
+    iconName: "company-stars",
     title: "랜딩페이지",
   },
   {
     description: "낡은 홈페이지를 최신 반응형으로 새단장.",
-    iconName: "home-02",
+    iconName: "company-home-02",
     title: "홈페이지 리뉴얼",
   },
 ];

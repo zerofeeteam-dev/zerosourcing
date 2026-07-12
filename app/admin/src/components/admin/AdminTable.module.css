@@ -1,83 +1,95 @@
 .panel {
   background: #ffffff;
-  border: 1px solid var(--color-gray-100);
-  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  padding: 52px 20px 104px;
+}
+
+.panelInner {
   display: flex;
   flex-direction: column;
+  gap: 20px;
+  max-width: var(--admin-table-width);
+  width: 100%;
+}
+
+.panelContent {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .panelHeader {
-  align-items: flex-start;
+  align-items: center;
   display: flex;
-  gap: 16px;
+  gap: 32px;
   justify-content: space-between;
-  padding: 20px 20px 0;
-}
-
-.panelTitleGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
 }
 
 .panelTitle {
   composes: pretendard-bold-18 from global;
-  color: var(--color-gray-900);
+  color: var(--color-gray-800);
   margin: 0;
+  white-space: nowrap;
 }
 
-.panelDescription {
-  composes: pretendard-medium-14 from global;
-  color: var(--color-gray-500);
-  margin: 0;
-}
-
-.panelActions {
-  align-items: center;
+.panelAction {
+  align-self: flex-end;
   display: flex;
-  gap: 8px;
-}
-
-.divider {
-  background: var(--color-gray-100);
-  height: 1px;
-  width: 100%;
 }
 
 .filterBar {
-  align-items: flex-end;
+  align-items: center;
   display: flex;
-  gap: 12px;
-  padding: 20px;
+  gap: 32px;
+  margin-left: auto;
+}
+
+.filterSelect,
+.searchField {
+  align-items: center;
+  color: var(--color-gray-800);
+  display: inline-flex;
+  gap: 16px;
+  white-space: nowrap;
 }
 
 .searchField {
-  display: flex;
-  flex: 1 1 260px;
-  flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .filterLabel {
-  composes: pretendard-bold-12 from global;
-  color: var(--color-gray-600);
+  composes: pretendard-bold-14 from global;
+  color: var(--color-gray-800);
+}
+
+.selectControl,
+.searchControl {
+  align-items: center;
+  display: inline-flex;
+}
+
+.selectControl {
+  color: var(--color-gray-800);
+  gap: 4px;
+}
+
+.select {
+  composes: pretendard-medium-14 from global;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  color: var(--color-gray-800);
+  cursor: pointer;
+  field-sizing: content;
+  outline: 0;
+  padding: 0;
 }
 
 .searchControl {
-  align-items: center;
-  background: #ffffff;
-  border: 1px solid var(--color-gray-200);
-  border-radius: 8px;
-  color: var(--color-gray-400);
-  display: flex;
-  gap: 8px;
-  min-height: 44px;
-  padding: 0 12px;
-}
-
-.searchControl:focus-within {
-  border-color: var(--color-brand-500);
-  outline: 3px solid var(--color-brand-50);
+  color: var(--color-gray-800);
+  gap: 4px;
+  max-width: 224px;
 }
 
 .searchInput {
@@ -85,8 +97,10 @@
   background: transparent;
   border: 0;
   color: var(--color-gray-900);
-  flex: 1 1 auto;
+  flex: 0 0 200px;
   outline: 0;
+  padding: 0;
+  width: 200px;
 }
 
 .searchInput::placeholder {
@@ -95,42 +109,109 @@
 
 .tableWrap {
   overflow-x: auto;
-  padding: 0 20px 20px;
-}
-
-.table {
-  border-collapse: collapse;
   width: 100%;
 }
 
-.table th {
-  composes: pretendard-bold-12 from global;
+.table {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: var(--admin-table-width);
+}
+
+.headerRow,
+.tableRow {
+  align-items: center;
+  display: grid;
+  height: 52px;
+  width: var(--admin-table-width);
+}
+
+.headerRow {
   background: var(--color-gray-50);
-  color: var(--color-gray-500);
-  padding: 12px;
-  text-align: left;
+  border-radius: 16px;
+}
+
+.headerCell,
+.bodyCell {
+  align-items: center;
+  color: var(--color-gray-800);
+  display: flex;
+  height: 52px;
+  justify-content: center;
+  min-width: 0;
+  overflow: hidden;
+  padding: 0 16px;
+  position: relative;
+  text-align: center;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.table td {
+.headerCell {
+  composes: pretendard-bold-14 from global;
+}
+
+.bodyCell {
   composes: pretendard-medium-14 from global;
-  border-top: 1px solid var(--color-gray-100);
-  color: var(--color-gray-800);
-  padding: 14px 12px;
-  vertical-align: middle;
-  white-space: nowrap;
+}
+
+.columnDivider {
+  border-left: 1px dotted var(--color-gray-100);
+  bottom: 10px;
+  position: absolute;
+  right: 0;
+  top: 10px;
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: var(--admin-table-width);
+}
+
+.tableRow {
+  border-radius: 16px;
+}
+
+.tableRow:hover,
+.tableRow:focus-within {
+  background: var(--color-gray-50);
 }
 
 .alignCenter {
+  justify-content: center;
   text-align: center;
 }
 
+.alignLeft {
+  justify-content: flex-start;
+  text-align: left;
+}
+
 .alignRight {
+  justify-content: flex-end;
   text-align: right;
 }
 
+.emptyRow {
+  display: flex;
+  justify-content: center;
+  padding-top: 32px;
+  width: var(--admin-table-width);
+}
+
 .emptyCell {
-  padding: 0;
+  composes: pretendard-medium-14-20 from global;
+  align-items: center;
+  background: var(--color-gray-50);
+  border-radius: 16px;
+  color: var(--color-gray-400);
+  display: inline-flex;
+  height: 32px;
+  justify-content: center;
+  padding: 4px 8px;
 }
 
 .emptyState {
@@ -165,6 +246,8 @@
   composes: pretendard-medium-14 from global;
   color: var(--color-gray-500);
   margin: 0;
+  overflow-wrap: break-word;
+  word-break: keep-all;
 }
 
 .chip {
@@ -206,14 +289,30 @@
   color: var(--color-error-700);
 }
 
-@media (max-width: 720px) {
+@media (max-width: 840px) {
+  .panel {
+    padding: 40px 20px 72px;
+  }
+
   .panelHeader,
   .filterBar {
-    align-items: stretch;
+    align-items: flex-start;
     flex-direction: column;
   }
 
-  .panelActions {
-    justify-content: flex-start;
+  .filterBar {
+    gap: 16px;
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .filterSelect,
+  .searchField {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .searchControl {
+    max-width: none;
   }
 }
