@@ -1,4 +1,86 @@
-.section {
+.companyTypesSection {
+  --section-inner-gap: 52px;
+  --section-inner-gap-mobile: 32px;
+  --section-padding-y: 104px;
+  --section-padding-y-mobile: 72px;
+  --section-title-size-mobile: 24px;
+  --section-title-line-height-mobile: 32px;
+}
+
+.companyTypesGrid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.companyTypesCard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 24px 32px;
+  border-radius: 16px;
+  background: var(--color-gray-50);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.iconFrame {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 16px;
+  color: var(--color-gray-800);
+}
+
+.companyTypesCardTitle {
+  margin: 0;
+  color: var(--color-gray-800);
+  font-family: var(--font-sans);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 26px;
+  letter-spacing: 0;
+}
+
+.companyTypesCardDescription {
+  width: 100%;
+  color: var(--color-gray-600);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 21px;
+  letter-spacing: 0;
+}
+
+@media (max-width: 1079px) {
+  .companyTypesGrid {
+    gap: 8px;
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .companyTypesCard {
+    gap: 8px
+  }
+}
+
+@media (max-width: 639px) {
+  .companyTypesGrid {
+    grid-template-columns: 1fr;
+  }
+  .companyTypesCard {
+    padding: 16px 20px;
+  }
+
+}
+
+.companySeoGeoSection {
   --section-inner-gap: 52px;
   --section-inner-gap-mobile: 32px;
   --section-padding-y: 104px;
@@ -13,7 +95,7 @@
   gap: 20px;
 }
 
-.card {
+.companySeoGeoCard {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -41,7 +123,7 @@
   gap: 20px;
 }
 
-.eyebrow {
+.companySeoGeoEyebrow {
   composes: pretendard-medium-14 from global;
   width: 100%;
   color: var(--color-brand-500);
@@ -52,13 +134,13 @@
   gap: 8px;
 }
 
-.cardTitle {
+.companySeoGeoCardTitle {
   composes: pretendard-bold-18 from global;
   margin: 0;
   color: var(--color-gray-800);
 }
 
-.cardDescription {
+.companySeoGeoCardDescription {
   composes: pretendard-medium-14 from global;
   width: 400px;
   color: var(--color-gray-800);
@@ -195,11 +277,11 @@
 }
 
 @media (max-width: 640px) {
-  .card {
+  .companySeoGeoCard {
     padding: 16px 20px;
   }
 
-  .cardDescription,
+  .companySeoGeoCardDescription,
   .resultTitle,
   .resultUrl {
     width: 100%;
@@ -215,5 +297,72 @@
 
   .previewBox {
     padding: 16px;
+  }
+}
+
+.companyScopeSection {
+  --section-inner-gap: 52px;
+  --section-inner-gap-mobile: 32px;
+  --section-padding-y: 104px;
+  --section-padding-y-mobile: 72px;
+  --section-title-size-mobile: 24px;
+  --section-title-line-height-mobile: 32px;
+}
+
+.companyScopeGrid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+}
+
+.companyScopeCard {
+  padding: 24px 32px;
+  border-radius: 16px;
+  background: var(--color-gray-50);
+}
+
+.cardInner,
+.copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.cardInner {
+  gap: 16px;
+}
+
+.copy {
+  width: 100%;
+  gap: 8px;
+}
+
+.companyScopeEyebrow {
+  composes: pretendard-bold-12 from global;
+  color: var(--color-brand-500);
+  letter-spacing: 0.18px;
+  white-space: nowrap;
+}
+
+.companyScopeCardTitle {
+  composes: pretendard-bold-18 from global;
+  margin: 0;
+  color: var(--color-gray-800);
+}
+
+.cardBody {
+  composes: pretendard-medium-14 from global;
+  color: var(--color-gray-600);
+}
+
+@media (max-width: 1079px) {
+  .companyScopeGrid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .companyScopeCard {
+    padding: 16px 20px;
   }
 }

@@ -1,33 +1,37 @@
 import type { ReactNode } from "react";
 
 import { SectionShell } from "./SectionShell";
-import { ServiceCard } from "./ServiceCard";
+import { ServiceCard, type ServiceCardData } from "./ServiceCard";
 import styles from "./BusinessTypesSection.module.css";
 
 const services = [
   {
+    action: "service-mvp",
     badge: "주력",
     description: [
       "핵심 기능만으로 검증부터.",
       "군더더기는 덜어내고, 출시까지 가장 짧은 길로.",
     ],
     headline: "아이디어를 가장 빠르게 시장 앞에",
-    iconName: "package-02" as const,
+    iconName: "package-02",
     title: "MVP 개발",
   },
   {
+    action: "service-app",
     description: ["두 플랫폼을 따로 만들 필요 없이.", "비용도 일정도 가볍게."],
     headline: "한 번 개발로 iOS·안드로이드 동시에",
-    iconName: "device-mobile" as const,
+    iconName: "device-mobile",
     title: "하이브리드 앱",
   },
   {
+    action: "service-company-homepage",
     description: ["브랜드를 담은 반응형 사이트.", "어떤 화면에서도 단정하게."],
     headline: "회사의 첫인상을 신뢰로",
-    iconName: "home-02" as const,
+    iconName: "home-02",
     title: "기업 홈페이지",
   },
   {
+    action: "quick",
     actionLabel: "상담으로 시작하기",
     description: [
       "딱 맞는 항목이 없어도 괜찮습니다.",
@@ -35,7 +39,7 @@ const services = [
     ],
     headline: "어디에도 없는 형태인가요?",
   },
-];
+] as const satisfies readonly ServiceCardData[];
 
 type BusinessTypesSectionProps = {
   description?: ReactNode;

@@ -1,23 +1,28 @@
+"use client";
+
 import { Icon, type IconName } from "./Icon";
+import { type CtaAction, emitCtaClick } from "./cta-events";
 import styles from "./ServiceCard.module.css";
 
-type ServiceCardProps = {
+export type ServiceCardData = {
+  action: CtaAction;
   actionLabel?: string;
   badge?: string;
-  description: string[];
+  description: readonly string[];
   headline: string;
   iconName?: IconName;
   title?: string;
 };
 
 export function ServiceCard({
+  action,
   actionLabel = "자세히 보기",
   badge,
   description,
   headline,
   iconName,
   title,
-}: ServiceCardProps) {
+}: ServiceCardData) {
   const hasHeader = Boolean(title || iconName || badge);
 
   return (
@@ -45,7 +50,11 @@ export function ServiceCard({
           ))}
         </p>
       </div>
-      <button className={styles.action} type="button">
+      <button
+        className={styles.action}
+        onClick={() => emitCtaClick(action)}
+        type="button"
+      >
         {actionLabel}
         <Icon name="arrow-right" size={16} />
       </button>

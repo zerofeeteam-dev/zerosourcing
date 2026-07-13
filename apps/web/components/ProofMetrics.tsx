@@ -9,7 +9,7 @@ type ProofMetric = {
 };
 
 type ProofMetricsProps = {
-  items: ProofMetric[];
+  items: readonly ProofMetric[];
 };
 
 export function ProofMetrics({ items }: ProofMetricsProps) {

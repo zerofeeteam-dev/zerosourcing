@@ -1,46 +1,18 @@
 import { BottomCtaBanner } from "../../../components/BottomCtaBanner";
-import { CompanyHomepageSeoGeoSection } from "../../../components/CompanyHomepageSeoGeoSection";
-import { CompanyHomepageScopeSection } from "../../../components/CompanyHomepageScopeSection";
-import { CompanyHomepageTypesSection } from "../../../components/CompanyHomepageTypesSection";
 import { FaqSection } from "../../../components/FaqSection";
 import { Footer } from "../../../components/Footer";
 import { Header } from "../../../components/Header";
+import { Icon } from "../../../components/Icon";
+import { SectionShell } from "../../../components/SectionShell";
 import { ServicePortfolioSection } from "../../../components/ServicePortfolioSection";
 import { VideoBanner } from "../../../components/VideoBanner";
 import styles from "../../page.module.css";
-
-const companyHomepageFaqs = [
-  {
-    question: "기업 홈페이지 제작 기간과 비용은 어떻게 되나요?",
-    answer:
-      "페이지 수, 디자인 범위, CMS 적용 여부에 따라 달라집니다. 상담에서 필요한 화면과 기능을 먼저 정리한 뒤 기간과 비용을 안내드립니다.",
-  },
-  {
-    question: "홈페이지를 만든 뒤 내용 수정은 직접 할 수 있나요?",
-    answer:
-      "네. 글과 이미지를 직접 바꿀 수 있는 콘텐츠 관리 기능(CMS)을 기본 제공합니다. 공지·소식·회사 정보를 바꿀 때마다 외주를 부를 필요가 없습니다.",
-  },
-  {
-    question: "네이버·구글 검색에 잘 나오게 해주나요?",
-    answer:
-      "네. 메타태그, 사이트맵, 구조화 데이터, 페이지 속도처럼 기본 SEO 세팅을 함께 적용해 검색엔진이 페이지를 이해하기 쉽게 만듭니다.",
-  },
-  {
-    question: "AI 검색(ChatGPT·Claude)에도 노출되나요?",
-    answer:
-      "회사와 서비스 정보를 구조화해 AI가 인용하기 쉬운 형태로 정리합니다. 검색엔진 최적화와 함께 생성형 AI 답변 노출까지 고려합니다.",
-  },
-  {
-    question: "모바일에서도 잘 보이나요?",
-    answer:
-      "네. PC, 태블릿, 모바일 화면에 맞춰 반응형으로 제작해 어떤 기기에서도 단정하게 보이도록 구성합니다.",
-  },
-  {
-    question: "도메인과 서버도 맡아 주나요?",
-    answer:
-      "네. 도메인 연결, 서버 배포, SSL 보안 설정까지 함께 진행할 수 있습니다. 운영 방식은 고객님 계정 기준으로 정리합니다.",
-  },
-] as const;
+import {
+  companyHomepageFaqs,
+  companyHomepageScopeItems,
+  companyHomepageTypes,
+} from "./content";
+import companyStyles from "./page.module.css";
 
 export default function CompanyHomepageServicePage() {
   return (
@@ -90,9 +62,187 @@ export default function CompanyHomepageServicePage() {
         order="01"
         title="업종별 기업 홈페이지 제작 사례"
       />
-      <CompanyHomepageTypesSection />
-      <CompanyHomepageSeoGeoSection />
-      <CompanyHomepageScopeSection />
+      <SectionShell
+        className={companyStyles.companyTypesSection}
+        description="회사의 성격과 목적에 맞춰, 필요한 형태로 제작합니다."
+        label="홈페이지 제작 종류"
+        order="02"
+        title={
+          <>
+            이런 기업 홈페이지를
+            <br />
+            만듭니다
+          </>
+        }
+      >
+        <div
+          className={companyStyles.companyTypesGrid}
+          data-node-id="49:3828"
+        >
+          {companyHomepageTypes.map((type) => (
+            <article
+              className={companyStyles.companyTypesCard}
+              key={type.title}
+            >
+              <div className={companyStyles.header}>
+                <span className={companyStyles.iconFrame}>
+                  <Icon name={type.iconName} size={24} />
+                </span>
+                <h3 className={companyStyles.companyTypesCardTitle}>
+                  {type.title}
+                </h3>
+              </div>
+              <p className={companyStyles.companyTypesCardDescription}>
+                {type.description}
+              </p>
+            </article>
+          ))}
+        </div>
+      </SectionShell>
+      <SectionShell
+        className={companyStyles.companySeoGeoSection}
+        description={
+          <>
+            아무리 잘 만들어도 검색에 안 나오면 아무도 못 찾습니다.
+            <br />
+            제로소싱은 만드는 것에서 끝내지 않고, 검색엔진과 생성형 AI
+            양쪽에 노출되도록 세팅합니다.
+          </>
+        }
+        label="홈페이지 SEO·GEO"
+        order="03"
+        title={
+          <>
+            검색과 AI 답변에
+            <br />
+            노출되는 홈페이지
+          </>
+        }
+      >
+        <div className={companyStyles.cards} data-node-id="49:4344">
+          <article className={companyStyles.companySeoGeoCard}>
+            <div className={companyStyles.cardCopy}>
+              <p className={companyStyles.companySeoGeoEyebrow}>
+                SEO · 검색엔진 최적화
+              </p>
+              <div className={companyStyles.textGroup}>
+                <h3 className={companyStyles.companySeoGeoCardTitle}>
+                  네이버·구글 검색에서
+                  <br />
+                  먼저 보이게
+                </h3>
+                <p className={companyStyles.companySeoGeoCardDescription}>
+                  메타태그·구조화 데이터·사이트맵·페이지 속도까지 세팅해,
+                  회사 이름과 핵심 키워드로 검색했을 때 상위에 노출되도록
+                  만듭니다.
+                </p>
+              </div>
+            </div>
+            <div className={companyStyles.previewBox}>
+              <div className={companyStyles.searchBar}>
+                <span className={companyStyles.searchText}>
+                  OO 주식회사 검색
+                </span>
+                <span className={companyStyles.searchActions}>
+                  <Icon name="webcam" size={24} />
+                  <Icon name="camera-lens" size={24} />
+                  <span className={companyStyles.aiMode}>AI 모드</span>
+                </span>
+              </div>
+              <div className={companyStyles.result}>
+                <p className={companyStyles.resultTitle}>
+                  OO 주식회사 | MVP 개발 파트너
+                </p>
+                <div className={companyStyles.resultText}>
+                  <p className={companyStyles.resultUrl}>
+                    https://www.zerosourcing.com
+                  </p>
+                  <p className={companyStyles.resultDescription}>
+                    MVP 개발 외주 전문 OO 주식회사. 핵심 기능만 담아 평균 4주
+                    만에 출시·검증합니다. 기획·디자인·개발부터 버그 영구
+                    보장까지, 부담 없이 시작하세요.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article className={companyStyles.companySeoGeoCard}>
+            <div className={companyStyles.cardCopy}>
+              <p className={companyStyles.companySeoGeoEyebrow}>
+                GEO · 생성형 AI 최적화
+              </p>
+              <div className={companyStyles.textGroup}>
+                <h3 className={companyStyles.companySeoGeoCardTitle}>
+                  ChatGPT·Claude가
+                  <br />
+                  회사를 인용하게
+                </h3>
+                <p className={companyStyles.companySeoGeoCardDescription}>
+                  구조화된 회사·서비스 정보로, 사용자가 AI에게 물었을 때 우리
+                  회사가 답변에 언급되고 인용되도록 준비합니다. 검색의 다음
+                  단계까지 대비합니다.
+                </p>
+              </div>
+            </div>
+            <div
+              className={`${companyStyles.previewBox} ${companyStyles.answerPreview}`}
+            >
+              <div className={companyStyles.promptBubble}>
+                &quot;개발 분야 믿을 만한 회사 추천해줘&quot;
+              </div>
+              <div className={companyStyles.answer}>
+                <div className={companyStyles.answerLabel}>
+                  <Icon name="stars" size={12} />
+                  <span>AI 답변</span>
+                </div>
+                <p className={companyStyles.answerText}>
+                  &quot;개발 분야 믿을 만한 회사 추천해줘&quot;라는 질문에,{" "}
+                  <strong>OO 주식회사</strong>를 신뢰할 수 있는 업체로
+                  안내합니다.
+                </p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </SectionShell>
+      <SectionShell
+        className={companyStyles.companyScopeSection}
+        description="복잡한 기능은 없습니다. 대신 기업 홈페이지에 꼭 필요한 것들을, 빠짐없이 챙깁니다."
+        label="홈페이지 제작 범위"
+        order="04"
+        title={
+          <>
+            기업 홈페이지 제작에
+            <br />
+            포함되는 것
+          </>
+        }
+      >
+        <div
+          className={companyStyles.companyScopeGrid}
+          data-node-id="49:4396"
+        >
+          {companyHomepageScopeItems.map((item) => (
+            <article
+              className={companyStyles.companyScopeCard}
+              key={item.eyebrow}
+            >
+              <div className={companyStyles.cardInner}>
+                <p className={companyStyles.companyScopeEyebrow}>
+                  {item.eyebrow}
+                </p>
+                <div className={companyStyles.copy}>
+                  <h3 className={companyStyles.companyScopeCardTitle}>
+                    {item.title}
+                  </h3>
+                  <p className={companyStyles.cardBody}>{item.body}</p>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </SectionShell>
       <FaqSection
         items={companyHomepageFaqs}
         order="05"

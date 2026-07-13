@@ -1,0 +1,71 @@
+import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+import test from "node:test";
+
+const businessTypesPath = new URL("./BusinessTypesSection.tsx", import.meta.url);
+const ctaEventsPath = new URL("./cta-events.ts", import.meta.url);
+const headerPath = new URL("./Header.tsx", import.meta.url);
+const serviceCardPath = new URL("./ServiceCard.tsx", import.meta.url);
+
+test("Header Service entries use native links", async () => {
+  const header = await readFile(headerPath, "utf8");
+
+  assert.match(
+    header,
+    /const navLink = \(\s*<Link[\s\S]*?aria-haspopup=\{isServiceItem \? "menu" : undefined\}[\s\S]*?href=\{item\.href\}/,
+  );
+  assert.match(
+    header,
+    /\{isServiceItem \? \(\s*<Icon[\s\S]*?name="chevron-down"[\s\S]*?\/>\s*\) : null\}/,
+  );
+  assert.match(
+    header,
+    /<div className=\{styles\.mobileMenuGroup\} key=\{item\.label\}>\s*<Link[\s\S]*?href=\{item\.href\}[\s\S]*?onClick=\{closeMobileMenu\}[\s\S]*?>\s*\{item\.label\}\s*<\/Link>\s*\{item\.label === "Service"/,
+  );
+  assert.doesNotMatch(header, /const navLink = \(\s*isServiceItem \?/);
+  assert.doesNotMatch(
+    header,
+    /\{item\.label === "Service" \? \(\s*<Link/,
+  );
+});
+
+test("ServiceCard actions emit typed CTA events for all four cards", async () => {
+  const [businessTypes, ctaEvents, serviceCard] = await Promise.all([
+    readFile(businessTypesPath, "utf8"),
+    readFile(ctaEventsPath, "utf8"),
+    readFile(serviceCardPath, "utf8"),
+  ]);
+
+  assert.match(serviceCard, /^"use client";/);
+  assert.match(
+    serviceCard,
+    /export type ServiceCardData = \{[\s\S]*?action: CtaAction;[\s\S]*?description: readonly string\[\];[\s\S]*?iconName\?: IconName;/,
+  );
+  assert.match(serviceCard, /action: CtaAction;/);
+  assert.match(serviceCard, /onClick=\{\(\) => emitCtaClick\(action\)\}/);
+  assert.match(
+    businessTypes,
+    /const services = \[[\s\S]*?\] as const satisfies readonly ServiceCardData\[\];/,
+  );
+  assert.doesNotMatch(
+    businessTypes,
+    /(?:action|iconName): "[^"]+" as const/,
+  );
+
+  for (const action of [
+    "service-mvp",
+    "service-app",
+    "service-company-homepage",
+    "quick",
+  ]) {
+    assert.match(businessTypes, new RegExp(`action: "${action}"`));
+  }
+
+  for (const [action, href] of [
+    ["service-mvp", "/service/mvp"],
+    ["service-app", "/service/app"],
+    ["service-company-homepage", "/service/company-homepage"],
+  ]) {
+    assert.match(ctaEvents, new RegExp(`"${action}": "${href}"`));
+  }
+});

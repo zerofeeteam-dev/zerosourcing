@@ -1,4 +1,9 @@
-import type { PartnerLogo } from "./PartnerLogoRollingBanner";
+export type PartnerLogo = {
+  alt: string;
+  height: number;
+  src: string;
+  width: number;
+};
 
 export const partnerLogos: PartnerLogo[] = [
   {

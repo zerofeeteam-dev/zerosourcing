@@ -65,27 +65,20 @@ export function Header() {
                   ? pathname.startsWith("/blog")
                   : item.href !== "/" && pathname === item.href;
               const navLink = (
-                isServiceItem ? (
-                  <button
-                    aria-haspopup="menu"
-                    className={isActive ? styles.activeNavLink : styles.navLink}
-                    type="button"
-                  >
-                    {item.label}
+                <Link
+                  aria-haspopup={isServiceItem ? "menu" : undefined}
+                  className={isActive ? styles.activeNavLink : styles.navLink}
+                  href={item.href}
+                >
+                  {item.label}
+                  {isServiceItem ? (
                     <Icon
                       className={styles.chevron}
                       name="chevron-down"
                       size={20}
                     />
-                  </button>
-                ) : (
-                  <Link
-                    className={isActive ? styles.activeNavLink : styles.navLink}
-                    href={item.href}
-                  >
-                    {item.label}
-                  </Link>
-                )
+                  ) : null}
+                </Link>
               );
 
               if (!isServiceItem) {
@@ -169,19 +162,13 @@ export function Header() {
         </button>
         {navItems.map((item) => (
           <div className={styles.mobileMenuGroup} key={item.label}>
-            {item.label === "Service" ? (
-              <button className={styles.mobileMenuItem} type="button">
-                {item.label}
-              </button>
-            ) : (
-              <Link
-                className={styles.mobileMenuItem}
-                href={item.href}
-                onClick={closeMobileMenu}
-              >
-                {item.label}
-              </Link>
-            )}
+            <Link
+              className={styles.mobileMenuItem}
+              href={item.href}
+              onClick={closeMobileMenu}
+            >
+              {item.label}
+            </Link>
             {item.label === "Service"
               ? serviceItems.map((serviceItem) => (
                   <Link
