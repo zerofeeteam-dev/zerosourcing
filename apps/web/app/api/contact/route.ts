@@ -65,7 +65,7 @@ function parseContactMessage(data: Record<string, unknown>) {
     !contact.company ||
     !contact.name ||
     !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact.email) ||
-    !contact.phone ||
+    !/^010-\d{4}-\d{3,4}$/.test(contact.phone) ||
     !contactMethods.has(contact.contactMethod) ||
     !contact.budget ||
     data.privacyConsent !== true

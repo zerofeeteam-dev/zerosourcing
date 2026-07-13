@@ -3,6 +3,24 @@
   --foreground: #111827;
 }
 
+/* Page-wide palettes driven by the floating theme switcher (CodePen parity).
+   Light keeps the site defaults above. */
+:root[data-theme="dark"] {
+  --background: #1b1b1d;
+  --foreground: #e1e1e1;
+}
+
+:root[data-theme="dim"] {
+  --background: #152433;
+  --foreground: #d5dbe2;
+}
+
+:root[data-theme] body {
+  transition:
+    background 400ms cubic-bezier(1, 0, 0.4, 1),
+    color 400ms cubic-bezier(1, 0, 0.4, 1);
+}
+
 html,
 body {
   max-width: 100vw;

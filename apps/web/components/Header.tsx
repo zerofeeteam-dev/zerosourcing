@@ -1,15 +1,18 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@repo/ui/button";
 
-import { GlassSurface } from "./GlassSurface";
 import { Icon } from "./Icon";
 import { emitCtaClick } from "./cta-events";
+import {
+  ensureGlassFilter,
+  supportsGlassRefraction,
+} from "./glassFilter";
 import styles from "./Header.module.css";
 
 const imgLogo = "/figma-icons/ZerosourcingLogo.svg";
@@ -33,17 +36,56 @@ const ctaButtonStyle = {
 
 export function Header() {
   const pathname = usePathname();
+  const headerRef = useRef<HTMLElement | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const closeMobileMenu = () => setIsMenuOpen(false);
 
+  useLayoutEffect(() => {
+    const element = headerRef.current;
+    if (!element || !supportsGlassRefraction()) return;
+
+    let timer = 0;
+    const updateFilter = () => {
+      const width = element.offsetWidth;
+      const height = element.offsetHeight;
+      if (!width || !height) return;
+
+      const filterId = ensureGlassFilter({
+        width,
+        height,
+        radius: height / 2,
+        bezel: 18,
+        scale: 54,
+      });
+      const filter = `blur(8px) url("#${filterId}") saturate(1.5)`;
+      element.style.backdropFilter = filter;
+      (
+        element.style as CSSStyleDeclaration & {
+          webkitBackdropFilter?: string;
+        }
+      ).webkitBackdropFilter = filter;
+    };
+    const scheduleUpdate = () => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(updateFilter, 120);
+    };
+
+    updateFilter();
+    const observer = new ResizeObserver(scheduleUpdate);
+    observer.observe(element);
+
+    return () => {
+      observer.disconnect();
+      window.clearTimeout(timer);
+    };
+  }, []);
+
   return (
     <>
-      <GlassSurface
-        as="header"
+      <header
         className={styles.header}
-        radius={40}
-        refract
         data-node-id="269:32520"
+        ref={headerRef}
       >
         <div className={styles.left}>
           <Link className={styles.logo} href="/" aria-label="ZeroSourcing home">
@@ -142,7 +184,7 @@ export function Header() {
         >
           <Icon name="menu-01" size={24} />
         </button>
-      </GlassSurface>
+      </header>
 
       <nav
         aria-hidden={!isMenuOpen}

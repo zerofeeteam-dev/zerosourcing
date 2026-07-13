@@ -1,0 +1,86 @@
+# Organization JSON-LD 속성 설명
+
+실행 원본은 `organization-json-ld.json`이다. 표준 JSON은 주석을 허용하지 않으므로, 파싱 가능한 원본을 유지하기 위해 속성 설명을 이 문서에서 관리한다.
+
+## 조직 기본 정보
+
+| 속성 | 설명 |
+| --- | --- |
+| `@context` | 이 데이터가 Schema.org 어휘를 사용한다는 선언이다. |
+| `@type` | 설명 대상의 종류다. 현재 값 `Organization`은 회사·단체를 의미한다. |
+| `@id` | 검색엔진이 제로소싱 조직을 다른 객체와 구분할 때 사용하는 전역 고유 식별자다. 실제 페이지 주소가 아니라 `#organization`을 붙인 엔터티 ID다. |
+| `name` | 검색엔진에 전달하는 대표 브랜드명이다. |
+| `legalName` | 사업자등록상 법적 상호다. 브랜드명과 법적 상호가 다를 때 사용한다. |
+| `alternateName` | 영문 표기나 다른 통용 명칭처럼 대표 이름 외에 사용되는 이름 목록이다. |
+| `alternateName[]` | 개별 대체 이름이다. 현재 `zeroSourcing`, `제로소싱`을 전달한다. |
+| `url` | 제로소싱의 공식 대표 홈페이지 주소다. |
+| `image` | 조직을 대표하는 이미지의 공개 URL이다. 현재 홈페이지의 `og.png`를 사용한다. |
+| `email` | 회사의 대표 공개 이메일 주소다. |
+| `description` | 회사의 핵심 서비스, 차별점, 제공 범위를 설명하는 검색엔진용 요약문이다. 실제 공개 페이지 내용과 일치해야 한다. |
+| `slogan` | 회사가 공식적으로 사용하는 슬로건 또는 모토다. |
+| `knowsAbout` | 회사가 전문적으로 다루는 주제와 업무 영역의 목록이다. |
+| `knowsAbout[]` | `MVP 개발`, `외주 개발`처럼 개별 전문 주제를 나타낸다. |
+
+## 서비스 지역
+
+| 속성 | 설명 |
+| --- | --- |
+| `areaServed` | 회사가 서비스를 제공하는 지역 정보를 묶는 객체다. |
+| `areaServed.@type` | 서비스 지역의 종류다. `Country`는 국가 단위 제공 범위를 의미한다. |
+| `areaServed.name` | 사람이 읽을 수 있는 서비스 대상 국가명이다. |
+| `areaServed.sameAs` | 해당 국가를 명확히 식별하는 외부 지식 베이스 주소다. 조직의 SNS 주소를 넣는 최상위 `sameAs`와 용도가 다르다. |
+
+## 주소
+
+| 속성 | 설명 |
+| --- | --- |
+| `address` | 회사의 실제 주소 정보를 묶는 객체다. |
+| `address.@type` | 주소 객체의 종류다. `PostalAddress`는 우편 주소 형식임을 의미한다. |
+| `address.streetAddress` | 도로명, 건물명, 동·층·호를 포함한 상세 주소다. |
+| `address.addressLocality` | 시·군·구 중 도시 또는 기초 행정구역 이름이다. 현재 값은 `고양시`다. |
+| `address.addressRegion` | 도·광역시처럼 상위 행정구역을 나타낸다. 현재 값은 `경기도`다. |
+| `address.addressCountry` | ISO 3166-1 alpha-2 형식의 국가 코드다. `KR`은 대한민국을 의미한다. |
+
+## 창업자
+
+| 속성 | 설명 |
+| --- | --- |
+| `founder` | 조직을 설립한 사람 또는 조직 정보를 묶는 객체다. 대표자와 창업자가 다른 경우 대표자 이름을 넣으면 안 된다. |
+| `founder.@type` | 창업자 객체의 종류다. `Person`은 개인을 의미한다. |
+| `founder.name` | 창업자의 이름이다. |
+
+## 문의처
+
+| 속성 | 설명 |
+| --- | --- |
+| `contactPoint` | 고객이 회사에 연락할 수 있는 공식 문의 채널을 묶는 객체다. |
+| `contactPoint.@type` | 문의 채널의 종류다. `ContactPoint`는 이메일·전화 같은 연락 지점을 의미한다. |
+| `contactPoint.email` | 해당 문의 채널에서 사용하는 이메일 주소다. 최상위 대표 이메일과 동일하게 유지한다. |
+| `contactPoint.contactType` | 문의 목적 또는 담당 부서다. `sales`는 영업·외주 상담 문의를 의미한다. |
+| `contactPoint.areaServed` | 이 문의 채널이 응대하는 국가 또는 지역 코드다. |
+| `contactPoint.availableLanguage` | 문의 응대가 가능한 언어다. 현재 `Korean`은 한국어 응대를 의미한다. |
+
+## 서비스 카탈로그
+
+| 속성 | 설명 |
+| --- | --- |
+| `hasOfferCatalog` | 회사가 제공하는 여러 서비스와 제안을 하나의 카탈로그로 묶는 객체다. |
+| `hasOfferCatalog.@type` | 카탈로그 객체의 종류다. `OfferCatalog`는 상품·서비스 제안 목록을 의미한다. |
+| `hasOfferCatalog.name` | 서비스 카탈로그 전체의 이름이다. |
+| `hasOfferCatalog.itemListElement` | 카탈로그에 포함된 제안 목록이다. |
+| `hasOfferCatalog.itemListElement[]` | 개별 서비스 제안 객체다. 현재 총 5개가 들어 있다. |
+| `hasOfferCatalog.itemListElement[].@type` | 개별 항목의 종류다. `Offer`는 회사가 제공하는 하나의 제안을 의미한다. |
+| `hasOfferCatalog.itemListElement[].itemOffered` | 해당 제안이 실제로 제공하는 서비스 정보를 묶는 객체다. |
+| `hasOfferCatalog.itemListElement[].itemOffered.@type` | 제공 대상의 종류다. `Service`는 개발 용역 같은 서비스를 의미한다. |
+| `hasOfferCatalog.itemListElement[].itemOffered.name` | 고객에게 표시되는 개별 서비스명이다. |
+| `hasOfferCatalog.itemListElement[].itemOffered.description` | 해당 서비스의 범위와 특징을 설명한다. 공개 페이지에 상세 내용이 있는 서비스에만 사용한다. |
+| `hasOfferCatalog.itemListElement[].itemOffered.serviceType` | 검색엔진이 서비스 분야를 분류할 수 있도록 제공하는 서비스 유형명이다. |
+| `hasOfferCatalog.itemListElement[].itemOffered.url` | 해당 서비스의 공식 상세 페이지 주소다. 실제 전용 페이지가 있는 서비스에만 사용한다. |
+
+## 의도적으로 넣지 않은 속성
+
+| 속성 | 제외 이유 |
+| --- | --- |
+| 최상위 `sameAs` | 자사 홈페이지가 아니라 공식 SNS·외부 프로필 주소를 넣어야 한다. 확인된 외부 공식 URL이 없어 제외했다. |
+| `logo` | 현재 `favicon.png`는 96×96이므로 조직 로고 권장 최소 크기인 112×112에 미달한다. 규격에 맞는 로고 자산을 만든 뒤 추가한다. |
+| `telephone` | 공개 데이터에 임시 전화번호가 포함되어 있어 검증된 대표번호가 확인될 때까지 제외한다. |

@@ -1,7 +1,9 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { CSSProperties } from "react";
 
 import { BottomCtaBanner } from "../components/BottomCtaBanner";
+import { BottomFloatingThemeSwitcher } from "../components/BottomFloatingThemeSwitcher";
 import { BusinessTypesSection } from "../components/BusinessTypesSection";
 import { CardCarousel } from "../components/CardCarousel";
 import { FaqSection } from "../components/FaqSection";
@@ -47,6 +49,7 @@ export default function Home() {
       <div className={styles.headerLayer}>
         <Header />
       </div>
+      <BottomFloatingThemeSwitcher />
       <VideoBanner
         actions={[
           {
@@ -247,9 +250,13 @@ export default function Home() {
                   <ul className={styles.featureGrid}>
                     {step.items.map((item) => (
                       <li className={styles.featureItem} key={item}>
-                        <span className={styles.featureIcon} aria-hidden="true">
-                          <Icon name="check" size={10} />
-                        </span>
+                        <Image
+                          alt=""
+                          className={styles.featureIcon}
+                          height={16}
+                          src="/figma-assets/zerosourcing-feature-mark.svg"
+                          width={16}
+                        />
                         <span>{item}</span>
                       </li>
                     ))}
@@ -308,8 +315,10 @@ export default function Home() {
                   key={columnIndex === 0 ? "left" : "right"}
                 >
                   {portfolios.map((portfolio) => (
-                    <article
+                    <Link
+                      aria-label={`${portfolio.title} 포트폴리오 보기`}
                       className={styles.portfolioCard}
+                      href={`/portfolio/${portfolio.slug}`}
                       key={portfolio.title}
                     >
                       <div
@@ -330,7 +339,7 @@ export default function Home() {
                           <span>{portfolio.duration}</span>
                         </p>
                       </div>
-                    </article>
+                    </Link>
                   ))}
                 </div>
               ),
@@ -348,7 +357,12 @@ export default function Home() {
         <div className={styles.insightContent} data-node-id="138:5026">
           <CardCarousel bleed={20} minItemWidth={330} snapAlign="center">
             {homeInsights.map((insight) => (
-              <article className={styles.insightCard} key={insight.title}>
+              <Link
+                aria-label={`${insight.title} 글 보기`}
+                className={styles.insightCard}
+                href={`/blog/${insight.slug}`}
+                key={insight.title}
+              >
                 <div aria-hidden="true" className={styles.insightThumbnail} />
                 <div className={styles.insightCopy}>
                   <div className={styles.textGroup}>
@@ -364,7 +378,7 @@ export default function Home() {
                   </div>
                   <p className={styles.date}>{insight.date}</p>
                 </div>
-              </article>
+              </Link>
             ))}
           </CardCarousel>
         </div>

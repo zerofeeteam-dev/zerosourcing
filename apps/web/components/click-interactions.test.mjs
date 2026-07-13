@@ -42,7 +42,22 @@ test("ServiceCard actions emit typed CTA events for all four cards", async () =>
     /export type ServiceCardData = \{[\s\S]*?action: CtaAction;[\s\S]*?description: readonly string\[\];[\s\S]*?iconName\?: IconName;/,
   );
   assert.match(serviceCard, /action: CtaAction;/);
-  assert.match(serviceCard, /onClick=\{\(\) => emitCtaClick\(action\)\}/);
+  assert.match(serviceCard, /import Link from "next\/link";/);
+  assert.match(
+    serviceCard,
+    /<Link[\s\S]*?href=\{getCtaHref\(action\)\}[\s\S]*?onClick=\{\(\) => emitCtaEvent\(action\)\}/,
+  );
+  assert.match(serviceCard, /<span className=\{styles\.action\}>/);
+  assert.doesNotMatch(serviceCard, /<button/);
+  assert.doesNotMatch(serviceCard, /role="link"|tabIndex|handleCardKeyDown/);
+  assert.match(
+    ctaEvents,
+    /export function getCtaHref\(action: CtaAction\) \{\s*return ctaHrefs\[action\];/,
+  );
+  assert.match(
+    ctaEvents,
+    /export function emitCtaEvent\(action: CtaAction\)[\s\S]*?window\.dispatchEvent/,
+  );
   assert.match(
     businessTypes,
     /const services = \[[\s\S]*?\] as const satisfies readonly ServiceCardData\[\];/,
@@ -65,7 +80,8 @@ test("ServiceCard actions emit typed CTA events for all four cards", async () =>
     ["service-mvp", "/service/mvp"],
     ["service-app", "/service/app"],
     ["service-company-homepage", "/service/company-homepage"],
+    ["quick", "/contact"],
   ]) {
-    assert.match(ctaEvents, new RegExp(`"${action}": "${href}"`));
+    assert.match(ctaEvents, new RegExp(`"?${action}"?: "${href}"`));
   }
 });

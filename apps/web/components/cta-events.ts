@@ -15,7 +15,11 @@ const ctaHrefs = {
   "service-mvp": "/service/mvp",
 } satisfies Record<CtaAction, string>;
 
-export function emitCtaClick(action: CtaAction) {
+export function getCtaHref(action: CtaAction) {
+  return ctaHrefs[action];
+}
+
+export function emitCtaEvent(action: CtaAction) {
   if (typeof window === "undefined") {
     return;
   }
@@ -25,6 +29,13 @@ export function emitCtaClick(action: CtaAction) {
       detail: { action },
     }),
   );
+}
 
+export function emitCtaClick(action: CtaAction) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  emitCtaEvent(action);
   window.location.href = ctaHrefs[action];
 }

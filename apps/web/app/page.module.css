@@ -290,15 +290,10 @@
 }
 
 .featureIcon {
+  display: block;
   width: 16px;
   height: 16px;
-  display: inline-flex;
   flex: 0 0 16px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 2px;
-  background: var(--color-brand-500);
-  color: #f8faff;
 }
 
 .burdenBox {
@@ -507,7 +502,16 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  color: inherit;
+  cursor: pointer;
   overflow: hidden;
+  text-decoration: none;
+}
+
+.portfolioCard:focus-visible {
+  border-radius: 16px;
+  outline: 2px solid var(--color-brand-500);
+  outline-offset: 4px;
 }
 
 .portfolioThumbnail {
@@ -646,7 +650,16 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  color: inherit;
+  cursor: pointer;
   overflow: hidden;
+  text-decoration: none;
+}
+
+.insightCard:focus-visible {
+  border-radius: 16px;
+  outline: 2px solid var(--color-brand-500);
+  outline-offset: 4px;
 }
 
 .insightThumbnail {

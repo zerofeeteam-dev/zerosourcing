@@ -42,7 +42,7 @@ const textFields = [
     autoComplete: "tel",
     id: "phone",
     label: "연락처*",
-    placeholder: "연락처를 입력해주세요.",
+    placeholder: "010-0000-000",
     type: "tel",
   },
 ] as const;
@@ -67,6 +67,20 @@ type SubmitStatus = "error" | "idle" | "success";
 
 function formatBudgetInput(value: string) {
   return value.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+function formatPhoneInput(value: string) {
+  const digits = value.replace(/\D/g, "").slice(0, 11);
+
+  if (digits.length <= 3) {
+    return digits;
+  }
+
+  if (digits.length <= 7) {
+    return `${digits.slice(0, 3)}-${digits.slice(3)}`;
+  }
+
+  return `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7)}`;
 }
 
 export default function ContactPage() {
@@ -116,6 +130,10 @@ export default function ContactPage() {
     event.currentTarget.value = formatBudgetInput(event.currentTarget.value);
   }
 
+  function handlePhoneChange(event: ChangeEvent<HTMLInputElement>) {
+    event.currentTarget.value = formatPhoneInput(event.currentTarget.value);
+  }
+
   return (
     <main className={pageStyles.page}>
       <div className={pageStyles.headerLayer}>
@@ -162,9 +180,24 @@ export default function ContactPage() {
                       autoComplete={field.autoComplete}
                       className={styles.control}
                       id={field.id}
+                      inputMode={field.id === "phone" ? "numeric" : undefined}
+                      maxLength={field.id === "phone" ? 13 : undefined}
                       name={field.id}
+                      onChange={
+                        field.id === "phone" ? handlePhoneChange : undefined
+                      }
+                      pattern={
+                        field.id === "phone"
+                          ? "010-[0-9]{4}-[0-9]{3,4}"
+                          : undefined
+                      }
                       placeholder={field.placeholder}
                       required
+                      title={
+                        field.id === "phone"
+                          ? "010-0000-000 형식으로 입력해주세요."
+                          : undefined
+                      }
                       type={field.type}
                     />
                   </label>

@@ -9,7 +9,9 @@
   border-radius: 16px;
   background: var(--color-gray-50);
   color: var(--color-gray-800);
+  cursor: pointer;
   overflow: hidden;
+  text-decoration: none;
   transition: color 220ms ease-in-out;
   justify-content: space-between;
 }
@@ -72,14 +74,12 @@
   width: 40px;
   height: 40px;
   border-radius: 16px;
-  background: var(--color-gray-50);
   color: var(--color-gray-800);
   transition: color 220ms ease-in-out;
 }
 
 .card:hover .iconFrame,
 .card:focus-within .iconFrame {
-  background: transparent;
   color: #f8faff;
 }
 

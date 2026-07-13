@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import { Footer } from "../../components/Footer";
 import { Header } from "../../components/Header";
@@ -62,7 +62,12 @@ export default function PortfolioPage() {
             ))}
           </div>
 
-          <article className={styles.featured} data-node-id="74:3527">
+          <Link
+            aria-label={`${featuredCase.title} 포트폴리오 보기`}
+            className={`${styles.featured} ${styles.clickableCard}`}
+            data-node-id="74:3527"
+            href={`/portfolio/${featuredCase.slug}`}
+          >
             <div className={styles.featuredPreview}>
               <div className={styles.thumbnail}>
                 <span className={styles.logoPill}>zeroSourcing</span>
@@ -109,7 +114,7 @@ export default function PortfolioPage() {
                 </div>
               </div>
             </div>
-          </article>
+          </Link>
 
           <section className={styles.listSection} aria-label="포트폴리오 목록">
             <div className={styles.filterBar}>
@@ -145,9 +150,12 @@ export default function PortfolioPage() {
 }
 
 function PortfolioCard({ item }: { item: (typeof portfolioItems)[number] }) {
-  const router = useRouter();
-  const content = (
-    <>
+  return (
+    <Link
+      aria-label={`${item.title} 포트폴리오 보기`}
+      className={`${styles.card} ${styles.clickableCard}`}
+      href={`/portfolio/${item.slug}`}
+    >
       <div className={styles.cardThumbnail} aria-hidden="true" />
       <div className={styles.cardContent}>
         <div className={styles.cardCopy}>
@@ -159,26 +167,6 @@ function PortfolioCard({ item }: { item: (typeof portfolioItems)[number] }) {
           <span>{item.duration}</span>
         </p>
       </div>
-    </>
+    </Link>
   );
-
-  if ("slug" in item) {
-    return (
-      <article
-        className={`${styles.card} ${styles.clickableCard}`}
-        onClick={() => router.push(`/portfolio/${item.slug}`)}
-        onKeyDown={(event) => {
-          if (event.key === "Enter") {
-            router.push(`/portfolio/${item.slug}`);
-          }
-        }}
-        role="link"
-        tabIndex={0}
-      >
-        {content}
-      </article>
-    );
-  }
-
-  return <article className={styles.card}>{content}</article>;
 }

@@ -1,7 +1,13 @@
 "use client";
 
+import Link from "next/link";
+
 import { Icon, type IconName } from "./Icon";
-import { type CtaAction, emitCtaClick } from "./cta-events";
+import {
+  type CtaAction,
+  emitCtaEvent,
+  getCtaHref,
+} from "./cta-events";
 import styles from "./ServiceCard.module.css";
 
 export type ServiceCardData = {
@@ -26,7 +32,11 @@ export function ServiceCard({
   const hasHeader = Boolean(title || iconName || badge);
 
   return (
-    <article className={`${styles.card} ${hasHeader ? "" : styles.centered}`}>
+    <Link
+      className={`${styles.card} ${hasHeader ? "" : styles.centered}`}
+      href={getCtaHref(action)}
+      onClick={() => emitCtaEvent(action)}
+    >
       {hasHeader ? (
         <div className={styles.header}>
           {title || iconName ? (
@@ -50,14 +60,10 @@ export function ServiceCard({
           ))}
         </p>
       </div>
-      <button
-        className={styles.action}
-        onClick={() => emitCtaClick(action)}
-        type="button"
-      >
+      <span className={styles.action}>
         {actionLabel}
         <Icon name="arrow-right" size={16} />
-      </button>
-    </article>
+      </span>
+    </Link>
   );
 }

@@ -16,6 +16,10 @@ const proofMetricsPath = new URL(
   "../components/ProofMetrics.tsx",
   import.meta.url,
 );
+const scopeIconPath = new URL(
+  "../public/figma-assets/zerosourcing-feature-mark.svg",
+  import.meta.url,
+);
 
 const homeTitle = "제로소싱 | MVP·앱·홈페이지 개발 외주 파트너";
 const homeDescription =
@@ -148,6 +152,24 @@ test("home content is JSX-free route-owned data", async () => {
 
   assert.doesNotMatch(content, /ReactNode|<>|<\/?[A-Z][A-Za-z0-9]*/);
   assert.match(page, /<FaqSection items=\{homeFaqs\} \/>/);
+});
+
+test("the service scope uses the supplied Zerosourcing feature mark", async () => {
+  const [page, scopeIcon] = await Promise.all([
+    readFile(pagePath, "utf8"),
+    readFile(scopeIconPath, "utf8"),
+  ]);
+
+  assert.match(
+    page,
+    /<Image[\s\S]*?className=\{styles\.featureIcon\}[\s\S]*?src="\/figma-assets\/zerosourcing-feature-mark\.svg"/,
+  );
+  assert.doesNotMatch(
+    page,
+    /className=\{styles\.featureIcon\}[\s\S]*?<Icon name="check"/,
+  );
+  assert.match(scopeIcon, /fill="#0360EF"/);
+  assert.match(scopeIcon, /fill="#F8FAFF"/);
 });
 
 test("shared data and readonly interfaces no longer depend on home-only files", async () => {

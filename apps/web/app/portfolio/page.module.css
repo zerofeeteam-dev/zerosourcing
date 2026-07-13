@@ -272,7 +272,9 @@
 }
 
 .clickableCard {
+  color: inherit;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .clickableCard:focus-visible {

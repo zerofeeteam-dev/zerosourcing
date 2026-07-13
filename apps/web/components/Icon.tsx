@@ -224,22 +224,17 @@ function FileEdit02Icon({ size = 24, ...props }: Omit<IconProps, "name">) {
       aria-hidden="true"
       fill="none"
       height={size}
-      viewBox="0 0 24 24"
+      viewBox="0 0 20 20"
       width={size}
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
       <path
-        d="M14 3.5V8C14 8.55228 14.4477 9 15 9H19.5M13 20.5H6C5.17157 20.5 4.5 19.8284 4.5 19V5C4.5 4.17157 5.17157 3.5 6 3.5H14.25L19.5 8.75V12"
+        d="M7.96436 17.9643H3.96435C2.85978 17.9643 1.96435 17.0689 1.96436 15.9643L1.96443 3.96434C1.96444 2.85978 2.85987 1.96436 3.96443 1.96436H12.9647C14.0692 1.96436 14.9647 2.85979 14.9647 3.96436V7.96435M5.46467 5.96435H11.4647M5.46467 8.96435H11.4647M5.46467 11.9644H8.46467M10.9645 15.2069L15.2072 10.9642L18.0356 13.7927L13.7929 18.0353H10.9645V15.2069Z"
         stroke="currentColor"
+        strokeLinecap="round"
         strokeLinejoin="round"
-        strokeWidth="1.8"
-      />
-      <path
-        d="M14.5 19.5L15 17L19.75 12.25C20.1642 11.8358 20.8358 11.8358 21.25 12.25C21.6642 12.6642 21.6642 13.3358 21.25 13.75L16.5 18.5L14.5 19.5Z"
-        stroke="currentColor"
-        strokeLinejoin="round"
-        strokeWidth="1.8"
+        strokeWidth="2"
       />
     </svg>
   );
@@ -668,17 +663,17 @@ function LineChartUp02Icon({ size = 24, ...props }: Omit<IconProps, "name">) {
       aria-hidden="true"
       fill="none"
       height={size}
-      viewBox="0 0 24 24"
+      viewBox="0 0 20 20"
       width={size}
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
       <path
-        d="M4 19H20M6 16L10 12L13 15L19 8M19 8V13M19 8H14"
+        d="M2 2V18H18M6 12.0001L9.5 8.5001L12 11.0001L16.5001 6.5"
         stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
-        strokeWidth="1.8"
+        strokeWidth="2"
       />
     </svg>
   );
