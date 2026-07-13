@@ -10,7 +10,7 @@
 
 ## Global Constraints
 
-- 대상은 공개 사이트 `apps/web`이며 Vite 관리자 앱 `app/admin`에는 추가하지 않는다.
+- 대상은 공개 사이트 `apps/web`이며 Vite 관리자 앱 `apps/admin`에는 추가하지 않는다.
 - Organization JSON-LD는 홈페이지 `/`에만 1회 렌더링한다.
 - `ProfessionalService`는 Schema.org에서 deprecated 상태이므로 `@type`은 `Organization`만 사용한다.
 - 공개 페이지와 다른 사실을 구조화 데이터에 넣지 않는다.

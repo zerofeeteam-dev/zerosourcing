@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Build the `app/admin` product admin from the provided Figma admin frames. The current admin app is only a single dashboard mock, so the first real boundary is not a dashboard: it is authentication plus content management for Portfolio and Blog.
+Build the `apps/admin` product admin from the provided Figma admin frames. The current admin app is only a single dashboard mock, so the first real boundary is not a dashboard: it is authentication plus content management for Portfolio and Blog.
 
 ## Source Frames
 
