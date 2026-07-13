@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { Footer } from "../../../components/Footer";
 import { Header } from "../../../components/Header";
+import { createPageMetadata } from "../../site-metadata";
 import {
   blogPosts,
   type BlogPost,
@@ -17,6 +18,21 @@ type BlogDetailPageProps = {
 
 export function generateStaticParams() {
   return blogPosts.map((post) => ({ slug: post.slug }));
+}
+
+export async function generateMetadata({ params }: BlogDetailPageProps) {
+  const { slug } = await params;
+  const post = blogPosts.find((item) => item.slug === slug);
+
+  if (!post) {
+    return {};
+  }
+
+  return createPageMetadata({
+    title: post.title,
+    description: post.description,
+    path: `/blog/${post.slug}`,
+  });
 }
 
 function CategoryChip({ children }: { children: string }) {

@@ -7,12 +7,20 @@ import { SectionShell } from "../../../components/SectionShell";
 import { ServicePortfolioSection } from "../../../components/ServicePortfolioSection";
 import { VideoBanner } from "../../../components/VideoBanner";
 import styles from "../../page.module.css";
+import { createPageMetadata } from "../../site-metadata";
 import {
   companyHomepageFaqs,
   companyHomepageScopeItems,
   companyHomepageTypes,
 } from "./content";
 import companyStyles from "./page.module.css";
+
+export const metadata = createPageMetadata({
+  title: "제로소싱 | 기업 홈페이지 제작 (반응형·SEO)",
+  description:
+    "제로소싱의 기업 홈페이지 제작은 반응형과 네이버·구글·AI 검색 노출(SEO·GEO), 도메인·서버·보안까지 한 번에 제공합니다. 홈페이지 제작 비용·과정과 업종별 제작 사례를 확인하세요.",
+  path: "/service/company-homepage",
+});
 
 export default function CompanyHomepageServicePage() {
   return (

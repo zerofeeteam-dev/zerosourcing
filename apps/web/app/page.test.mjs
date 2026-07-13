@@ -5,6 +5,7 @@ import test from "node:test";
 const componentsUrl = new URL("../components/", import.meta.url);
 const contentPath = new URL("./content.ts", import.meta.url);
 const faqSectionPath = new URL("../components/FaqSection.tsx", import.meta.url);
+const ogImagePath = new URL("../public/og.png", import.meta.url);
 const pagePath = new URL("./page.tsx", import.meta.url);
 const pageStylesPath = new URL("./page.module.css", import.meta.url);
 const partnerLogosPath = new URL(
@@ -15,6 +16,10 @@ const proofMetricsPath = new URL(
   "../components/ProofMetrics.tsx",
   import.meta.url,
 );
+
+const homeTitle = "제로소싱 | MVP·앱·홈페이지 개발 외주 파트너";
+const homeDescription =
+  "MVP 개발 외주 전문 제로소싱. 핵심 기능만 담아 평균 4주 만에 출시·검증합니다. 앱·기업 홈페이지·강의·쇼핑몰까지, 기능별 정찰가로 투명하게. 무료 상담으로 시작하세요.";
 
 async function exists(url) {
   try {
@@ -44,6 +49,21 @@ function assertExportUsesAsConst(source, name) {
   );
   assert.match(declaration, /as const;/, `${name} must use as const`);
 }
+
+test("the home route exports the approved social metadata", async () => {
+  const page = await readFile(pagePath, "utf8");
+
+  assert.equal(await exists(ogImagePath), true, "OG image is missing");
+  assert.ok(page.includes(JSON.stringify(homeTitle)), "home title is missing");
+  assert.ok(
+    page.includes(JSON.stringify(homeDescription)),
+    "home description is missing",
+  );
+  assert.match(
+    page,
+    /export const metadata = createPageMetadata\(\{[\s\S]*?title: homeTitle,[\s\S]*?description: homeDescription,[\s\S]*?path: "\/",/,
+  );
+});
 
 test("the home route owns sections that are not reused by another page", async () => {
   const page = await readFile(pagePath, "utf8");

@@ -1,0 +1,100 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": "https://zerosourcing.kr/#organization",
+  "name": "제로소싱",
+  "legalName": "제로피",
+  "alternateName": ["zeroSourcing", "제로소싱"],
+  "url": "https://zerosourcing.kr",
+  "image": "https://zerosourcing.kr/og.png",
+  "email": "contact@zerofee.kr",
+  "description": "MVP 개발 외주 전문 기업. 과한 스펙도 긴 일정도 없이 핵심 기능만 담아 평균 4주 만에 출시·검증하는 개발 파트너. MVP 개발, 하이브리드 앱 개발, 기업 홈페이지 제작, 인터넷 강의 홈페이지 제작, 온라인 쇼핑몰 제작을 제공하며, 기능 항목별 정찰가로 견적이 투명하고 버그를 영구 보장한다.",
+  "slogan": "부담은 제로, 출시는 현실로",
+  "areaServed": {
+    "@type": "Country",
+    "name": "대한민국",
+    "sameAs": "https://www.wikidata.org/wiki/Q884"
+  },
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "덕양구 동축로70, A동 9층 901호(동산동, 현대프리미어캠퍼스)",
+    "addressLocality": "고양시",
+    "addressRegion": "경기도",
+    "addressCountry": "KR"
+  },
+  "founder": {
+    "@type": "Person",
+    "name": "이동규"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "email": "contact@zerofee.kr",
+    "contactType": "sales",
+    "areaServed": "KR",
+    "availableLanguage": "Korean"
+  },
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "개발 외주 서비스",
+    "itemListElement": [
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "MVP 개발",
+          "description": "검증에 필요한 핵심 기능만 담아 평균 4주 만에 출시하는 MVP 개발 외주 서비스. 정부지원사업 자금으로 개발비 집행이 가능하다.",
+          "serviceType": "MVP 개발",
+          "url": "https://zerosourcing.kr/service/mvp"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "하이브리드 앱 개발",
+          "description": "웹뷰 하이브리드 방식으로 한 번 개발해 iOS·안드로이드에 동시 출시하고, 구글·애플 스토어 등록까지 대행하는 앱 개발 서비스",
+          "serviceType": "앱 개발",
+          "url": "https://zerosourcing.kr/service/app"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "기업 홈페이지 제작",
+          "description": "반응형과 검색엔진·생성형 AI 검색 최적화(SEO·GEO), 도메인·서버·보안까지 포함하는 기업 홈페이지 제작 서비스",
+          "serviceType": "홈페이지 제작",
+          "url": "https://zerosourcing.kr/service/company-homepage"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "인터넷 강의 홈페이지 제작",
+          "serviceType": "온라인 강의 플랫폼 제작"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "온라인 쇼핑몰 제작",
+          "serviceType": "쇼핑몰 제작"
+        }
+      }
+    ]
+  },
+  "knowsAbout": [
+    "MVP 개발",
+    "MVP 개발 외주",
+    "MVP 개발 비용",
+    "하이브리드 앱 개발",
+    "기업 홈페이지 제작",
+    "인터넷 강의 홈페이지 제작",
+    "온라인 쇼핑몰 제작",
+    "외주 개발",
+    "정부지원사업",
+    "정찰가 견적"
+  ]
+}

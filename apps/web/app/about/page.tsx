@@ -7,6 +7,7 @@ import { ProofPartnerLogoBanner } from "../../components/ProofPartnerLogoBanner"
 import { ProofMetrics } from "../../components/ProofMetrics";
 import { SectionShell } from "../../components/SectionShell";
 import { VideoBanner } from "../../components/VideoBanner";
+import { createPageMetadata } from "../site-metadata";
 import {
   aboutCompanyInfoRows,
   aboutHowItems,
@@ -16,6 +17,13 @@ import {
 } from "./content";
 import aboutStyles from "./page.module.css";
 import styles from "../page.module.css";
+
+export const metadata = createPageMetadata({
+  title: "제로소싱 | MVP 개발 외주 전문 팀 회사소개",
+  description:
+    "제로소싱은 목적에 맞는 가장 빠른 방법으로, 때로는 AI를 활용해 더 가볍게 MVP를 만드는 개발 외주 팀입니다. 부담은 덜고 출시는 앞당기는 제로소싱의 일하는 방식과 철학을 소개합니다.",
+  path: "/about",
+});
 
 const officeMapQuery = encodeURIComponent(aboutOffice.mapQuery);
 const googleMapsEmbedKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY;

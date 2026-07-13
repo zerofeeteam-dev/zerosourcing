@@ -9,6 +9,7 @@ import { SectionShell } from "../../../components/SectionShell";
 import { ServicePortfolioSection } from "../../../components/ServicePortfolioSection";
 import { VideoBanner } from "../../../components/VideoBanner";
 import styles from "../../page.module.css";
+import { createPageMetadata } from "../../site-metadata";
 import {
   appBuildFlowSteps,
   appDevelopmentDifferences,
@@ -18,6 +19,13 @@ import {
   appNativeFeatures,
 } from "./content";
 import appStyles from "./page.module.css";
+
+export const metadata = createPageMetadata({
+  title: "제로소싱 | 하이브리드 앱 개발 (iOS·안드로이드)",
+  description:
+    "제로소싱의 하이브리드 앱 개발은 한 번 개발해 iOS·안드로이드에 동시 출시합니다. 푸시·결제 등 네이티브 기능 연동과 구글·애플 스토어 등록 대행 포함. 앱 개발 비용·기간을 안내합니다.",
+  path: "/service/app",
+});
 
 const [sourceStep, packagingStep, appStoreStep, googlePlayStep] =
   appBuildFlowSteps;

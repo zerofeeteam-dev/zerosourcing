@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import { Footer } from "../../../components/Footer";
 import { Header } from "../../../components/Header";
+import { createPageMetadata } from "../../site-metadata";
 import pageStyles from "../../page.module.css";
 import { portfolioDetails } from "../portfolio-items";
 import { PortfolioDetailCtaButton } from "./PortfolioDetailCtaButton";
@@ -14,6 +15,21 @@ type PortfolioDetailPageProps = {
 
 export function generateStaticParams() {
   return portfolioDetails.map((item) => ({ slug: item.slug }));
+}
+
+export async function generateMetadata({ params }: PortfolioDetailPageProps) {
+  const { slug } = await params;
+  const portfolio = portfolioDetails.find((item) => item.slug === slug);
+
+  if (!portfolio) {
+    return {};
+  }
+
+  return createPageMetadata({
+    title: portfolio.title,
+    description: portfolio.description,
+    path: `/portfolio/${portfolio.slug}`,
+  });
 }
 
 export default async function PortfolioDetailPage({

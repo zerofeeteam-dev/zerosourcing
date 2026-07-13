@@ -7,6 +7,7 @@ import { SectionShell } from "../../../components/SectionShell";
 import { ServicePortfolioSection } from "../../../components/ServicePortfolioSection";
 import { VideoBanner } from "../../../components/VideoBanner";
 import styles from "../../page.module.css";
+import { createPageMetadata } from "../../site-metadata";
 import {
   fundingPrograms,
   mvpFaqs,
@@ -15,6 +16,13 @@ import {
   supportStepText,
 } from "./content";
 import mvpStyles from "./page.module.css";
+
+export const metadata = createPageMetadata({
+  title: "제로소싱 | MVP 개발 외주, 평균 4주 출시",
+  description:
+    "제로소싱의 MVP 개발 외주는 검증되는 MVP를 평균 4주 만에 제작합니다. 예비창업패키지 등 정부지원금 집행이 가능하고, 기능별 정찰가로 견적이 투명합니다. MVP 개발 비용·기간·진행 방식을 안내합니다.",
+  path: "/service/mvp",
+});
 
 export default function MvpServicePage() {
   return (

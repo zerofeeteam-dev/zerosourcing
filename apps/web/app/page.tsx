@@ -24,6 +24,17 @@ import {
   homeServiceScopeSteps,
 } from "./content";
 import styles from "./page.module.css";
+import { createPageMetadata } from "./site-metadata";
+
+const homeTitle = "제로소싱 | MVP·앱·홈페이지 개발 외주 파트너";
+const homeDescription =
+  "MVP 개발 외주 전문 제로소싱. 핵심 기능만 담아 평균 4주 만에 출시·검증합니다. 앱·기업 홈페이지·강의·쇼핑몰까지, 기능별 정찰가로 투명하게. 무료 상담으로 시작하세요.";
+
+export const metadata = createPageMetadata({
+  title: homeTitle,
+  description: homeDescription,
+  path: "/",
+});
 
 const homeLeftPortfolios = homePortfolios.filter((_, index) => index % 2 === 0);
 const homeRightPortfolios = homePortfolios.filter(
