@@ -14,10 +14,10 @@ import {
   defaultAdminPath,
   loginPath,
   matchAdminRoute,
-  pushPath,
-  replacePath,
   type AdminRoute,
 } from "./lib/router";
+import { usePendingAssetNavigation } from "./navigation/PendingAssetNavigation";
+import { useAdminNavigationController } from "./navigation/useAdminNavigationController";
 import { supabaseConfig, type SupabaseDisabledConfig } from "./lib/supabase";
 import { LoginPage } from "./pages/LoginPage";
 import type { Session } from "@supabase/supabase-js";
@@ -29,8 +29,6 @@ type AuthState =
   | { readonly kind: "error"; readonly message: string }
   | { readonly kind: "setupBlocked"; readonly setup: SupabaseDisabledConfig }
   | { readonly kind: "signedOut" };
-
-type NavigationMode = "push" | "replace";
 
 async function authStateFromSession(session: Session | null): Promise<AuthState> {
   if (!session) {
@@ -77,21 +75,13 @@ export function App() {
   const [authState, setAuthState] = useState<AuthState>({ kind: "checking" });
   const [loginError, setLoginError] = useState<string>();
   const [isLoginSubmitting, setIsLoginSubmitting] = useState(false);
-
-  const navigate = useCallback((path: string, mode: NavigationMode = "push") => {
-    if (mode === "replace") {
-      replacePath(path);
-    } else {
-      pushPath(path);
-    }
-    setRoute(routeFromWindow());
-  }, []);
-
-  useEffect(() => {
-    const handlePopState = () => setRoute(routeFromWindow());
-    window.addEventListener("popstate", handlePopState);
-    return () => window.removeEventListener("popstate", handlePopState);
-  }, []);
+  const { announceBlockedAttempt, getPendingAssetCount } = usePendingAssetNavigation();
+  const acceptCurrentRoute = useCallback(() => setRoute(routeFromWindow()), []);
+  const navigate = useAdminNavigationController({
+    announceBlockedAttempt,
+    getPendingAssetCount,
+    onRouteAccepted: acceptCurrentRoute,
+  });
 
   useEffect(() => {
     if (supabaseConfig.kind === "disabled") {

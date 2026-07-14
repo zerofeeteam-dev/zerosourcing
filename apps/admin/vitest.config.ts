@@ -6,7 +6,10 @@ export default defineConfig({
       "src/components/content/**/*.test.ts",
       "src/components/content/**/*.test.tsx",
       "src/lib/contentAssetStorage.test.ts",
+      "src/lib/router.test.ts",
+      "src/lib/thumbnailPersistence.test.ts",
       "src/lib/thumbnailStorage.test.ts",
+      "src/navigation/**/*.test.tsx",
     ],
   },
 });

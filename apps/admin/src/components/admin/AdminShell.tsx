@@ -12,9 +12,16 @@ export type AdminNavItem = {
   readonly label: string;
 };
 
+const blogAdminNavItem = { href: "/blog", key: "blog", label: "Blog" } as const;
+const portfolioAdminNavItem = {
+  href: "/portfolio",
+  key: "portfolio",
+  label: "Portfolio",
+} as const;
+
 export const adminNavItems = [
-  { href: "/blog", key: "blog", label: "Blog" },
-  { href: "/portfolio", key: "portfolio", label: "Portfolio" },
+  blogAdminNavItem,
+  portfolioAdminNavItem,
 ] as const satisfies readonly AdminNavItem[];
 
 type AdminShellProps = {
@@ -36,6 +43,19 @@ function classNames(...values: readonly (string | undefined)[]): string {
   return values.filter(Boolean).join(" ");
 }
 
+function shouldHandleClientNavigation(event: MouseEvent<HTMLAnchorElement>): boolean {
+  return (
+    !event.defaultPrevented &&
+    event.button === 0 &&
+    !event.altKey &&
+    !event.ctrlKey &&
+    !event.metaKey &&
+    !event.shiftKey &&
+    !event.currentTarget.hasAttribute("download") &&
+    (!event.currentTarget.target || event.currentTarget.target === "_self")
+  );
+}
+
 export function AdminShell({
   accountActions,
   activeItem,
@@ -44,7 +64,7 @@ export function AdminShell({
   onNavigate,
 }: AdminShellProps) {
   const handleNavigate = (event: MouseEvent<HTMLAnchorElement>, item: AdminNavItem) => {
-    if (!onNavigate) return;
+    if (!onNavigate || !shouldHandleClientNavigation(event)) return;
     event.preventDefault();
     onNavigate(item);
   };
@@ -52,7 +72,12 @@ export function AdminShell({
   return (
     <div className={styles.shell}>
       <header className={styles.header}>
-        <a aria-label="Zerosourcing Admin" className={styles.logoLink} href="/portfolio">
+        <a
+          aria-label="Zerosourcing Admin"
+          className={styles.logoLink}
+          href={portfolioAdminNavItem.href}
+          onClick={(event) => handleNavigate(event, portfolioAdminNavItem)}
+        >
           <img alt="zeroSourcing" className={styles.logoImage} height={24} src={logoSrc} width={168} />
         </a>
         <nav aria-label="Primary admin sections" className={styles.nav}>
