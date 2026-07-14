@@ -15,6 +15,8 @@ import {
 } from "./content";
 import companyStyles from "./page.module.css";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = createPageMetadata({
   title: "제로소싱 | 기업 홈페이지 제작 (반응형·SEO)",
   description:
@@ -68,6 +70,7 @@ export default function CompanyHomepageServicePage() {
         }
         label="기업 홈페이지 제작 사례"
         order="01"
+        portfolioType="company_homepage"
         title="업종별 기업 홈페이지 제작 사례"
       />
       <SectionShell
@@ -83,10 +86,7 @@ export default function CompanyHomepageServicePage() {
           </>
         }
       >
-        <div
-          className={companyStyles.companyTypesGrid}
-          data-node-id="49:3828"
-        >
+        <div className={companyStyles.companyTypesGrid} data-node-id="49:3828">
           {companyHomepageTypes.map((type) => (
             <article
               className={companyStyles.companyTypesCard}
@@ -113,8 +113,8 @@ export default function CompanyHomepageServicePage() {
           <>
             아무리 잘 만들어도 검색에 안 나오면 아무도 못 찾습니다.
             <br />
-            제로소싱은 만드는 것에서 끝내지 않고, 검색엔진과 생성형 AI
-            양쪽에 노출되도록 세팅합니다.
+            제로소싱은 만드는 것에서 끝내지 않고, 검색엔진과 생성형 AI 양쪽에
+            노출되도록 세팅합니다.
           </>
         }
         label="홈페이지 SEO·GEO"
@@ -140,9 +140,8 @@ export default function CompanyHomepageServicePage() {
                   먼저 보이게
                 </h3>
                 <p className={companyStyles.companySeoGeoCardDescription}>
-                  메타태그·구조화 데이터·사이트맵·페이지 속도까지 세팅해,
-                  회사 이름과 핵심 키워드로 검색했을 때 상위에 노출되도록
-                  만듭니다.
+                  메타태그·구조화 데이터·사이트맵·페이지 속도까지 세팅해, 회사
+                  이름과 핵심 키워드로 검색했을 때 상위에 노출되도록 만듭니다.
                 </p>
               </div>
             </div>
@@ -227,10 +226,7 @@ export default function CompanyHomepageServicePage() {
           </>
         }
       >
-        <div
-          className={companyStyles.companyScopeGrid}
-          data-node-id="49:4396"
-        >
+        <div className={companyStyles.companyScopeGrid} data-node-id="49:4396">
           {companyHomepageScopeItems.map((item) => (
             <article
               className={companyStyles.companyScopeCard}

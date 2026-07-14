@@ -11,6 +11,15 @@
   width: 100%;
 }
 
+.emptyText {
+  composes: pretendard-medium-14 from global;
+  width: 100%;
+  margin: 0;
+  padding: 52px 0;
+  color: var(--color-gray-500);
+  text-align: center;
+}
+
 .card {
   display: flex;
   flex-direction: column;

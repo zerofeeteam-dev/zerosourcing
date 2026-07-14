@@ -129,7 +129,7 @@ test("home-only component files are removed after their markup is inlined", asyn
   }
 });
 
-test("home content is JSX-free route-owned data", async () => {
+test("home static marketing content stays JSX-free and managed cards use public queries", async () => {
   const [content, page] = await Promise.all([
     readOrEmpty(contentPath),
     readFile(pagePath, "utf8"),
@@ -142,14 +142,18 @@ test("home content is JSX-free route-owned data", async () => {
     "homeProofMetrics",
     "homeReviews",
     "homeServiceScopeSteps",
-    "homePortfolios",
-    "homeInsights",
     "homeFaqs",
   ]) {
     assertExportUsesAsConst(content, name);
     assert.doesNotMatch(page, new RegExp(`const ${name}`));
   }
 
+  assert.doesNotMatch(content, /export const homePortfolios/);
+  assert.doesNotMatch(content, /export const homeInsights/);
+  assert.match(page, /getPublishedPortfolios/);
+  assert.match(page, /getPublishedBlogPosts/);
+  assert.match(page, /selectHomePortfolios/);
+  assert.match(page, /selectHomeBlogPosts/);
   assert.doesNotMatch(content, /ReactNode|<>|<\/?[A-Z][A-Za-z0-9]*/);
   assert.match(page, /<FaqSection items=\{homeFaqs\} \/>/);
 });

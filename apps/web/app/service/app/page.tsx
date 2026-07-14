@@ -20,6 +20,8 @@ import {
 } from "./content";
 import appStyles from "./page.module.css";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = createPageMetadata({
   title: "제로소싱 | 하이브리드 앱 개발 (iOS·안드로이드)",
   description:
@@ -318,6 +320,7 @@ export default function AppServicePage() {
         contentNodeId="43:3501"
         label="어플리케이션 포트폴리오"
         order="05"
+        portfolioType="application"
         title="하이브리드 앱 개발 사례"
       />
       <FaqSection items={appFaqs} order="06" title="앱 개발 자주 묻는 질문" />

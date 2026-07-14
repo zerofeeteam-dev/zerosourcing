@@ -161,8 +161,13 @@ test("robots and sitemap expose the canonical public routes", async () => {
 
   assert.match(robots, /sitemap: `\$\{SITE_URL\}\/sitemap\.xml`/);
   assert.match(robots, /host: SITE_URL/);
-  assert.match(sitemap, /blogPosts/);
-  assert.match(sitemap, /portfolioDetails/);
+  assert.match(sitemap, /export const dynamic = "force-dynamic";/);
+  assert.match(sitemap, /export default async function sitemap/);
+  assert.match(sitemap, /getPublishedBlogPosts/);
+  assert.match(sitemap, /getPublishedPortfolios/);
+  assert.match(sitemap, /lastModified: post\.updatedAt/);
+  assert.match(sitemap, /lastModified: portfolio\.updatedAt/);
+  assert.doesNotMatch(sitemap, /blog-posts|portfolio-items/);
 
   for (const path of staticMetadataExpectations.map((item) => item.path)) {
     assert.ok(sitemap.includes(JSON.stringify(path)), path);

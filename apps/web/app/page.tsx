@@ -9,6 +9,7 @@ import { FaqSection } from "../components/FaqSection";
 import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
 import { Icon } from "../components/Icon";
+import { ManagedThumbnail } from "../components/ManagedThumbnail";
 import { partnerLogos } from "../components/partner-logos";
 import { ProcessSection } from "../components/ProcessSection";
 import { ProofMetrics } from "../components/ProofMetrics";
@@ -16,9 +17,15 @@ import { ProofPartnerLogoBanner } from "../components/ProofPartnerLogoBanner";
 import { SectionShell } from "../components/SectionShell";
 import { VideoBanner } from "../components/VideoBanner";
 import {
+  getPublishedBlogPosts,
+  getPublishedPortfolios,
+} from "../lib/public-content/queries";
+import {
+  selectHomeBlogPosts,
+  selectHomePortfolios,
+} from "../lib/public-content/selectors";
+import {
   homeFaqs,
-  homeInsights,
-  homePortfolios,
   homeProblemQuotes,
   homeProofMetrics,
   homeReviews,
@@ -37,12 +44,22 @@ export const metadata = createPageMetadata({
   path: "/",
 });
 
-const homeLeftPortfolios = homePortfolios.filter((_, index) => index % 2 === 0);
-const homeRightPortfolios = homePortfolios.filter(
-  (_, index) => index % 2 === 1,
-);
+export const dynamic = "force-dynamic";
 
-export default function Home() {
+export default async function Home() {
+  const [portfolioRows, blogRows] = await Promise.all([
+    getPublishedPortfolios(),
+    getPublishedBlogPosts(),
+  ]);
+  const homePortfolios = selectHomePortfolios(portfolioRows);
+  const homeInsights = selectHomeBlogPosts(blogRows);
+  const homeLeftPortfolios = homePortfolios.filter(
+    (_, index) => index % 2 === 0,
+  );
+  const homeRightPortfolios = homePortfolios.filter(
+    (_, index) => index % 2 === 1,
+  );
+
   return (
     <main className={styles.page}>
       <div className={styles.headerLayer}>
@@ -301,48 +318,56 @@ export default function Home() {
             </p>
           </div>
 
-          <div className={styles.grid}>
-            {[homeLeftPortfolios, homeRightPortfolios].map(
-              (portfolios, columnIndex) => (
-                <div
-                  className={
-                    columnIndex === 0
-                      ? styles.column
-                      : `${styles.column} ${styles.columnOffset}`
-                  }
-                  key={columnIndex === 0 ? "left" : "right"}
-                >
-                  {portfolios.map((portfolio) => (
-                    <Link
-                      aria-label={`${portfolio.title} 포트폴리오 보기`}
-                      className={styles.portfolioCard}
-                      href={`/portfolio/${portfolio.slug}`}
-                      key={portfolio.title}
-                    >
-                      <div
-                        aria-hidden="true"
-                        className={styles.portfolioThumbnail}
-                      />
-                      <div className={styles.cardContent}>
-                        <div className={styles.portfolioCopy}>
-                          <h3 className={styles.portfolioCardTitle}>
-                            {portfolio.title}
-                          </h3>
-                          <p className={styles.cardDescription}>
-                            {portfolio.description}
+          {homePortfolios.length > 0 ? (
+            <div className={styles.grid}>
+              {[homeLeftPortfolios, homeRightPortfolios].map(
+                (portfolios, columnIndex) => (
+                  <div
+                    className={
+                      columnIndex === 0
+                        ? styles.column
+                        : `${styles.column} ${styles.columnOffset}`
+                    }
+                    key={columnIndex === 0 ? "left" : "right"}
+                  >
+                    {portfolios.map((portfolio) => (
+                      <Link
+                        aria-label={`${portfolio.title} 포트폴리오 보기`}
+                        className={styles.portfolioCard}
+                        href={`/portfolio/${portfolio.slug}`}
+                        key={portfolio.slug}
+                      >
+                        <ManagedThumbnail
+                          alt={portfolio.thumbnailAlt}
+                          className={styles.portfolioThumbnail!}
+                          sizes="(max-width: 560px) calc(100vw - 40px), (max-width: 768px) calc(50vw - 30px), 325px"
+                          url={portfolio.thumbnailUrl}
+                        />
+                        <div className={styles.cardContent}>
+                          <div className={styles.portfolioCopy}>
+                            <h3 className={styles.portfolioCardTitle}>
+                              {portfolio.title}
+                            </h3>
+                            <p className={styles.cardDescription}>
+                              {portfolio.description}
+                            </p>
+                          </div>
+                          <p className={styles.duration}>
+                            <Icon name="calendar-02" size={16} />
+                            <span>{portfolio.duration}</span>
                           </p>
                         </div>
-                        <p className={styles.duration}>
-                          <Icon name="calendar-02" size={16} />
-                          <span>{portfolio.duration}</span>
-                        </p>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              ),
-            )}
-          </div>
+                      </Link>
+                    ))}
+                  </div>
+                ),
+              )}
+            </div>
+          ) : (
+            <p className={`${styles.emptyText} ${styles.portfolioEmptyText}`}>
+              등록된 포트폴리오가 없습니다.
+            </p>
+          )}
         </div>
       </section>
 
@@ -353,32 +378,41 @@ export default function Home() {
         title="MVP, 외주 개발을 더 잘하는 방법"
       >
         <div className={styles.insightContent} data-node-id="138:5026">
-          <CardCarousel bleed={20} minItemWidth={330} snapAlign="center">
-            {homeInsights.map((insight) => (
-              <Link
-                aria-label={`${insight.title} 글 보기`}
-                className={styles.insightCard}
-                href={`/blog/${insight.slug}`}
-                key={insight.title}
-              >
-                <div aria-hidden="true" className={styles.insightThumbnail} />
-                <div className={styles.insightCopy}>
-                  <div className={styles.textGroup}>
-                    <p className={styles.category}>{insight.category}</p>
-                    <div className={styles.titleGroup}>
-                      <h3 className={styles.insightCardTitle}>
-                        {insight.title}
-                      </h3>
-                      <p className={styles.insightDescription}>
-                        {insight.description}
-                      </p>
+          {homeInsights.length > 0 ? (
+            <CardCarousel bleed={20} minItemWidth={330} snapAlign="center">
+              {homeInsights.map((insight) => (
+                <Link
+                  aria-label={`${insight.title} 글 보기`}
+                  className={styles.insightCard}
+                  href={`/blog/${insight.slug}`}
+                  key={insight.slug}
+                >
+                  <ManagedThumbnail
+                    alt={insight.thumbnailAlt}
+                    className={styles.insightThumbnail!}
+                    sizes="(max-width: 480px) 330px, 346px"
+                    url={insight.thumbnailUrl}
+                  />
+                  <div className={styles.insightCopy}>
+                    <div className={styles.textGroup}>
+                      <p className={styles.category}>{insight.category}</p>
+                      <div className={styles.titleGroup}>
+                        <h3 className={styles.insightCardTitle}>
+                          {insight.title}
+                        </h3>
+                        <p className={styles.insightDescription}>
+                          {insight.summary}
+                        </p>
+                      </div>
                     </div>
+                    <p className={styles.date}>{insight.date}</p>
                   </div>
-                  <p className={styles.date}>{insight.date}</p>
-                </div>
-              </Link>
-            ))}
-          </CardCarousel>
+                </Link>
+              ))}
+            </CardCarousel>
+          ) : (
+            <p className={styles.emptyText}>등록된 인사이트가 없습니다.</p>
+          )}
         </div>
       </SectionShell>
 

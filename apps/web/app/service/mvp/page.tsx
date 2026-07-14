@@ -17,6 +17,8 @@ import {
 } from "./content";
 import mvpStyles from "./page.module.css";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = createPageMetadata({
   title: "제로소싱 | MVP 개발 외주, 평균 4주 출시",
   description:
@@ -215,6 +217,7 @@ export default function MvpServicePage() {
         contentNodeId="291:55618"
         label="MVP 포트폴리오"
         order="05"
+        portfolioType="mvp"
         title="MVP 개발 사례"
       />
       <FaqSection items={mvpFaqs} order="06" />

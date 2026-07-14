@@ -1,7 +1,9 @@
 import type { MetadataRoute } from "next";
 
-import { blogPosts } from "./blog/blog-posts";
-import { portfolioDetails } from "./portfolio/portfolio-items";
+import {
+  getPublishedBlogPosts,
+  getPublishedPortfolios,
+} from "../lib/public-content/queries";
 import { SITE_URL } from "./site-metadata";
 
 const staticPaths = [
@@ -16,14 +18,29 @@ const staticPaths = [
   "/contact",
 ] as const;
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const paths = [
-    ...staticPaths,
-    ...blogPosts.map((post) => `/blog/${post.slug}`),
-    ...portfolioDetails.map((portfolio) => `/portfolio/${portfolio.slug}`),
-  ];
+export const dynamic = "force-dynamic";
 
-  return paths.map((path) => ({
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const [blogs, portfolios] = await Promise.all([
+    getPublishedBlogPosts(),
+    getPublishedPortfolios(),
+  ]);
+  const staticEntries = staticPaths.map((path) => ({
     url: new URL(path, `${SITE_URL}/`).toString(),
   }));
+  const dynamicEntries = [
+    ...blogs.map((post) => ({
+      lastModified: post.updatedAt,
+      path: `/blog/${post.slug}`,
+    })),
+    ...portfolios.map((portfolio) => ({
+      lastModified: portfolio.updatedAt,
+      path: `/portfolio/${portfolio.slug}`,
+    })),
+  ].map(({ lastModified, path }) => ({
+    lastModified,
+    url: new URL(path, `${SITE_URL}/`).toString(),
+  }));
+
+  return [...staticEntries, ...dynamicEntries];
 }
