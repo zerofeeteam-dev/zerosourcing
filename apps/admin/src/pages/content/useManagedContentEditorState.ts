@@ -17,7 +17,13 @@ export function useManagedContentEditorState(
   });
 
   useEffect(() => {
-    setState({ busy: true, documentKey, pendingAssetCount: 0 });
+    // Child effects may already have reported the new document before this
+    // parent effect runs, so only initialize generations that remain unclaimed.
+    setState((current) =>
+      current.documentKey === documentKey
+        ? current
+        : { busy: true, documentKey, pendingAssetCount: 0 },
+    );
   }, [documentKey]);
 
   const onBusyChange = useCallback(

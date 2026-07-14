@@ -167,11 +167,11 @@ export function AdminContentEditor({
 
   useEffect(() => {
     onPendingAssetCountChangeRef.current(pendingAssetCount);
-  }, [pendingAssetCount]);
+  }, [editorGeneration, pendingAssetCount]);
 
   useEffect(() => {
     onBusyChangeRef.current(busy);
-  }, [busy]);
+  }, [busy, editorGeneration]);
 
   const commitValue = useCallback((nextValue: ManagedContentFormValue) => {
     onChangeRef.current(nextValue);

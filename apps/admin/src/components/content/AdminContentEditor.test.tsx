@@ -10,7 +10,7 @@ import {
   within,
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   afterEach,
   beforeEach,
@@ -26,6 +26,7 @@ import {
   EMPTY_TIPTAP_DOCUMENT,
   type ManagedContentFormValue,
 } from "../../lib/managedContent";
+import { useManagedContentEditorState } from "../../pages/content/useManagedContentEditorState";
 import type {
   AdminRichTextEditorProps,
   UploadedEditorImage,
@@ -292,6 +293,100 @@ afterEach(() => {
 });
 
 describe("AdminContentEditor raw source", () => {
+  it("settles a reloaded raw document after the parent resets its editor state", async () => {
+    const user = userEvent.setup();
+    const busyReports = vi.fn();
+    const pendingReports = vi.fn();
+    const renderedStates: string[] = [];
+    const staleCallbacks: {
+      busy?: (busy: boolean) => void;
+      pending?: (count: number) => void;
+    } = {};
+
+    function IntegratedRawHarness() {
+      const [documentKey, setDocumentKey] = useState("portfolio:row-a:v1");
+      const activeDocumentKeyRef = useRef(documentKey);
+      activeDocumentKeyRef.current = documentKey;
+      const documentIsCurrent = useCallback(
+        (candidate: string) => candidate === activeDocumentKeyRef.current,
+        [],
+      );
+      const editorState = useManagedContentEditorState(
+        documentKey,
+        documentIsCurrent,
+      );
+      const stateLabel = `${documentKey}:${editorState.busy ? "busy" : "ready"}:${editorState.pendingAssetCount}`;
+      renderedStates.push(stateLabel);
+      if (documentKey === "portfolio:row-a:v1") {
+        staleCallbacks.busy = editorState.onBusyChange;
+        staleCallbacks.pending = editorState.onPendingAssetCountChange;
+      }
+
+      return (
+        <>
+          <button
+            onClick={() => setDocumentKey("portfolio:row-b:v1")}
+            type="button"
+          >
+            저장된 원문 다시 로드
+          </button>
+          <output aria-label="통합 편집기 상태">{stateLabel}</output>
+          <AdminContentEditor
+            disabled={false}
+            documentKey={documentKey}
+            entity="portfolio"
+            onBusyChange={(busy) => {
+              busyReports(busy);
+              editorState.onBusyChange(busy);
+            }}
+            onChange={() => undefined}
+            onPendingAssetCountChange={(count) => {
+              pendingReports(count);
+              editorState.onPendingAssetCountChange(count);
+            }}
+            value={value({ content: "<p>저장된 원문</p>" })}
+          />
+        </>
+      );
+    }
+
+    render(<IntegratedRawHarness />);
+    await waitFor(() =>
+      expect(screen.getByLabelText("통합 편집기 상태").textContent).toBe(
+        "portfolio:row-a:v1:ready:0",
+      ),
+    );
+
+    busyReports.mockClear();
+    pendingReports.mockClear();
+    renderedStates.length = 0;
+    await user.click(
+      screen.getByRole("button", { name: "저장된 원문 다시 로드" }),
+    );
+
+    await waitFor(() =>
+      expect(screen.getByLabelText("통합 편집기 상태").textContent).toBe(
+        "portfolio:row-b:v1:ready:0",
+      ),
+    );
+    expect(renderedStates).toContain("portfolio:row-b:v1:busy:0");
+    expect(pendingReports).toHaveBeenCalledWith(0);
+    expect(busyReports).toHaveBeenCalledWith(false);
+
+    const oldBusy = staleCallbacks.busy;
+    const oldPending = staleCallbacks.pending;
+    if (!oldBusy || !oldPending) {
+      throw new Error("Expected callbacks captured from the first document.");
+    }
+    act(() => {
+      oldBusy(true);
+      oldPending(7);
+    });
+    expect(screen.getByLabelText("통합 편집기 상태").textContent).toBe(
+      "portfolio:row-b:v1:ready:0",
+    );
+  });
+
   it("keeps an imported source byte-for-byte and refreshes preview only explicitly", async () => {
     const user = userEvent.setup();
     const source = '<!doctype html>\n<html lang="ko">한글</html>\n';
