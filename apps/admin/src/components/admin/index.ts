@@ -37,7 +37,12 @@ export {
 } from "./AdminEditorMode";
 export { AdminUploadControl } from "./AdminUpload";
 export {
+  AdminAlignCenterIcon,
+  AdminAlignLeftIcon,
+  AdminAlignRightIcon,
   AdminArrowRightIcon,
+  AdminBoldIcon,
+  AdminBulletListIcon,
   AdminCalendarIcon,
   AdminCheckIcon,
   AdminChevronDownIcon,
@@ -46,9 +51,19 @@ export {
   AdminExternalLinkIcon,
   AdminFileIcon,
   AdminFolderUpIcon,
+  AdminHorizontalRuleIcon,
+  AdminImageIcon,
+  AdminItalicIcon,
+  AdminLinkIcon,
+  AdminOrderedListIcon,
   AdminPackageIcon,
   AdminPlusIcon,
+  AdminQuoteIcon,
+  AdminRedoIcon,
   AdminSearchIcon,
+  AdminStrikeIcon,
   AdminTrashIcon,
+  AdminUnderlineIcon,
+  AdminUndoIcon,
   AdminUploadIcon,
 } from "./icons";

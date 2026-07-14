@@ -1,0 +1,125 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.editorFrame {
+  background: #ffffff;
+  border: 1px solid var(--color-gray-200);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.editorFrame:focus-within {
+  border-color: var(--color-brand-500);
+  outline: 3px solid var(--color-brand-50);
+  outline-offset: 1px;
+}
+
+.editorFrame[data-invalid="true"] {
+  border-color: var(--color-error-400);
+}
+
+.editorFrame[data-disabled="true"] {
+  background: var(--color-gray-50);
+}
+
+.editorContent {
+  max-height: 560px;
+  overflow-y: auto;
+}
+
+.editorContent :global(.tiptap) {
+  outline: 0;
+  padding: 20px;
+}
+
+.editorContent :global(.tiptap p.is-editor-empty:first-child)::before {
+  color: var(--color-gray-400);
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.editorContent :global(img[src^="blob:"]) {
+  filter: saturate(0.6);
+  opacity: 0.6;
+}
+
+.imagePanel {
+  background: var(--color-gray-50);
+  border: 1px solid var(--color-gray-100);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+}
+
+.imagePanelLegend,
+.imageLabel {
+  composes: pretendard-bold-14 from global;
+  color: var(--color-gray-800);
+}
+
+.imageField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.imageInput {
+  composes: pretendard-medium-14 from global;
+  background: #ffffff;
+  border: 1px solid var(--color-gray-200);
+  border-radius: 8px;
+  color: var(--color-gray-900);
+  height: 44px;
+  outline: 0;
+  padding: 10px 12px;
+}
+
+.imageInput:focus {
+  border-color: var(--color-brand-500);
+  outline: 3px solid var(--color-brand-50);
+  outline-offset: 1px;
+}
+
+.imageInput:disabled {
+  background: var(--color-gray-50);
+  color: var(--color-gray-400);
+  cursor: not-allowed;
+}
+
+.imageDescription,
+.uploadError {
+  composes: pretendard-medium-12 from global;
+  margin: 0;
+}
+
+.imageDescription {
+  color: var(--color-gray-500);
+}
+
+.decorativeOption {
+  composes: pretendard-medium-14 from global;
+  align-items: center;
+  color: var(--color-gray-800);
+  display: flex;
+  gap: 8px;
+  width: fit-content;
+}
+
+.decorativeOption input {
+  accent-color: var(--color-brand-500);
+}
+
+.uploadError {
+  color: var(--color-error-600);
+}
+
+.uploadError:empty {
+  display: none;
+}

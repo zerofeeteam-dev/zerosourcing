@@ -150,3 +150,138 @@ export function AdminCloseIcon(props: AdminIconProps) {
     </svg>
   );
 }
+
+export function AdminBoldIcon(props: AdminIconProps) {
+  return (
+    <svg {...iconProps(props)}>
+      <path d="M7 4h5.5a4 4 0 0 1 0 8H7V4Z" />
+      <path d="M7 12h6.5a4 4 0 0 1 0 8H7v-8Z" />
+    </svg>
+  );
+}
+
+export function AdminItalicIcon(props: AdminIconProps) {
+  return (
+    <svg {...iconProps(props)}>
+      <path d="M10 4h7" />
+      <path d="M7 20h7" />
+      <path d="m14 4-4 16" />
+    </svg>
+  );
+}
+
+export function AdminUnderlineIcon(props: AdminIconProps) {
+  return (
+    <svg {...iconProps(props)}>
+      <path d="M7 4v6a5 5 0 0 0 10 0V4" />
+      <path d="M5 21h14" />
+    </svg>
+  );
+}
+
+export function AdminStrikeIcon(props: AdminIconProps) {
+  return (
+    <svg {...iconProps(props)}>
+      <path d="M17 6.5A5.5 5.5 0 0 0 12 4c-3 0-5 1.4-5 3.5 0 1.4.8 2.3 2.1 3" />
+      <path d="M7 17.5A5.5 5.5 0 0 0 12 20c3 0 5-1.4 5-3.5 0-1.4-.8-2.3-2.1-3" />
+      <path d="M4 12h16" />
+    </svg>
+  );
+}
+
+export function AdminLinkIcon(props: AdminIconProps) {
+  return (
+    <svg {...iconProps(props)}>
+      <path d="m10 13.5 4-4" />
+      <path d="m7.5 16-1 1a3.5355 3.5355 0 0 1-5-5l3-3a3.5355 3.5355 0 0 1 5 0" />
+      <path d="m16.5 8 1-1a3.5355 3.5355 0 0 1 5 5l-3 3a3.5355 3.5355 0 0 1-5 0" transform="translate(-1 -1)" />
+    </svg>
+  );
+}
+
+export function AdminBulletListIcon(props: AdminIconProps) {
+  return (
+    <svg {...iconProps(props)}>
+      <path d="M9 6h11M9 12h11M9 18h11" />
+      <path d="M4 6h.01M4 12h.01M4 18h.01" strokeWidth={3} />
+    </svg>
+  );
+}
+
+export function AdminOrderedListIcon(props: AdminIconProps) {
+  return (
+    <svg {...iconProps(props)}>
+      <path d="M10 6h10M10 12h10M10 18h10" />
+      <path d="M4 5h1v3M4 11.5c.3-.35.7-.5 1.1-.5.8 0 1.4.5 1.4 1.2 0 .8-.7 1.3-2.5 2.8h2.7M4 17h1.3a1.2 1.2 0 1 1 0 2.4H4" />
+    </svg>
+  );
+}
+
+export function AdminQuoteIcon(props: AdminIconProps) {
+  return (
+    <svg {...iconProps(props)}>
+      <path d="M5 7h6v6H7a4 4 0 0 1-4 4" />
+      <path d="M15 7h6v6h-4a4 4 0 0 1-4 4" />
+    </svg>
+  );
+}
+
+export function AdminHorizontalRuleIcon(props: AdminIconProps) {
+  return (
+    <svg {...iconProps(props)}>
+      <path d="M4 12h16" />
+    </svg>
+  );
+}
+
+export function AdminAlignLeftIcon(props: AdminIconProps) {
+  return (
+    <svg {...iconProps(props)}>
+      <path d="M4 6h16M4 10h11M4 14h16M4 18h9" />
+    </svg>
+  );
+}
+
+export function AdminAlignCenterIcon(props: AdminIconProps) {
+  return (
+    <svg {...iconProps(props)}>
+      <path d="M4 6h16M7 10h10M4 14h16M8 18h8" />
+    </svg>
+  );
+}
+
+export function AdminAlignRightIcon(props: AdminIconProps) {
+  return (
+    <svg {...iconProps(props)}>
+      <path d="M4 6h16M9 10h11M4 14h16M11 18h9" />
+    </svg>
+  );
+}
+
+export function AdminImageIcon(props: AdminIconProps) {
+  return (
+    <svg {...iconProps(props)}>
+      <rect height="16" rx="2" width="18" x="3" y="4" />
+      <circle cx="8.5" cy="9" r="1.5" />
+      <path d="m4 17 4.5-4.5 3 3 2-2L20 20" />
+    </svg>
+  );
+}
+
+export function AdminUndoIcon(props: AdminIconProps) {
+  return (
+    <svg {...iconProps(props)}>
+      <path d="M9 7 4 12l5 5" />
+      <path d="M5 12h9a6 6 0 0 1 6 6" />
+    </svg>
+  );
+}
+
+export function AdminRedoIcon(props: AdminIconProps) {
+  return (
+    <svg {...iconProps(props)}>
+      <path d="m15 7 5 5-5 5" />
+      <path d="M19 12h-9a6 6 0 0 0-6 6" />
+    </svg>
+  );
+}
