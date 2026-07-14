@@ -20,6 +20,9 @@ importers:
 
   apps/admin:
     dependencies:
+      '@repo/content':
+        specifier: workspace:*
+        version: link:../../packages/content
       '@supabase/supabase-js':
         specifier: 2.109.0
         version: 2.109.0
@@ -91,6 +94,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@repo/content':
+        specifier: workspace:*
+        version: link:../../packages/content
       '@repo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -122,6 +128,33 @@ importers:
       eslint:
         specifier: ^9.39.1
         version: 9.39.1
+      typescript:
+        specifier: 5.9.2
+        version: 5.9.2
+
+  packages/content:
+    devDependencies:
+      '@repo/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/react':
+        specifier: 19.2.2
+        version: 19.2.2
+      '@types/react-dom':
+        specifier: 19.2.2
+        version: 19.2.2(@types/react@19.2.2)
+      eslint:
+        specifier: ^9.39.1
+        version: 9.39.1
+      react:
+        specifier: ^19.2.0
+        version: 19.2.0
+      react-dom:
+        specifier: ^19.2.0
+        version: 19.2.0(react@19.2.0)
       typescript:
         specifier: 5.9.2
         version: 5.9.2

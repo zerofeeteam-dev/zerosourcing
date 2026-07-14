@@ -12,6 +12,7 @@
     "test:blog-form": "node --no-warnings=ExperimentalWarning --experimental-transform-types --loader ./tests/typescript-loader.mjs --test src/pages/blog/blogFormModel.test.ts"
   },
   "dependencies": {
+    "@repo/content": "workspace:*",
     "@supabase/supabase-js": "2.109.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"

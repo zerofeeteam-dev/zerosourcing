@@ -1,0 +1,87 @@
+.rich-content {
+  color: var(--color-gray-800);
+  font-family: Pretendard, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  overflow-wrap: anywhere;
+}
+
+.rich-content :where(h2, h3, h4, p, ul, ol, blockquote, pre, figure) {
+  margin: 0;
+}
+
+.rich-content :where(h2) {
+  padding-top: 48px;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 36px;
+}
+
+.rich-content :where(h3) {
+  padding-top: 36px;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 32px;
+}
+
+.rich-content :where(h4) {
+  padding-top: 28px;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 26px;
+}
+
+.rich-content :where(p, ul, ol, blockquote, pre, figure) {
+  padding-top: 20px;
+}
+
+.rich-content :where(ul, ol) {
+  padding-left: 24px;
+}
+
+.rich-content :where(blockquote) {
+  padding-left: 20px;
+  border-left: 3px solid var(--color-gray-300);
+  color: var(--color-gray-600);
+}
+
+.rich-content :where(pre) {
+  overflow-x: auto;
+  padding: 20px;
+  border-radius: 8px;
+  color: var(--color-gray-50);
+  background: var(--color-gray-900);
+}
+
+.rich-content :where(a) {
+  color: var(--color-brand-600);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.rich-content :where(img) {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+}
+
+.rich-content :where(hr) {
+  margin: 40px 0 20px;
+  border: 0;
+  border-top: 1px solid var(--color-gray-200);
+}
+
+@media (max-width: 640px) {
+  .rich-content {
+    font-size: 14px;
+    line-height: 21px;
+  }
+
+  .rich-content :where(h2) {
+    padding-top: 36px;
+    font-size: 24px;
+    line-height: 32px;
+  }
+}
