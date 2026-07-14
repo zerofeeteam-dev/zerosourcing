@@ -21,6 +21,7 @@ test("treats Task 4 indeterminate and unrelated failures conservatively", () => 
   const indeterminateKinds = [
     "network_failure",
     "save_failure",
+    "thumbnail_cleanup_failure",
     "upload_failure",
   ] as const satisfies readonly AdminFailure["kind"][];
 

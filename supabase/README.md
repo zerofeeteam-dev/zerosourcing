@@ -5,9 +5,12 @@ This project uses Supabase directly from the Vite admin app:
 - Supabase Auth email/password for sign-in.
 - `public.admin_users` as the admin authorization gate.
 - `public.portfolios` and `public.blog_posts` for admin data.
-- Supabase Storage bucket `zerosourcing` for public thumbnail reads and admin writes.
+- Supabase Storage bucket `zerosourcing` for public thumbnail/content reads and admin writes.
 
-The frontend must use only `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, and `VITE_SUPABASE_STORAGE_BUCKET`.
+The frontend uses only `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`.
+The public Storage bucket name is the fixed application contract `zerosourcing`; it is not configured through a frontend environment variable.
+Managed content objects live under `content/{blog|portfolio}/{content_asset_scope}/` and are immutable: Admin uploads a new path instead of updating an existing object. Exact-object deletion remains available for failed-save and orphan cleanup.
+Legacy thumbnails keep the backward-compatible `{slug}/{uuid}.{png|jpg|webp}` path. Thumbnail cleanup accepts only that one-level shape, so it cannot remove managed objects under the reserved `content/` namespace.
 
 ## Local setup
 
