@@ -1,0 +1,90 @@
+{
+  "portfolios": [
+    {
+      "slug": "classit",
+      "type": "company_homepage",
+      "landingPublished": true,
+      "servicePublished": false
+    },
+    {
+      "slug": "todomall",
+      "type": "mvp",
+      "landingPublished": true,
+      "servicePublished": true
+    },
+    {
+      "slug": "gongsa-morakmorak",
+      "type": "mvp",
+      "landingPublished": true,
+      "servicePublished": true
+    },
+    {
+      "slug": "meetit-plus",
+      "type": "mvp",
+      "landingPublished": true,
+      "servicePublished": true
+    },
+    {
+      "slug": "jangryedam",
+      "type": "company_homepage",
+      "landingPublished": true,
+      "servicePublished": false
+    },
+    {
+      "slug": "lipang",
+      "type": "application",
+      "landingPublished": true,
+      "servicePublished": false
+    },
+    {
+      "slug": "opus-house",
+      "type": "company_homepage",
+      "landingPublished": false,
+      "servicePublished": false
+    },
+    {
+      "slug": "my-plan-it",
+      "type": "mvp",
+      "landingPublished": false,
+      "servicePublished": false
+    },
+    {
+      "slug": "relive-deal",
+      "type": "application",
+      "landingPublished": false,
+      "servicePublished": false
+    }
+  ],
+  "blogPosts": [
+    {
+      "slug": "mvp-development-cost",
+      "landingPublished": false,
+      "bannerPublished": false
+    },
+    {
+      "slug": "hybrid-vs-native-app",
+      "landingPublished": true,
+      "bannerPublished": true
+    },
+    {
+      "slug": "mvp-with-government-support",
+      "landingPublished": false,
+      "bannerPublished": false
+    },
+    {
+      "slug": "outsourcing-fail-patterns",
+      "landingPublished": false,
+      "bannerPublished": false
+    },
+    {
+      "slug": "company-homepage-search",
+      "landingPublished": true,
+      "bannerPublished": false
+    },
+    {
+      "slug": "nocode-vs-custom-development",
+      "landingPublished": true,
+      "bannerPublished": false
+    }
+  ]
+}
