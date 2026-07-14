@@ -8,14 +8,19 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint --max-warnings 0",
-    "check-types": "next typegen && tsc --noEmit"
+    "check-types": "next typegen && tsc --noEmit",
+    "test": "pnpm run test:unit && pnpm run test:node",
+    "test:node": "node --test app/*.test.mjs app/*/*.test.mjs app/*/*/*.test.mjs components/*.test.mjs",
+    "test:unit": "vitest run"
   },
   "dependencies": {
     "@repo/content": "workspace:*",
     "@repo/ui": "workspace:*",
     "next": "16.2.0",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.0",
+    "sanitize-html": "2.17.4",
+    "server-only": "0.0.1"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
@@ -23,7 +28,9 @@
     "@types/node": "^22.15.3",
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",
+    "@types/sanitize-html": "2.16.1",
     "eslint": "^9.39.1",
-    "typescript": "5.9.2"
+    "typescript": "5.9.2",
+    "vitest": "4.1.10"
   }
 }
