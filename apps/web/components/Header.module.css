@@ -1,16 +1,8 @@
 .header {
-  --c-action: #0052f5;
-  --c-dark: #000;
-  --c-glass: #bbbbbc;
-  --c-light: #fff;
-  --glass-reflex-dark: 1;
-  --glass-reflex-light: 1;
-  --saturation: 150%;
   --header-content: var(--color-gray-800);
   --header-action: var(--color-brand-500);
 
   position: relative;
-  isolation: isolate;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -18,97 +10,10 @@
   height: 80px;
   margin: 0 auto;
   padding: 0 20px 0 40px;
-  border: 0;
+  border: 1px solid var(--color-gray-100);
   border-radius: 40px;
-  background-color: color-mix(in srgb, var(--c-glass) 12%, transparent);
-  -webkit-backdrop-filter: blur(8px) saturate(var(--saturation));
-  backdrop-filter: blur(8px) saturate(var(--saturation));
-  box-shadow:
-    inset 0 0 0 1px
-      color-mix(
-        in srgb,
-        var(--c-light) calc(var(--glass-reflex-light) * 10%),
-        transparent
-      ),
-    inset 1.8px 3px 0 -2px
-      color-mix(
-        in srgb,
-        var(--c-light) calc(var(--glass-reflex-light) * 90%),
-        transparent
-      ),
-    inset -2px -2px 0 -2px
-      color-mix(
-        in srgb,
-        var(--c-light) calc(var(--glass-reflex-light) * 80%),
-        transparent
-      ),
-    inset -3px -8px 1px -6px
-      color-mix(
-        in srgb,
-        var(--c-light) calc(var(--glass-reflex-light) * 60%),
-        transparent
-      ),
-    inset -0.3px -1px 4px 0
-      color-mix(
-        in srgb,
-        var(--c-dark) calc(var(--glass-reflex-dark) * 12%),
-        transparent
-      ),
-    inset -1.5px 2.5px 0 -2px
-      color-mix(
-        in srgb,
-        var(--c-dark) calc(var(--glass-reflex-dark) * 20%),
-        transparent
-      ),
-    inset 0 3px 4px -2px
-      color-mix(
-        in srgb,
-        var(--c-dark) calc(var(--glass-reflex-dark) * 20%),
-        transparent
-      ),
-    inset 2px -6.5px 1px -4px
-      color-mix(
-        in srgb,
-        var(--c-dark) calc(var(--glass-reflex-dark) * 10%),
-        transparent
-      ),
-    0 1px 5px 0
-      color-mix(
-        in srgb,
-        var(--c-dark) calc(var(--glass-reflex-dark) * 10%),
-        transparent
-      ),
-    0 6px 16px 0
-      color-mix(
-        in srgb,
-        var(--c-dark) calc(var(--glass-reflex-dark) * 8%),
-        transparent
-      );
-  transition:
-    background-color 400ms cubic-bezier(1, 0, 0.4, 1),
-    box-shadow 400ms cubic-bezier(1, 0, 0.4, 1);
-}
-
-/* Same palette swaps the pen applies per theme, keyed off the page-wide
-   switcher state on <html>. Light keeps the defaults above. */
-:root[data-theme="dark"] .header {
-  --c-action: #03d5ff;
-  --glass-reflex-dark: 2;
-  --glass-reflex-light: 0.3;
-  --header-content: #e1e1e1;
-  --header-action: #03d5ff;
-}
-
-:root[data-theme="dim"] .header {
-  --c-action: #ff48a9;
-  --c-dark: #20001b;
-  --c-glass: hsl(335 100% 74%);
-  --c-light: #99deff;
-  --glass-reflex-dark: 2;
-  --glass-reflex-light: 0.7;
-  --saturation: 200%;
-  --header-content: #d5dbe2;
-  --header-action: #ff48a9;
+  background-color: #fff;
+  box-shadow: 0 6px 16px rgb(15 18 25 / 8%);
 }
 
 .left {

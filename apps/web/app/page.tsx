@@ -3,7 +3,6 @@ import Link from "next/link";
 import type { CSSProperties } from "react";
 
 import { BottomCtaBanner } from "../components/BottomCtaBanner";
-import { BottomFloatingThemeSwitcher } from "../components/BottomFloatingThemeSwitcher";
 import { BusinessTypesSection } from "../components/BusinessTypesSection";
 import { CardCarousel } from "../components/CardCarousel";
 import { FaqSection } from "../components/FaqSection";
@@ -49,7 +48,6 @@ export default function Home() {
       <div className={styles.headerLayer}>
         <Header />
       </div>
-      <BottomFloatingThemeSwitcher />
       <VideoBanner
         actions={[
           {

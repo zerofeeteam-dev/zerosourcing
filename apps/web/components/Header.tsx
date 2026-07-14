@@ -1,7 +1,7 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -9,8 +9,6 @@ import { Button } from "@repo/ui/button";
 
 import { Icon } from "./Icon";
 import { emitCtaClick } from "./cta-events";
-import { supportsGlassRefraction } from "./glassFilter";
-import { ensureLiquidGlassFilter } from "./liquidGlassFilter";
 import styles from "./Header.module.css";
 
 const imgLogo = "/figma-icons/ZerosourcingLogo.svg";
@@ -34,58 +32,12 @@ const ctaButtonStyle = {
 
 export function Header() {
   const pathname = usePathname();
-  const headerRef = useRef<HTMLElement | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const closeMobileMenu = () => setIsMenuOpen(false);
 
-  useLayoutEffect(() => {
-    const element = headerRef.current;
-    if (!element || !supportsGlassRefraction()) return;
-
-    let timer = 0;
-    let requestToken = 0;
-    const updateFilter = () => {
-      const width = element.offsetWidth;
-      const height = element.offsetHeight;
-      if (!width || !height) return;
-
-      const token = ++requestToken;
-      void ensureLiquidGlassFilter({ width, height }).then((filterId) => {
-        // A later resize (or unmount) may have superseded this request.
-        if (!filterId || token !== requestToken) return;
-
-        const filter = `blur(8px) url("#${filterId}") saturate(var(--saturation))`;
-        element.style.backdropFilter = filter;
-        (
-          element.style as CSSStyleDeclaration & {
-            webkitBackdropFilter?: string;
-          }
-        ).webkitBackdropFilter = filter;
-      });
-    };
-    const scheduleUpdate = () => {
-      window.clearTimeout(timer);
-      timer = window.setTimeout(updateFilter, 120);
-    };
-
-    updateFilter();
-    const observer = new ResizeObserver(scheduleUpdate);
-    observer.observe(element);
-
-    return () => {
-      requestToken += 1;
-      observer.disconnect();
-      window.clearTimeout(timer);
-    };
-  }, []);
-
   return (
     <>
-      <header
-        className={styles.header}
-        data-node-id="269:32520"
-        ref={headerRef}
-      >
+      <header className={styles.header} data-node-id="269:32520">
         <div className={styles.left}>
           <Link className={styles.logo} href="/" aria-label="ZeroSourcing home">
             <Image

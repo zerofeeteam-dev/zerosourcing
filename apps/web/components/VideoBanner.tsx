@@ -3,7 +3,6 @@
 import type { CSSProperties, ReactNode } from "react";
 import { Button, type ButtonColor } from "@repo/ui/button";
 
-import { GlassSurface } from "./GlassSurface";
 import { Icon } from "./Icon";
 import { type CtaAction, emitCtaClick } from "./cta-events";
 import styles from "./VideoBanner.module.css";
@@ -67,19 +66,9 @@ export function VideoBanner({
       >
         <div className={styles.copy}>
           {eyebrow ? (
-            <GlassSurface
-              as="div"
-              bezel={10}
-              blur={2}
-              className={styles.eyebrowChip}
-              radius={32}
-              refract
-              saturate={1.4}
-              scale={30}
-              tone="light"
-            >
+            <div className={styles.eyebrowChip}>
               <p className={styles.eyebrow}>{eyebrow}</p>
-            </GlassSurface>
+            </div>
           ) : null}
           <div className={styles.text}>
             <h1 className={styles.title}>{title}</h1>

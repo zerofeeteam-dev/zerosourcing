@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import "./glass.css";
 import "../../../design-system.css";
 import organizationJsonLd from "./organization-json-ld.json";
 import {
