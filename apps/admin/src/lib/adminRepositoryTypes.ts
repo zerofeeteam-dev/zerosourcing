@@ -1,3 +1,10 @@
+import {
+  SUPPORTED_CONTENT_SCHEMA_VERSION,
+  contentOutputModes,
+  type ContentAuthoringMode,
+  type ContentOutputMode,
+  type TiptapDocument,
+} from "@repo/content/types";
 import type { AdminResult, AdminSlug } from "./adminTypes";
 import type { AdminFailure } from "./adminErrors";
 
@@ -21,10 +28,44 @@ export type PortfolioStatus = (typeof portfolioStatuses)[number];
 export const portfolioTypes = ["application", "company_homepage", "mvp"] as const;
 export type PortfolioType = (typeof portfolioTypes)[number];
 
-export const contentModes = ["html", "text"] as const;
-export type ContentMode = (typeof contentModes)[number];
+export const contentModes = contentOutputModes;
+export type ContentMode = ContentOutputMode;
 
-export type PortfolioRow = {
+export type ManagedContentRow = {
+  readonly content: string;
+  readonly content_asset_base_enabled: boolean;
+  readonly content_asset_scope: string;
+  readonly content_authoring_mode: ContentAuthoringMode;
+  readonly content_json: TiptapDocument | null;
+  readonly content_mode: ContentMode;
+  readonly content_schema_version: number;
+  readonly content_source_backup: string | null;
+  readonly published_at: string | null;
+};
+
+type ManagedContentInputBase = {
+  readonly content: string;
+  readonly contentAssetBaseEnabled: boolean;
+  readonly contentAssetScope: string;
+  readonly contentSchemaVersion: typeof SUPPORTED_CONTENT_SCHEMA_VERSION;
+  readonly contentSourceBackup: string | null;
+};
+
+export type ManagedContentInput = ManagedContentInputBase &
+  (
+    | {
+        readonly contentAuthoringMode: "raw_html";
+        readonly contentJson: TiptapDocument | null;
+        readonly contentMode: ContentMode;
+      }
+    | {
+        readonly contentAuthoringMode: "wysiwyg";
+        readonly contentJson: TiptapDocument;
+        readonly contentMode: "html";
+      }
+  );
+
+export type PortfolioRow = ManagedContentRow & {
   readonly id: string;
   readonly status: PortfolioStatus;
   readonly type: PortfolioType;
@@ -36,9 +77,10 @@ export type PortfolioRow = {
   readonly development_period: string;
   readonly core_features: readonly string[];
   readonly work_scopes: readonly string[];
-  readonly content_mode: ContentMode;
-  readonly content: string;
   readonly seo_description: string;
+  readonly thumbnail_alt: string;
+  readonly thumbnail_path: string | null;
+  readonly thumbnail_public_url: string | null;
   readonly landing_published: boolean;
   readonly service_published: boolean;
   readonly landing_sections: AdminJson;
@@ -48,7 +90,7 @@ export type PortfolioRow = {
   readonly deleted_at: string | null;
 };
 
-export type PortfolioCreateInput = {
+export type PortfolioCreateInput = ManagedContentInput & {
   readonly status: PortfolioStatus;
   readonly type: PortfolioType;
   readonly slug: AdminSlug;
@@ -59,9 +101,10 @@ export type PortfolioCreateInput = {
   readonly developmentPeriod: string;
   readonly coreFeatures: readonly string[];
   readonly workScopes: readonly string[];
-  readonly contentMode: ContentMode;
-  readonly content: string;
   readonly seoDescription: string;
+  readonly thumbnailAlt: string;
+  readonly thumbnailPath: string | null;
+  readonly thumbnailPublicUrl: string | null;
   readonly landingPublished: boolean;
   readonly servicePublished: boolean;
   readonly landingSections: AdminJson;
@@ -76,18 +119,17 @@ export type BlogPostStatus = (typeof blogPostStatuses)[number];
 export const blogPostTypes = ["insight", "mvp", "application", "company_homepage"] as const;
 export type BlogPostType = (typeof blogPostTypes)[number];
 
-export type BlogPostRow = {
+export type BlogPostRow = ManagedContentRow & {
   readonly id: string;
   readonly status: BlogPostStatus;
   readonly type: BlogPostType;
   readonly slug: string;
   readonly title: string;
+  readonly summary: string;
   readonly published_date: string | null;
   readonly thumbnail_path: string | null;
   readonly thumbnail_public_url: string | null;
   readonly thumbnail_alt: string;
-  readonly content_mode: ContentMode;
-  readonly content: string;
   readonly seo_description: string;
   readonly landing_published: boolean;
   readonly banner_published: boolean;
@@ -98,17 +140,16 @@ export type BlogPostRow = {
   readonly deleted_at: string | null;
 };
 
-export type BlogPostCreateInput = {
+export type BlogPostCreateInput = ManagedContentInput & {
   readonly status: BlogPostStatus;
   readonly type: BlogPostType;
   readonly slug: AdminSlug;
   readonly title: string;
+  readonly summary: string;
   readonly publishedDate: string | null;
   readonly thumbnailPath: string | null;
   readonly thumbnailPublicUrl: string | null;
   readonly thumbnailAlt: string;
-  readonly contentMode: ContentMode;
-  readonly content: string;
   readonly seoDescription: string;
   readonly landingPublished: boolean;
   readonly bannerPublished: boolean;

@@ -1,10 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   AdminArrowRightIcon,
   AdminButton,
   AdminTrashIcon,
 } from "../../components/admin";
 import { adminFailureMessage } from "../../lib/adminErrors";
+import { ManagedContentSchemaError } from "../../lib/managedContent";
+import {
+  createOperationGeneration,
+  type OperationGeneration,
+  type OperationToken,
+} from "../../lib/operationGeneration";
 import {
   createPortfolio,
   deletePortfolio,
@@ -14,7 +20,7 @@ import {
 import { supabaseConfig } from "../../lib/supabase";
 import {
   buildPortfolioInput,
-  emptyPortfolioFormState,
+  createEmptyPortfolioFormState,
   portfolioFormFromRow,
 } from "./portfolioModel";
 import type {
@@ -36,12 +42,62 @@ export function PortfolioFormPage({
   route,
 }: PortfolioFormPageProps) {
   const isEditMode = route.id === "portfolioDetail";
-  const [form, setForm] = useState<PortfolioFormState>(emptyPortfolioFormState);
+  const [form, setForm] = useState<PortfolioFormState>(() =>
+    createEmptyPortfolioFormState(),
+  );
   const [editingId, setEditingId] = useState<string>();
+  const [editingRouteParam, setEditingRouteParam] = useState<string>();
   const [isLoading, setIsLoading] = useState(isEditMode);
   const [isPending, setIsPending] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<PortfolioFormErrors>({});
   const [globalError, setGlobalError] = useState<string>();
+  const [contentSchemaError, setContentSchemaError] = useState<string>();
+  const previousRouteId = useRef(route.id);
+  const mutationControllerRef = useRef<AbortController | null>(null);
+  const operationGenerationRef = useRef<OperationGeneration | null>(null);
+  if (operationGenerationRef.current === null) {
+    operationGenerationRef.current = createOperationGeneration();
+  }
+  const operationGeneration = operationGenerationRef.current;
+  const routeKey =
+    route.id === "portfolioDetail"
+      ? `portfolio:detail:${route.param}`
+      : "portfolio:new";
+  const currentRouteKeyRef = useRef(routeKey);
+  currentRouteKeyRef.current = routeKey;
+  const operationIsCurrent = (operation: OperationToken) =>
+    operationGeneration.isCurrent(operation, currentRouteKeyRef.current);
+  const hasCurrentEditingPortfolio =
+    route.id === "portfolioDetail" &&
+    editingId !== undefined &&
+    editingRouteParam === route.param;
+
+  useEffect(() => {
+    mutationControllerRef.current?.abort();
+    mutationControllerRef.current = null;
+    operationGeneration.invalidate();
+    setIsPending(false);
+
+    return () => {
+      mutationControllerRef.current?.abort();
+      mutationControllerRef.current = null;
+      operationGeneration.invalidate();
+    };
+  }, [operationGeneration, routeKey]);
+
+  useEffect(() => {
+    const previousId = previousRouteId.current;
+    previousRouteId.current = route.id;
+    if (route.id !== "portfolioNew" || previousId === "portfolioNew") return;
+
+    setForm(createEmptyPortfolioFormState());
+    setEditingId(undefined);
+    setEditingRouteParam(undefined);
+    setFieldErrors({});
+    setGlobalError(undefined);
+    setContentSchemaError(undefined);
+    setIsLoading(false);
+  }, [route.id]);
 
   useEffect(() => {
     if (!isEditMode) return;
@@ -49,6 +105,11 @@ export function PortfolioFormPage({
     const controller = new AbortController();
     let isActive = true;
     setIsLoading(true);
+    setEditingId(undefined);
+    setEditingRouteParam(undefined);
+    setFieldErrors({});
+    setGlobalError(undefined);
+    setContentSchemaError(undefined);
 
     void getPortfolioBySlug(supabaseConfig, route.param, {
       signal: controller.signal,
@@ -63,8 +124,18 @@ export function PortfolioFormPage({
         setGlobalError("해당 slug의 Portfolio를 찾을 수 없습니다.");
         return;
       }
+      try {
+        setForm(portfolioFormFromRow(result.value));
+      } catch (error) {
+        if (error instanceof ManagedContentSchemaError) {
+          setContentSchemaError(error.message);
+          setGlobalError(error.message);
+          return;
+        }
+        throw error;
+      }
       setEditingId(result.value.id);
-      setForm(portfolioFormFromRow(result.value));
+      setEditingRouteParam(route.param);
       setGlobalError(undefined);
     });
 
@@ -74,9 +145,18 @@ export function PortfolioFormPage({
     };
   }, [isEditMode, route]);
 
-  const isDisabled = isLoading || isPending;
+  const isDisabled =
+    isLoading ||
+    isPending ||
+    contentSchemaError !== undefined ||
+    (isEditMode && !hasCurrentEditingPortfolio);
 
   const savePortfolio = async (status: PortfolioStatus) => {
+    if (isLoading || isPending || contentSchemaError) return;
+    if (isEditMode && (!hasCurrentEditingPortfolio || !editingId)) {
+      setGlobalError("저장할 Portfolio를 먼저 불러와야 합니다.");
+      return;
+    }
     setFieldErrors({});
     setGlobalError(undefined);
 
@@ -88,11 +168,35 @@ export function PortfolioFormPage({
       return;
     }
 
+    mutationControllerRef.current?.abort();
+    const operationController = new AbortController();
+    mutationControllerRef.current = operationController;
+    const operation = operationGeneration.begin(routeKey);
+    const releaseOperation = () => {
+      if (mutationControllerRef.current === operationController) {
+        mutationControllerRef.current = null;
+      }
+    };
+
     setIsPending(true);
-    const result =
-      isEditMode && editingId
-        ? await updatePortfolio(supabaseConfig, editingId, built.input)
-        : await createPortfolio(supabaseConfig, built.input);
+    let result: Awaited<ReturnType<typeof createPortfolio>>;
+    if (isEditMode) {
+      if (!editingId || !hasCurrentEditingPortfolio) {
+        releaseOperation();
+        setIsPending(false);
+        setGlobalError("저장할 Portfolio를 먼저 불러와야 합니다.");
+        return;
+      }
+      result = await updatePortfolio(supabaseConfig, editingId, built.input, {
+        signal: operationController.signal,
+      });
+    } else {
+      result = await createPortfolio(supabaseConfig, built.input, {
+        signal: operationController.signal,
+      });
+    }
+    if (!operationIsCurrent(operation)) return;
+    releaseOperation();
     setIsPending(false);
 
     if (!result.ok) {
@@ -103,17 +207,51 @@ export function PortfolioFormPage({
       return;
     }
 
-    setForm(portfolioFormFromRow(result.value));
+    try {
+      setForm(portfolioFormFromRow(result.value));
+    } catch (error) {
+      if (error instanceof ManagedContentSchemaError) {
+        setContentSchemaError(error.message);
+        setGlobalError(error.message);
+        return;
+      }
+      throw error;
+    }
     setEditingId(result.value.id);
+    setEditingRouteParam(result.value.slug);
+    if (!operationIsCurrent(operation)) return;
     onNavigate(`/portfolio/${result.value.slug}`);
   };
 
   const deleteCurrentPortfolio = async () => {
-    if (!isEditMode || !editingId) return;
+    if (
+      !isEditMode ||
+      !hasCurrentEditingPortfolio ||
+      !editingId ||
+      isLoading ||
+      isPending ||
+      contentSchemaError
+    ) {
+      return;
+    }
     if (!window.confirm("이 Portfolio를 삭제하시겠습니까?")) return;
 
+    mutationControllerRef.current?.abort();
+    const operationController = new AbortController();
+    mutationControllerRef.current = operationController;
+    const operation = operationGeneration.begin(routeKey);
+    const releaseOperation = () => {
+      if (mutationControllerRef.current === operationController) {
+        mutationControllerRef.current = null;
+      }
+    };
+
     setIsPending(true);
-    const result = await deletePortfolio(supabaseConfig, editingId);
+    const result = await deletePortfolio(supabaseConfig, editingId, {
+      signal: operationController.signal,
+    });
+    if (!operationIsCurrent(operation)) return;
+    releaseOperation();
     setIsPending(false);
 
     if (!result.ok) {
@@ -121,6 +259,7 @@ export function PortfolioFormPage({
       return;
     }
 
+    if (!operationIsCurrent(operation)) return;
     onNavigate("/portfolio");
   };
 
@@ -152,7 +291,7 @@ export function PortfolioFormPage({
         <div className={styles.portfolioFormActions}>
           <AdminButton
             className={`${styles.portfolioFormActionButton} ${styles.portfolioFormBackButton} ${styles.portfolioFormSecondaryAction}`}
-            disabled={isDisabled}
+            disabled={isLoading || isPending}
             onClick={() => onNavigate("/portfolio")}
             size="figma"
             variant="secondary"
@@ -163,7 +302,7 @@ export function PortfolioFormPage({
             {isEditMode ? (
               <AdminButton
                 className={styles.portfolioFormActionButton}
-                disabled={isDisabled || !editingId}
+                disabled={isDisabled || !hasCurrentEditingPortfolio}
                 icon={<AdminTrashIcon size={16} />}
                 onClick={deleteCurrentPortfolio}
                 size="figma"

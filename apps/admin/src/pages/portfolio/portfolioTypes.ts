@@ -1,10 +1,10 @@
 import type {
   AdminJson,
-  ContentMode,
   PortfolioCreateInput,
   PortfolioStatus,
   PortfolioType,
 } from "../../lib/adminRepositoryTypes";
+import type { ManagedContentFormValue } from "../../lib/managedContent";
 import type { AdminRoute } from "../../lib/router";
 
 export type PortfolioAdminPageProps = {
@@ -19,6 +19,7 @@ export type PortfolioFormRoute = Extract<
 
 export type PortfolioFieldKey =
   | "companyName"
+  | "content"
   | "landingSections"
   | "serviceSections"
   | "slug"
@@ -26,10 +27,8 @@ export type PortfolioFieldKey =
   | "type";
 export type PortfolioFormErrors = Partial<Record<PortfolioFieldKey, string>>;
 
-export type PortfolioFormState = {
+export type PortfolioFormState = ManagedContentFormValue & {
   readonly companyName: string;
-  readonly content: string;
-  readonly contentMode: ContentMode;
   readonly coreFeatures: readonly string[];
   readonly developmentPeriod: string;
   readonly estimateLabel: string;
@@ -41,6 +40,9 @@ export type PortfolioFormState = {
   readonly serviceSections: string;
   readonly slug: string;
   readonly status: PortfolioStatus;
+  readonly thumbnailAlt: string;
+  readonly thumbnailPath: string | null;
+  readonly thumbnailPublicUrl: string | null;
   readonly title: string;
   readonly type: PortfolioType | "";
   readonly workScopes: readonly string[];

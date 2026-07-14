@@ -1,3 +1,7 @@
+import {
+  SUPPORTED_CONTENT_SCHEMA_VERSION,
+  type TiptapDocument,
+} from "@repo/content/types";
 import type {
   AdminSelectOption,
   AdminStatusTone,
@@ -9,6 +13,11 @@ import type {
   BlogPostStatus,
   BlogPostType,
 } from "../../lib/adminRepositoryTypes";
+import {
+  managedContentFormFromRow,
+  managedContentInputFromForm,
+  managedContentIsEmpty,
+} from "../../lib/managedContent";
 import {
   parseAdminSlug,
   parseRequiredAdminString,
@@ -22,21 +31,35 @@ import type {
   TypeFilter,
 } from "./blogTypes";
 
-export const emptyBlogForm: BlogFormState = {
-  bannerPublished: false,
-  bannerSections: "[]",
-  content: "",
-  contentMode: "html",
-  landingPublished: false,
-  landingSections: "[]",
-  publishedDate: "",
-  seoDescription: "",
-  slug: "",
-  status: "draft",
-  thumbnailAlt: "",
-  title: "",
-  type: "",
-};
+const emptyDocument = {
+  type: "doc",
+  content: [{ type: "paragraph" }],
+} as const satisfies TiptapDocument;
+
+export function createEmptyBlogFormState(): BlogFormState {
+  return {
+    bannerPublished: false,
+    bannerSections: "[]",
+    content: "",
+    contentAssetBaseEnabled: false,
+    contentAssetScope: crypto.randomUUID(),
+    contentAuthoringMode: "wysiwyg",
+    contentJson: emptyDocument,
+    contentMode: "html",
+    contentSchemaVersion: SUPPORTED_CONTENT_SCHEMA_VERSION,
+    contentSourceBackup: null,
+    landingPublished: false,
+    landingSections: "[]",
+    publishedDate: "",
+    seoDescription: "",
+    slug: "",
+    status: "draft",
+    summary: "",
+    thumbnailAlt: "",
+    title: "",
+    type: "",
+  };
+}
 
 export const blogStatusOptions = [
   { label: "임시 저장", value: "draft" },
@@ -177,12 +200,19 @@ function errorFieldFromName(field: string): keyof BlogFieldErrors | undefined {
   switch (field) {
     case "bannerSections":
     case "content":
+    case "contentAssetBaseEnabled":
+    case "contentAssetScope":
+    case "contentAuthoringMode":
+    case "contentJson":
     case "contentMode":
+    case "contentSchemaVersion":
+    case "contentSourceBackup":
     case "landingSections":
     case "publishedDate":
     case "seoDescription":
     case "slug":
     case "status":
+    case "summary":
     case "thumbnail":
     case "thumbnailAlt":
     case "title":
@@ -194,17 +224,19 @@ function errorFieldFromName(field: string): keyof BlogFieldErrors | undefined {
 }
 
 export function blogFormFromRow(row: BlogPostRow): BlogFormState {
+  const managedContent = managedContentFormFromRow(row);
+
   return {
+    ...managedContent,
     bannerPublished: row.banner_published,
     bannerSections: jsonText(row.banner_sections),
-    content: row.content,
-    contentMode: row.content_mode,
     landingPublished: row.landing_published,
     landingSections: jsonText(row.landing_sections),
     publishedDate: blogDateInputValue(row.published_date),
     seoDescription: row.seo_description,
     slug: row.slug,
     status: row.status,
+    summary: row.summary,
     thumbnailAlt: row.thumbnail_alt,
     title: row.title,
     type: row.type,
@@ -264,6 +296,7 @@ export function validateBlogForm(form: BlogFormState): BlogValidationResult {
     "bannerSections",
     "Banner sections",
   );
+  const managedContent = managedContentInputFromForm(form);
 
   if (!titleResult.ok) fields.title = titleResult.error.message;
   if (!slugResult.ok) fields.slug = slugResult.error.message;
@@ -272,28 +305,38 @@ export function validateBlogForm(form: BlogFormState): BlogValidationResult {
     fields.landingSections = landingSectionsResult.message;
   if (!bannerSectionsResult.ok)
     fields.bannerSections = bannerSectionsResult.message;
+  if (!managedContent) fields.content = "본문 형식을 확인해 주세요.";
+  if (form.status === "published" && managedContentIsEmpty(form)) {
+    fields.content = "게시하려면 본문을 입력해 주세요.";
+  }
+  if (form.status === "published" && form.summary.trim().length === 0) {
+    fields.summary = "게시하려면 카드 요약을 입력해 주세요.";
+  }
 
   if (
     !titleResult.ok ||
     !slugResult.ok ||
     type === "" ||
     !landingSectionsResult.ok ||
-    !bannerSectionsResult.ok
+    !bannerSectionsResult.ok ||
+    !managedContent ||
+    fields.content !== undefined ||
+    fields.summary !== undefined
   ) {
     return { fields, message: "입력값을 확인해 주세요.", ok: false };
   }
 
   const value: BlogParsedInput = {
+    ...managedContent,
     bannerPublished: form.bannerPublished,
     bannerSections: bannerSectionsResult.value,
-    content: form.content,
-    contentMode: form.contentMode,
     landingPublished: form.landingPublished,
     landingSections: landingSectionsResult.value,
     publishedDate: form.publishedDate || null,
     seoDescription: form.seoDescription,
     slug: slugResult.value,
     status: form.status,
+    summary: form.summary.trim(),
     thumbnailAlt: form.thumbnailAlt.trim(),
     title: titleResult.value.value,
     type,

@@ -11,7 +11,7 @@ import { adminErr, adminOk } from "./adminTypes";
 import type { SupabaseConfig } from "./supabase";
 
 const portfolioColumns =
-  "id,status,type,slug,title,company_name,product_description,estimate_label,development_period,core_features,work_scopes,content_mode,content,seo_description,landing_published,service_published,landing_sections,service_sections,created_at,updated_at,deleted_at";
+  "id,status,type,slug,title,company_name,product_description,estimate_label,development_period,core_features,work_scopes,content_mode,content_authoring_mode,content_json,content_schema_version,content_source_backup,content_asset_scope,content_asset_base_enabled,content,seo_description,thumbnail_path,thumbnail_public_url,thumbnail_alt,landing_published,service_published,landing_sections,service_sections,published_at,created_at,updated_at,deleted_at";
 
 type PortfolioInsert = {
   readonly status: PortfolioCreateInput["status"];
@@ -24,9 +24,18 @@ type PortfolioInsert = {
   readonly development_period: string;
   readonly core_features: readonly string[];
   readonly work_scopes: readonly string[];
-  readonly content_mode: PortfolioCreateInput["contentMode"];
   readonly content: string;
+  readonly content_asset_base_enabled: boolean;
+  readonly content_asset_scope: string;
+  readonly content_authoring_mode: PortfolioCreateInput["contentAuthoringMode"];
+  readonly content_json: PortfolioCreateInput["contentJson"];
+  readonly content_mode: PortfolioCreateInput["contentMode"];
+  readonly content_schema_version: PortfolioCreateInput["contentSchemaVersion"];
+  readonly content_source_backup: string | null;
   readonly seo_description: string;
+  readonly thumbnail_alt: string;
+  readonly thumbnail_path: string | null;
+  readonly thumbnail_public_url: string | null;
   readonly landing_published: boolean;
   readonly service_published: boolean;
   readonly landing_sections: PortfolioCreateInput["landingSections"];
@@ -48,9 +57,18 @@ type PortfolioUpdateDraft = {
   development_period?: string;
   core_features?: readonly string[];
   work_scopes?: readonly string[];
-  content_mode?: PortfolioInsert["content_mode"];
   content?: string;
+  content_asset_base_enabled?: boolean;
+  content_asset_scope?: string;
+  content_authoring_mode?: PortfolioInsert["content_authoring_mode"];
+  content_json?: PortfolioInsert["content_json"];
+  content_mode?: PortfolioInsert["content_mode"];
+  content_schema_version?: PortfolioInsert["content_schema_version"];
+  content_source_backup?: string | null;
   seo_description?: string;
+  thumbnail_alt?: string;
+  thumbnail_path?: string | null;
+  thumbnail_public_url?: string | null;
   landing_published?: boolean;
   service_published?: boolean;
   landing_sections?: PortfolioInsert["landing_sections"];
@@ -69,9 +87,18 @@ function portfolioInsertFromInput(input: PortfolioCreateInput): PortfolioInsert 
     development_period: input.developmentPeriod,
     core_features: input.coreFeatures,
     work_scopes: input.workScopes,
-    content_mode: input.contentMode,
     content: input.content,
+    content_asset_base_enabled: input.contentAssetBaseEnabled,
+    content_asset_scope: input.contentAssetScope,
+    content_authoring_mode: input.contentAuthoringMode,
+    content_json: input.contentJson,
+    content_mode: input.contentMode,
+    content_schema_version: input.contentSchemaVersion,
+    content_source_backup: input.contentSourceBackup,
     seo_description: input.seoDescription,
+    thumbnail_alt: input.thumbnailAlt,
+    thumbnail_path: input.thumbnailPath,
+    thumbnail_public_url: input.thumbnailPublicUrl,
     landing_published: input.landingPublished,
     service_published: input.servicePublished,
     landing_sections: input.landingSections,
@@ -92,9 +119,24 @@ function portfolioUpdateFromInput(input: PortfolioUpdateInput): PortfolioUpdate 
   if (input.developmentPeriod !== undefined) update.development_period = input.developmentPeriod;
   if (input.coreFeatures !== undefined) update.core_features = input.coreFeatures;
   if (input.workScopes !== undefined) update.work_scopes = input.workScopes;
-  if (input.contentMode !== undefined) update.content_mode = input.contentMode;
   if (input.content !== undefined) update.content = input.content;
+  if (input.contentAssetBaseEnabled !== undefined)
+    update.content_asset_base_enabled = input.contentAssetBaseEnabled;
+  if (input.contentAssetScope !== undefined)
+    update.content_asset_scope = input.contentAssetScope;
+  if (input.contentAuthoringMode !== undefined)
+    update.content_authoring_mode = input.contentAuthoringMode;
+  if (input.contentJson !== undefined) update.content_json = input.contentJson;
+  if (input.contentMode !== undefined) update.content_mode = input.contentMode;
+  if (input.contentSchemaVersion !== undefined)
+    update.content_schema_version = input.contentSchemaVersion;
+  if (input.contentSourceBackup !== undefined)
+    update.content_source_backup = input.contentSourceBackup;
   if (input.seoDescription !== undefined) update.seo_description = input.seoDescription;
+  if (input.thumbnailAlt !== undefined) update.thumbnail_alt = input.thumbnailAlt;
+  if (input.thumbnailPath !== undefined) update.thumbnail_path = input.thumbnailPath;
+  if (input.thumbnailPublicUrl !== undefined)
+    update.thumbnail_public_url = input.thumbnailPublicUrl;
   if (input.landingPublished !== undefined) update.landing_published = input.landingPublished;
   if (input.servicePublished !== undefined) update.service_published = input.servicePublished;
   if (input.landingSections !== undefined) update.landing_sections = input.landingSections;

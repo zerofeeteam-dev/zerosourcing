@@ -1,4 +1,5 @@
-import type { BlogPostCreateInput, BlogPostStatus, BlogPostType, ContentMode } from "../../lib/adminRepositoryTypes";
+import type { BlogPostCreateInput, BlogPostStatus, BlogPostType } from "../../lib/adminRepositoryTypes";
+import type { ManagedContentFormValue } from "../../lib/managedContent";
 import type { AdminThumbnailFile } from "../../lib/adminTypes";
 import type { AdminRoute } from "../../lib/router";
 
@@ -12,17 +13,16 @@ export type LoadState = "idle" | "loading" | "ready";
 export type StatusFilter = BlogPostStatus | "all";
 export type TypeFilter = BlogPostType | "all";
 
-export type BlogFormState = {
+export type BlogFormState = ManagedContentFormValue & {
   readonly bannerPublished: boolean;
   readonly bannerSections: string;
-  readonly content: string;
-  readonly contentMode: ContentMode;
   readonly landingPublished: boolean;
   readonly landingSections: string;
   readonly publishedDate: string;
   readonly seoDescription: string;
   readonly slug: string;
   readonly status: BlogPostStatus;
+  readonly summary: string;
   readonly thumbnailAlt: string;
   readonly title: string;
   readonly type: BlogPostType | "";
@@ -31,7 +31,14 @@ export type BlogFormState = {
 export type BlogFieldErrors = Partial<Record<keyof BlogFormState | "thumbnail", string>>;
 export type BlogFieldChange = <Key extends keyof BlogFormState>(key: Key, value: BlogFormState[Key]) => void;
 
-export type BlogParsedInput = Omit<BlogPostCreateInput, "thumbnailPath" | "thumbnailPublicUrl">;
+type DistributiveOmit<TValue, TKey extends PropertyKey> = TValue extends unknown
+  ? Omit<TValue, TKey>
+  : never;
+
+export type BlogParsedInput = DistributiveOmit<
+  BlogPostCreateInput,
+  "thumbnailPath" | "thumbnailPublicUrl"
+>;
 
 export type BlogValidationResult =
   | { readonly ok: true; readonly value: BlogParsedInput }

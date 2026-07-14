@@ -10,7 +10,7 @@
     "lint": "eslint --max-warnings 0",
     "check-types": "tsc --noEmit",
     "test": "pnpm run test:model && pnpm run test:unit",
-    "test:model": "node --no-warnings=ExperimentalWarning --experimental-transform-types --loader ./tests/typescript-loader.mjs --test src/components/admin/AdminTable.test.tsx src/pages/blog/blogFormModel.test.ts src/pages/blog/blogModel.test.ts",
+    "test:model": "node --no-warnings=ExperimentalWarning --experimental-transform-types --loader ./tests/typescript-loader.mjs --test src/components/admin/AdminTable.test.tsx src/lib/adminWriteOutcome.test.ts src/lib/operationGeneration.test.ts src/pages/blog/blogFormModel.test.ts src/pages/blog/blogModel.test.ts src/pages/portfolio/portfolioModel.test.ts",
     "test:unit": "vitest run",
     "test:watch": "vitest",
     "test:blog-form": "node --no-warnings=ExperimentalWarning --experimental-transform-types --loader ./tests/typescript-loader.mjs --test src/pages/blog/blogFormModel.test.ts"

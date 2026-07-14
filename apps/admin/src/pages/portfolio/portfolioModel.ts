@@ -1,3 +1,7 @@
+import {
+  SUPPORTED_CONTENT_SCHEMA_VERSION,
+  type TiptapDocument,
+} from "@repo/content/types";
 import type {
   AdminSelectOption,
   AdminStatusTone,
@@ -8,6 +12,11 @@ import type {
   PortfolioStatus,
   PortfolioType,
 } from "../../lib/adminRepositoryTypes";
+import {
+  managedContentFormFromRow,
+  managedContentInputFromForm,
+  managedContentIsEmpty,
+} from "../../lib/managedContent";
 import {
   parseAdminSlug,
   parseRequiredAdminString,
@@ -20,7 +29,10 @@ import type {
   PortfolioJsonParseResult,
 } from "./portfolioTypes";
 
-const emptyJsonText = "{}";
+const emptyDocument = {
+  type: "doc",
+  content: [{ type: "paragraph" }],
+} as const satisfies TiptapDocument;
 
 export const portfolioStatusOptions = [
   { label: "임시 저장", value: "draft" },
@@ -43,25 +55,36 @@ export const typeFilterOptions = [
   ...portfolioTypeOptions,
 ] as const satisfies readonly AdminSelectOption[];
 
-export const emptyPortfolioFormState: PortfolioFormState = {
-  companyName: "",
-  content: "",
-  contentMode: "html",
-  coreFeatures: [""],
-  developmentPeriod: "",
-  estimateLabel: "",
-  landingPublished: false,
-  landingSections: emptyJsonText,
-  productDescription: "",
-  seoDescription: "",
-  servicePublished: false,
-  serviceSections: emptyJsonText,
-  slug: "",
-  status: "draft",
-  title: "",
-  type: "",
-  workScopes: [""],
-};
+export function createEmptyPortfolioFormState(): PortfolioFormState {
+  return {
+    companyName: "",
+    content: "",
+    contentAssetBaseEnabled: false,
+    contentAssetScope: crypto.randomUUID(),
+    contentAuthoringMode: "wysiwyg",
+    contentJson: emptyDocument,
+    contentMode: "html",
+    contentSchemaVersion: SUPPORTED_CONTENT_SCHEMA_VERSION,
+    contentSourceBackup: null,
+    coreFeatures: [""],
+    developmentPeriod: "",
+    estimateLabel: "",
+    landingPublished: false,
+    landingSections: "{}",
+    productDescription: "",
+    seoDescription: "",
+    servicePublished: false,
+    serviceSections: "{}",
+    slug: "",
+    status: "draft",
+    thumbnailAlt: "",
+    thumbnailPath: null,
+    thumbnailPublicUrl: null,
+    title: "",
+    type: "",
+    workScopes: [""],
+  };
+}
 
 export function portfolioStatusLabel(status: PortfolioStatus): string {
   switch (status) {
@@ -113,10 +136,11 @@ function jsonText(value: AdminJson): string {
 }
 
 export function portfolioFormFromRow(row: PortfolioRow): PortfolioFormState {
+  const managedContent = managedContentFormFromRow(row);
+
   return {
+    ...managedContent,
     companyName: row.company_name,
-    content: row.content,
-    contentMode: row.content_mode,
     coreFeatures: row.core_features.length > 0 ? row.core_features : [""],
     developmentPeriod: row.development_period,
     estimateLabel: row.estimate_label,
@@ -128,6 +152,9 @@ export function portfolioFormFromRow(row: PortfolioRow): PortfolioFormState {
     serviceSections: jsonText(row.service_sections),
     slug: row.slug,
     status: row.status,
+    thumbnailAlt: row.thumbnail_alt,
+    thumbnailPath: row.thumbnail_path,
+    thumbnailPublicUrl: row.thumbnail_public_url,
     title: row.title,
     type: row.type,
     workScopes: row.work_scopes.length > 0 ? row.work_scopes : [""],
@@ -193,6 +220,7 @@ export function buildPortfolioInput(
     form.serviceSections,
     "serviceSections",
   );
+  const managedContent = managedContentInputFromForm(form);
 
   if (!slug.ok) errors.slug = slug.error.message;
   if (!title.ok) errors.title = title.error.message;
@@ -200,6 +228,10 @@ export function buildPortfolioInput(
   if (!form.type) errors.type = "포트폴리오 유형을 선택해 주세요.";
   if (!landingSections.ok) errors.landingSections = landingSections.error;
   if (!serviceSections.ok) errors.serviceSections = serviceSections.error;
+  if (!managedContent) errors.content = "본문 형식을 확인해 주세요.";
+  if (form.status === "published" && managedContentIsEmpty(form)) {
+    errors.content = "게시하려면 본문을 입력해 주세요.";
+  }
 
   if (
     !slug.ok ||
@@ -207,7 +239,9 @@ export function buildPortfolioInput(
     !companyName.ok ||
     !form.type ||
     !landingSections.ok ||
-    !serviceSections.ok
+    !serviceSections.ok ||
+    !managedContent ||
+    errors.content !== undefined
   ) {
     return { errors };
   }
@@ -215,9 +249,8 @@ export function buildPortfolioInput(
   return {
     errors,
     input: {
+      ...managedContent,
       companyName: companyName.value.value,
-      content: form.content,
-      contentMode: form.contentMode,
       coreFeatures: compactItems(form.coreFeatures),
       developmentPeriod: form.developmentPeriod.trim(),
       estimateLabel: form.estimateLabel.trim(),
@@ -229,6 +262,9 @@ export function buildPortfolioInput(
       serviceSections: serviceSections.value,
       slug: slug.value,
       status: form.status,
+      thumbnailAlt: form.thumbnailAlt.trim(),
+      thumbnailPath: form.thumbnailPath,
+      thumbnailPublicUrl: form.thumbnailPublicUrl,
       title: title.value.value,
       type: form.type,
       workScopes: compactItems(form.workScopes),

@@ -10,27 +10,17 @@ import {
   AdminShell,
 } from "./components/admin";
 import { BlogFormFields } from "./pages/blog/BlogFormFields";
-import type { BlogFormState } from "./pages/blog/blogTypes";
+import { createEmptyBlogFormState } from "./pages/blog/blogModel";
 import styles from "./pages/BlogAdminPage.module.css";
 
-const initialForm: BlogFormState = {
-  bannerPublished: true,
-  bannerSections: '[{"id":1},{"id":2}]',
-  content: "",
-  contentMode: "html",
-  landingPublished: true,
-  landingSections: '[{"id":1},{"id":2},{"id":3}]',
-  publishedDate: "",
-  seoDescription: "",
-  slug: "",
-  status: "draft",
-  thumbnailAlt: "",
-  title: "",
-  type: "",
-};
-
 function VisualTest() {
-  const [form, setForm] = useState(initialForm);
+  const [form, setForm] = useState(() => ({
+    ...createEmptyBlogFormState(),
+    bannerPublished: true,
+    bannerSections: '[{"id":1},{"id":2}]',
+    landingPublished: true,
+    landingSections: '[{"id":1},{"id":2},{"id":3}]',
+  }));
 
   return (
     <AdminShell activeItem="blog">
