@@ -9,21 +9,37 @@
     "preview": "vite preview --host 0.0.0.0 --port 3002",
     "lint": "eslint --max-warnings 0",
     "check-types": "tsc --noEmit",
+    "test": "pnpm run test:model && pnpm run test:unit",
+    "test:model": "node --no-warnings=ExperimentalWarning --experimental-transform-types --loader ./tests/typescript-loader.mjs --test src/components/admin/AdminTable.test.tsx src/pages/blog/blogFormModel.test.ts src/pages/blog/blogModel.test.ts",
+    "test:unit": "vitest run",
+    "test:watch": "vitest",
     "test:blog-form": "node --no-warnings=ExperimentalWarning --experimental-transform-types --loader ./tests/typescript-loader.mjs --test src/pages/blog/blogFormModel.test.ts"
   },
   "dependencies": {
     "@repo/content": "workspace:*",
     "@supabase/supabase-js": "2.109.0",
+    "@tiptap/core": "3.27.1",
+    "@tiptap/extension-file-handler": "3.27.1",
+    "@tiptap/extension-image": "3.27.1",
+    "@tiptap/extension-placeholder": "3.27.1",
+    "@tiptap/extension-text-align": "3.27.1",
+    "@tiptap/pm": "3.27.1",
+    "@tiptap/react": "3.27.1",
+    "@tiptap/starter-kit": "3.27.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
+    "@testing-library/react": "16.3.2",
+    "@testing-library/user-event": "14.6.1",
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",
     "@vitejs/plugin-react": "^4.4.1",
     "eslint": "^9.39.1",
+    "jsdom": "26.1.0",
     "typescript": "5.9.2",
-    "vite": "^6.3.5"
+    "vite": "^6.3.5",
+    "vitest": "4.1.10"
   }
 }
