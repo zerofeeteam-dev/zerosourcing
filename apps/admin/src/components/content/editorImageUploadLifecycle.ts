@@ -8,16 +8,17 @@ import {
   type UploadedEditorImage,
   type UploadEditorImage,
 } from "./contentEditorExtensions";
+import type {
+  PendingAssetProducerKey,
+  PendingAssetWork,
+} from "./generationPendingAssetRegistry";
 import { isAllowedManagedImageUrl } from "./managedEditorDocument";
 
 /**
  * Cardinality of unfinished asset lifecycle work, including replacement and
  * orphan cleanup. Integrations must use `count > 0` only as a busy signal.
  */
-export type PendingEditorAssetWork = {
-  readonly count: number;
-  readonly documentKey: string;
-};
+export type PendingEditorAssetWork = PendingAssetWork;
 
 export type EditorRuntime = {
   active: boolean;
@@ -30,6 +31,7 @@ export type EditorRuntime = {
   invalidated: boolean;
   readonly isAllowedImageUrl: (url: string) => boolean;
   lastCleanFingerprint: string | null;
+  readonly pendingAssetProducerKey: PendingAssetProducerKey;
 };
 
 type PendingImageUpload = {
@@ -393,7 +395,8 @@ export class ImageUploadLifecycle {
   private notifyPendingAssetWork(runtime: EditorRuntime) {
     safelyCall(this.callbacks.notifyPendingAssetWork, {
       count: this.entriesFor(runtime).length,
-      documentKey: runtime.documentKey,
+      generation: runtime.documentKey,
+      producerKey: runtime.pendingAssetProducerKey,
     });
   }
 
@@ -458,10 +461,7 @@ export class ImageUploadLifecycle {
       if (!this.isLive(entry)) {
         await this.ensureCleanup(entry, "editor_replaced");
       } else if (
-        !isAllowedManagedImageUrl(
-          uploaded.url,
-          entry.runtime.isAllowedImageUrl,
-        )
+        !isAllowedManagedImageUrl(uploaded.url, entry.runtime.isAllowedImageUrl)
       ) {
         entry.uploadFailed = true;
         this.registerTerminal(entry, { kind: "remove" });
@@ -520,14 +520,18 @@ export class ImageUploadLifecycle {
         .map((entry) => entry.cleanupPromise)
         .filter((promise): promise is Promise<void> => promise !== null);
       if (cleanupPromises.length > 0) await Promise.all(cleanupPromises);
-      if (this.entriesFor(runtime).some((entry) => !entry.uploadSettled)) return;
+      if (this.entriesFor(runtime).some((entry) => !entry.uploadSettled))
+        return;
     }
 
     this.finalizingRuntimeIds.add(runtime.id);
     try {
       while (true) {
         const entries = this.entriesFor(runtime);
-        if (entries.length === 0 || entries.some((entry) => !entry.uploadSettled)) {
+        if (
+          entries.length === 0 ||
+          entries.some((entry) => !entry.uploadSettled)
+        ) {
           return;
         }
 
@@ -535,9 +539,7 @@ export class ImageUploadLifecycle {
         for (const entry of entries) {
           if (!entry.uploadedImage || entry.cleanupReason) continue;
           if (!this.isLive(entry)) {
-            cleanupPromises.push(
-              this.ensureCleanup(entry, "editor_replaced"),
-            );
+            cleanupPromises.push(this.ensureCleanup(entry, "editor_replaced"));
           } else if (!findManagedImage(entry.editor, entry.uploadId)) {
             cleanupPromises.push(
               this.ensureCleanup(entry, "placeholder_deleted"),

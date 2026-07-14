@@ -17,6 +17,7 @@ import {
   type PendingEditorAssetWork,
   safelyCall,
 } from "./editorImageUploadLifecycle";
+import { createPendingAssetProducerKey } from "./generationPendingAssetRegistry";
 import {
   type AdminRichTextCanonicalValue,
   assertSemanticallyValidInitialDocument,
@@ -89,6 +90,7 @@ export function AdminRichTextEditor({
       invalidated: false,
       isAllowedImageUrl,
       lastCleanFingerprint: null,
+      pendingAssetProducerKey: createPendingAssetProducerKey(),
     };
     nextRuntimeIdRef.current += 1;
   }
@@ -218,10 +220,7 @@ export function AdminRichTextEditor({
         reportContentError(currentEditor, error);
       },
       onCreate: ({ editor: currentEditor }) => {
-        if (
-          runtime.created ||
-          createdEditorsRef.current.has(currentEditor)
-        ) {
+        if (runtime.created || createdEditorsRef.current.has(currentEditor)) {
           return;
         }
         createdEditorsRef.current.add(currentEditor);

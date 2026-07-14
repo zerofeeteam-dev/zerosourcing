@@ -22,11 +22,9 @@ export function isAllowedManagedImageUrl(
   value: unknown,
   isAllowedImageUrl: (url: string) => boolean,
 ): value is string {
-  if (!isAllowedEditorLinkHref(value)) return false;
-
+  if (typeof value !== "string") return false;
   try {
-    const url = new URL(value);
-    return url.protocol === "https:" && isAllowedImageUrl(value) === true;
+    return isAllowedImageUrl(value) === true;
   } catch {
     return false;
   }
@@ -72,8 +70,7 @@ function assertSemanticallyValidNode(
     if (
       (hasOwn(attrs, "altReviewed") &&
         typeof attrs.altReviewed !== "boolean") ||
-      (hasOwn(attrs, "decorative") &&
-        typeof attrs.decorative !== "boolean") ||
+      (hasOwn(attrs, "decorative") && typeof attrs.decorative !== "boolean") ||
       (hasOwn(attrs, "uploadId") && attrs.uploadId !== null)
     ) {
       throw new Error("Stored editor content contains transient image state.");

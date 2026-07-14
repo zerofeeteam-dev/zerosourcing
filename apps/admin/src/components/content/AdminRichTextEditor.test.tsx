@@ -158,7 +158,8 @@ async function readyEditor(props: EditorMocks): Promise<HTMLElement> {
 
 function editorInstance(editor: HTMLElement): Editor {
   const instance = (editor as HTMLElement & { editor?: Editor }).editor;
-  if (!instance) throw new Error("Expected the mounted Tiptap editor instance.");
+  if (!instance)
+    throw new Error("Expected the mounted Tiptap editor instance.");
   return instance;
 }
 
@@ -174,11 +175,7 @@ function selectImage(editor: HTMLElement, index = 0): Editor {
   return instance;
 }
 
-function pasteFiles(
-  editor: HTMLElement,
-  files: readonly File[],
-  html = "",
-) {
+function pasteFiles(editor: HTMLElement, files: readonly File[], html = "") {
   fireEvent.paste(editor, {
     clipboardData: {
       files,
@@ -190,7 +187,9 @@ function pasteFiles(
 function stringifyConsoleCall(call: readonly unknown[]) {
   return call
     .map((value) =>
-      value instanceof Error ? `${value.name}: ${value.message}` : String(value),
+      value instanceof Error
+        ? `${value.name}: ${value.message}`
+        : String(value),
     )
     .join(" ");
 }
@@ -213,7 +212,9 @@ describe("AdminRichTextEditor", () => {
 
   beforeEach(() => {
     nextObjectUrl = 1;
-    consoleError = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    consoleError = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => undefined);
     consoleWarn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
     createObjectUrl = vi
       .spyOn(URL, "createObjectURL")
@@ -273,10 +274,7 @@ describe("AdminRichTextEditor", () => {
       return encoded;
     };
     const deeplyEncodedNewline = encodePercentLayers("%0a", 6);
-    const deeplyEncodedHiddenUnicode = encodePercentLayers(
-      "%e2%80%8b",
-      6,
-    );
+    const deeplyEncodedHiddenUnicode = encodePercentLayers("%e2%80%8b", 6);
 
     expect(normalizeEditorLinkHref(null)).toBeNull();
     expect(normalizeEditorLinkHref("   ")).toBeNull();
@@ -357,148 +355,152 @@ describe("AdminRichTextEditor", () => {
     expect(props.onChange).not.toHaveBeenCalled();
   });
 
-  it.each(
+  it.each([
     [
-      [
-        "H1 headings",
-        {
-          type: "doc",
-          content: [
-            {
-              type: "heading",
-              attrs: { level: 1 },
-              content: [{ type: "text", text: "unsafe heading" }],
+      "H1 headings",
+      {
+        type: "doc",
+        content: [
+          {
+            type: "heading",
+            attrs: { level: 1 },
+            content: [{ type: "text", text: "unsafe heading" }],
+          },
+        ],
+      },
+    ],
+    [
+      "unsupported text alignment",
+      {
+        type: "doc",
+        content: [{ type: "paragraph", attrs: { textAlign: "justify" } }],
+      },
+    ],
+    [
+      "data image URLs",
+      {
+        type: "doc",
+        content: [
+          {
+            type: "image",
+            attrs: { alt: "data", src: "data:image/png;base64,AA==" },
+          },
+        ],
+      },
+    ],
+    [
+      "blob image URLs",
+      {
+        type: "doc",
+        content: [
+          { type: "image", attrs: { alt: "blob", src: "blob:stale-preview" } },
+        ],
+      },
+    ],
+    [
+      "remote HTTP image URLs",
+      {
+        type: "doc",
+        content: [
+          {
+            type: "image",
+            attrs: {
+              alt: "http",
+              src: "http://storage.example.com/content/blog/scope/images/http.png",
             },
-          ],
-        },
-      ],
-      [
-        "unsupported text alignment",
-        {
-          type: "doc",
-          content: [{ type: "paragraph", attrs: { textAlign: "justify" } }],
-        },
-      ],
-      [
-        "data image URLs",
-        {
-          type: "doc",
-          content: [
-            { type: "image", attrs: { alt: "data", src: "data:image/png;base64,AA==" } },
-          ],
-        },
-      ],
-      [
-        "blob image URLs",
-        {
-          type: "doc",
-          content: [
-            { type: "image", attrs: { alt: "blob", src: "blob:stale-preview" } },
-          ],
-        },
-      ],
-      [
-        "non-HTTPS image URLs",
-        {
-          type: "doc",
-          content: [
-            {
-              type: "image",
-              attrs: {
-                alt: "http",
-                src: "http://storage.example.com/content/blog/scope/images/http.png",
+          },
+        ],
+      },
+    ],
+    [
+      "external-scope image URLs",
+      {
+        type: "doc",
+        content: [
+          {
+            type: "image",
+            attrs: {
+              alt: "other scope",
+              src: "https://storage.example.com/content/blog/other/images/external.png",
+            },
+          },
+        ],
+      },
+    ],
+    [
+      "transient image IDs",
+      {
+        type: "doc",
+        content: [
+          {
+            type: "image",
+            attrs: {
+              alt: "pending",
+              src: "https://storage.example.com/content/blog/scope/images/pending.png",
+              uploadId: "stale-upload",
+            },
+          },
+        ],
+      },
+    ],
+    [
+      "invalid private image attribute types",
+      {
+        type: "doc",
+        content: [
+          {
+            type: "image",
+            attrs: {
+              alt: "private",
+              altReviewed: "true",
+              decorative: false,
+              src: "https://storage.example.com/content/blog/scope/images/private.png",
+            },
+          },
+        ],
+      },
+    ],
+    [
+      "unsafe links",
+      {
+        type: "doc",
+        content: [
+          {
+            type: "paragraph",
+            content: [
+              {
+                type: "text",
+                text: "unsafe link",
+                marks: [
+                  { type: "link", attrs: { href: "javascript:alert(1)" } },
+                ],
               },
-            },
-          ],
-        },
-      ],
-      [
-        "external-scope image URLs",
-        {
-          type: "doc",
-          content: [
-            {
-              type: "image",
-              attrs: {
-                alt: "other scope",
-                src: "https://storage.example.com/content/blog/other/images/external.png",
-              },
-            },
-          ],
-        },
-      ],
-      [
-        "transient image IDs",
-        {
-          type: "doc",
-          content: [
-            {
-              type: "image",
-              attrs: {
-                alt: "pending",
-                src: "https://storage.example.com/content/blog/scope/images/pending.png",
-                uploadId: "stale-upload",
-              },
-            },
-          ],
-        },
-      ],
-      [
-        "invalid private image attribute types",
-        {
-          type: "doc",
-          content: [
-            {
-              type: "image",
-              attrs: {
-                alt: "private",
-                altReviewed: "true",
-                decorative: false,
-                src: "https://storage.example.com/content/blog/scope/images/private.png",
-              },
-            },
-          ],
-        },
-      ],
-      [
-        "unsafe links",
-        {
-          type: "doc",
-          content: [
-            {
-              type: "paragraph",
-              content: [
-                {
-                  type: "text",
-                  text: "unsafe link",
-                  marks: [
-                    { type: "link", attrs: { href: "javascript:alert(1)" } },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    ] satisfies readonly (readonly [string, TiptapDocument])[],
-  )("fails closed for semantic %s without repairing JSON", async (_, document) => {
-    const props = createEditorProps({
-      document,
-      documentKey: `semantic-invalid-${_}`,
-    });
-    renderEditor(props);
+            ],
+          },
+        ],
+      },
+    ],
+  ] satisfies readonly (readonly [string, TiptapDocument])[])(
+    "fails closed for semantic %s without repairing JSON",
+    async (_, document) => {
+      const props = createEditorProps({
+        document,
+        documentKey: `semantic-invalid-${_}`,
+      });
+      renderEditor(props);
 
-    const editor = await screen.findByRole("textbox", {
-      name: "본문 WYSIWYG 편집기",
-    });
-    await waitFor(() => {
-      expect(props.onContentError).toHaveBeenCalledTimes(1);
-      expect(editor.getAttribute("contenteditable")).toBe("false");
-      expect(editor.getAttribute("aria-invalid")).toBe("true");
-    });
-    expect(props.onCreate).not.toHaveBeenCalled();
-    expect(props.onChange).not.toHaveBeenCalled();
-  });
+      const editor = await screen.findByRole("textbox", {
+        name: "본문 WYSIWYG 편집기",
+      });
+      await waitFor(() => {
+        expect(props.onContentError).toHaveBeenCalledTimes(1);
+        expect(editor.getAttribute("contenteditable")).toBe("false");
+        expect(editor.getAttribute("aria-invalid")).toBe("true");
+      });
+      expect(props.onCreate).not.toHaveBeenCalled();
+      expect(props.onChange).not.toHaveBeenCalled();
+    },
+  );
 
   it("keeps the cursor stable across same-key controlled rerenders", async () => {
     const cursorDocument: TiptapDocument = {
@@ -566,10 +568,12 @@ describe("AdminRichTextEditor", () => {
       "blob:preview-1",
     );
     expect(props.uploadImage).toHaveBeenCalledWith(file);
-    expect(props.onPendingAssetWorkChange).toHaveBeenLastCalledWith({
-      count: 1,
-      documentKey: "new-record",
-    });
+    expect(props.onPendingAssetWorkChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ count: 1, generation: "new-record" }),
+    );
+    expect(
+      typeof props.onPendingAssetWorkChange.mock.lastCall?.[0].producerKey,
+    ).toBe("symbol");
     expect(props.onChange).not.toHaveBeenCalled();
     expect(editor.getAttribute("contenteditable")).toBe("true");
     expect(editor.querySelectorAll("img")).toHaveLength(1);
@@ -600,6 +604,29 @@ describe("AdminRichTextEditor", () => {
       "업로드 중에도 작성한 문장",
     );
     expect(value.html).not.toMatch(/blob:|uploadId/);
+  });
+
+  it("canonicalizes an exact local-loopback HTTP upload through the ownership predicate", async () => {
+    const result: UploadedEditorImage = {
+      alt: "local",
+      path: "content/blog/scope/images/local.png",
+      url: "http://127.0.0.1:54321/content/blog/scope/images/local.png",
+    };
+    const props = createEditorProps({
+      isAllowedImageUrl: vi.fn((url) => url === result.url),
+      uploadImage: vi.fn(async () => result),
+    });
+    renderEditor(props);
+    const editor = await readyEditor(props);
+    pasteFiles(editor, [
+      new File(["local"], "local.png", { type: "image/png" }),
+    ]);
+
+    await waitFor(() => expect(props.onChange).toHaveBeenCalledTimes(1));
+    expect(editor.querySelector("img")?.getAttribute("src")).toBe(result.url);
+    expect(props.onUploadError).not.toHaveBeenCalled();
+    expect(props.cleanupOrphanedImage).not.toHaveBeenCalled();
+    expect(props.onChange.mock.lastCall?.[0].html).toContain(result.url);
   });
 
   it("ignores unsupported files without starting pending work", async () => {
@@ -636,9 +663,7 @@ describe("AdminRichTextEditor", () => {
     await waitFor(() =>
       expect(props.onUploadError).toHaveBeenCalledWith(failure),
     );
-    expect(revokeObjectUrl).toHaveBeenCalledWith(
-      "blob:created-before-failure",
-    );
+    expect(revokeObjectUrl).toHaveBeenCalledWith("blob:created-before-failure");
     expect(revokeObjectUrl).toHaveBeenCalledTimes(1);
     expect(props.uploadImage).not.toHaveBeenCalled();
     expect(props.onPendingAssetWorkChange).not.toHaveBeenCalled();
@@ -662,10 +687,9 @@ describe("AdminRichTextEditor", () => {
 
     await waitFor(() => {
       expect(props.onUploadError).toHaveBeenCalledWith(failure);
-      expect(props.onPendingAssetWorkChange).toHaveBeenLastCalledWith({
-        count: 0,
-        documentKey: "new-record",
-      });
+      expect(props.onPendingAssetWorkChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({ count: 0, generation: "new-record" }),
+      );
     });
     expect(props.uploadImage).not.toHaveBeenCalled();
     expect(revokeObjectUrl).toHaveBeenCalledWith("blob:preview-1");
@@ -732,7 +756,7 @@ describe("AdminRichTextEditor", () => {
     editorInstance(editor).commands.setTextSelection({ from: 1, to: 6 });
 
     const pasted = new File(["paste"], "paste.png", { type: "image/png" });
-    pasteFiles(editor, [pasted], '<p>붙여넣기 HTML</p>');
+    pasteFiles(editor, [pasted], "<p>붙여넣기 HTML</p>");
 
     expect(editor.textContent).not.toContain("선택 본문");
     expect(editor.textContent).not.toContain("붙여넣기 HTML");
@@ -769,9 +793,7 @@ describe("AdminRichTextEditor", () => {
       clientX: 10,
       clientY: 10,
       dataTransfer: {
-        files: [
-          new File(["drop"], "between.png", { type: "image/png" }),
-        ],
+        files: [new File(["drop"], "between.png", { type: "image/png" })],
         getData: () => "",
         types: ["Files"],
       },
@@ -823,10 +845,9 @@ describe("AdminRichTextEditor", () => {
     expect(
       Array.from(editor.querySelectorAll("img"), (image) => image.src),
     ).toEqual([uploaded("first").url, uploaded("second").url]);
-    expect(props.onPendingAssetWorkChange).toHaveBeenLastCalledWith({
-      count: 0,
-      documentKey: "new-record",
-    });
+    expect(props.onPendingAssetWorkChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ count: 0, generation: "new-record" }),
+    );
 
     const canonical = props.onChange.mock.lastCall?.[0];
     if (!canonical) throw new Error("Expected a canonical editor change.");
@@ -861,10 +882,9 @@ describe("AdminRichTextEditor", () => {
 
     await waitFor(() => {
       expect(props.onUploadError).toHaveBeenCalledTimes(1);
-      expect(props.onPendingAssetWorkChange).toHaveBeenLastCalledWith({
-        count: 0,
-        documentKey: "new-record",
-      });
+      expect(props.onPendingAssetWorkChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({ count: 0, generation: "new-record" }),
+      );
     });
     expect(props.onUploadError).toHaveBeenCalledWith(failure);
     expect(props.onChange).not.toHaveBeenCalled();
@@ -1028,10 +1048,9 @@ describe("AdminRichTextEditor", () => {
     pendingUpload.reject(failure);
     await waitFor(() => {
       expect(props.onUploadError).toHaveBeenCalledWith(failure);
-      expect(props.onPendingAssetWorkChange).toHaveBeenLastCalledWith({
-        count: 0,
-        documentKey: "new-record",
-      });
+      expect(props.onPendingAssetWorkChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({ count: 0, generation: "new-record" }),
+      );
     });
     expect(editor.querySelector("img")).toBeNull();
     expect(revokeObjectUrl).toHaveBeenCalledWith("blob:preview-1");
@@ -1077,10 +1096,9 @@ describe("AdminRichTextEditor", () => {
         result,
         "placeholder_deleted",
       );
-      expect(props.onPendingAssetWorkChange).toHaveBeenLastCalledWith({
-        count: 0,
-        documentKey: "new-record",
-      });
+      expect(props.onPendingAssetWorkChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({ count: 0, generation: "new-record" }),
+      );
     });
     expect(props.onUploadError).toHaveBeenCalledTimes(1);
     expect(props.onChange).not.toHaveBeenCalled();
@@ -1135,10 +1153,9 @@ describe("AdminRichTextEditor", () => {
     pendingUpload.resolve(uploaded("cleanup"));
     await waitFor(() => {
       expect(props.onUploadError).toHaveBeenCalledWith(cleanupFailure);
-      expect(props.onPendingAssetWorkChange).toHaveBeenLastCalledWith({
-        count: 0,
-        documentKey: "new-record",
-      });
+      expect(props.onPendingAssetWorkChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({ count: 0, generation: "new-record" }),
+      );
     });
     expect(props.cleanupOrphanedImage).toHaveBeenCalledTimes(1);
     expect(props.onUploadError).toHaveBeenCalledTimes(1);
@@ -1232,8 +1249,7 @@ describe("AdminRichTextEditor", () => {
       ),
     );
     expect(
-      screen.getByRole("textbox", { name: "본문 WYSIWYG 편집기" })
-        .textContent,
+      screen.getByRole("textbox", { name: "본문 WYSIWYG 편집기" }).textContent,
     ).toContain("저장된 본문");
     expect(revokeObjectUrl).toHaveBeenCalledWith("blob:preview-1");
   });
@@ -1362,9 +1378,11 @@ describe("AdminRichTextEditor", () => {
         .disabled,
     ).toBe(true);
     expect(
-      (screen.getByRole("checkbox", {
-        name: "장식용 이미지",
-      }) as HTMLInputElement).disabled,
+      (
+        screen.getByRole("checkbox", {
+          name: "장식용 이미지",
+        }) as HTMLInputElement
+      ).disabled,
     ).toBe(true);
   });
 
@@ -1383,9 +1401,9 @@ describe("AdminRichTextEditor", () => {
     const prompt = vi
       .spyOn(window, "prompt")
       .mockReturnValue("example.com/docs");
-    await userEvent.setup().click(
-      screen.getByRole("button", { name: "링크 설정" }),
-    );
+    await userEvent
+      .setup()
+      .click(screen.getByRole("button", { name: "링크 설정" }));
 
     await waitFor(() =>
       expect(editor.querySelector("a")?.getAttribute("href")).toBe(
@@ -1408,13 +1426,11 @@ describe("AdminRichTextEditor", () => {
     expect(screen.queryByRole("button", { name: "제목 1" })).toBeNull();
     expect(
       screen.getByLabelText("본문 이미지 업로드").getAttribute("accept"),
-    ).toBe(
-      "image/png,image/jpeg,image/webp",
-    );
+    ).toBe("image/png,image/jpeg,image/webp");
     expect(
-      screen.getByRole("toolbar", { name: "본문 서식 도구" }).querySelectorAll(
-        "[data-toolbar-divider='true']",
-      ).length,
+      screen
+        .getByRole("toolbar", { name: "본문 서식 도구" })
+        .querySelectorAll("[data-toolbar-divider='true']").length,
     ).toBe(4);
     for (const label of [
       "본문 단락",

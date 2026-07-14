@@ -1,0 +1,348 @@
+.root,
+.modeBody,
+.legacySection,
+.sourceSection,
+.assetSection,
+.previewSection,
+.sectionHeader,
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.root,
+.modeBody,
+.legacySection {
+  gap: 20px;
+}
+
+.sourceSection,
+.assetSection,
+.previewSection {
+  gap: 14px;
+}
+
+.sectionHeader,
+.field {
+  gap: 6px;
+}
+
+.sectionHeaderRow,
+.assetRowHeader,
+.buttonRow,
+.baseOption,
+.assetResultRow {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+}
+
+.sectionHeaderRow,
+.assetRowHeader,
+.assetResultRow {
+  justify-content: space-between;
+}
+
+.sectionHeaderRow .sectionHeader {
+  flex: 1 1 auto;
+}
+
+.buttonRow {
+  flex-wrap: wrap;
+}
+
+.modeFieldset {
+  border: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+}
+
+.modeLegend,
+.sectionTitle,
+.label {
+  color: var(--color-gray-800);
+}
+
+.modeLegend {
+  composes: pretendard-bold-14 from global;
+}
+
+.modeCards {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.modeCard {
+  position: relative;
+}
+
+.modeCard input {
+  height: 1px;
+  opacity: 0;
+  position: absolute;
+  width: 1px;
+}
+
+.modeCardText {
+  background: #ffffff;
+  border: 1px solid var(--color-gray-200);
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px;
+}
+
+.modeCard input:checked + .modeCardText {
+  background: var(--color-brand-50);
+  border-color: var(--color-brand-400);
+}
+
+.modeCard input:focus-visible + .modeCardText {
+  outline: 3px solid var(--color-brand-50);
+  outline-offset: 2px;
+}
+
+.modeCard input:disabled + .modeCardText {
+  cursor: not-allowed;
+  opacity: 0.56;
+}
+
+.modeName {
+  composes: pretendard-bold-14 from global;
+  color: var(--color-gray-900);
+}
+
+.modeDescription,
+.description,
+.fileMeta,
+.scopeValue,
+.assetStatus,
+.assetResult,
+.loading,
+.copyStatus {
+  composes: pretendard-medium-12 from global;
+  margin: 0;
+}
+
+.modeDescription,
+.description,
+.fileMeta,
+.scopeValue,
+.assetStatus,
+.assetResult,
+.copyStatus {
+  color: var(--color-gray-500);
+  overflow-wrap: anywhere;
+}
+
+.sectionTitle {
+  composes: pretendard-bold-16 from global;
+  margin: 0;
+}
+
+.label,
+.baseOption,
+.fileButton,
+.assetPicker {
+  composes: pretendard-bold-14 from global;
+}
+
+.sourceTextarea,
+.pathInput {
+  composes: pretendard-medium-14 from global;
+  background: #ffffff;
+  border: 1px solid var(--color-gray-200);
+  border-radius: 8px;
+  color: var(--color-gray-900);
+  outline: 0;
+  padding: 12px;
+  width: 100%;
+}
+
+.sourceTextarea {
+  height: 360px;
+  resize: vertical;
+  white-space: pre;
+}
+
+.sourceTextarea:focus,
+.pathInput:focus {
+  border-color: var(--color-brand-500);
+  outline: 3px solid var(--color-brand-50);
+  outline-offset: 1px;
+}
+
+.sourceTextarea:disabled,
+.pathInput:disabled {
+  background: var(--color-gray-50);
+  color: var(--color-gray-400);
+  cursor: not-allowed;
+}
+
+.legacyPreview {
+  composes: pretendard-medium-14 from global;
+  background: var(--color-gray-50);
+  border: 1px solid var(--color-gray-100);
+  border-radius: 8px;
+  color: var(--color-gray-800);
+  margin: 0;
+  overflow: auto;
+  padding: 16px;
+  white-space: pre-wrap;
+}
+
+.fileButton,
+.assetPicker {
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid var(--color-gray-200);
+  border-radius: 8px;
+  color: var(--color-gray-800);
+  cursor: pointer;
+  display: inline-flex;
+  justify-content: center;
+  padding: 10px 14px;
+  width: fit-content;
+}
+
+.fileButton[aria-disabled="true"],
+.assetPicker[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+.visuallyHiddenInput {
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  width: 1px;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+}
+
+.baseOption {
+  color: var(--color-gray-800);
+  width: fit-content;
+}
+
+.baseOption input {
+  accent-color: var(--color-brand-500);
+}
+
+.assetList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.assetRow {
+  background: var(--color-gray-50);
+  border: 1px solid var(--color-gray-100);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+}
+
+.assetName {
+  composes: pretendard-bold-14 from global;
+  color: var(--color-gray-800);
+  overflow-wrap: anywhere;
+}
+
+.assetStatus {
+  flex: 0 0 auto;
+}
+
+.assetResultRow .assetResult {
+  flex: 1 1 auto;
+}
+
+.copyStatus {
+  color: var(--color-brand-600);
+}
+
+.divider {
+  background: var(--color-gray-100);
+  display: block;
+  height: 1px;
+  width: 100%;
+}
+
+.error {
+  composes: pretendard-medium-12 from global;
+  color: var(--color-error-600);
+  margin: 0;
+}
+
+.previewDirty {
+  composes: pretendard-medium-12 from global;
+  color: var(--color-brand-600);
+  margin: 0;
+}
+
+.warningText {
+  composes: pretendard-medium-12 from global;
+  margin: 0;
+}
+
+.loading {
+  color: var(--color-gray-500);
+}
+
+.warning {
+  background: var(--color-error-50);
+  border: 1px solid var(--color-error-200);
+  border-radius: 8px;
+  color: var(--color-error-700);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px;
+}
+
+.operationalAlert {
+  background: var(--color-error-50);
+  border: 1px solid var(--color-error-200);
+  border-radius: 8px;
+  color: var(--color-error-700);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+}
+
+.operationalAlertText {
+  composes: pretendard-medium-12 from global;
+  margin: 0;
+}
+
+.operationalIssuePath {
+  overflow-wrap: anywhere;
+}
+
+.operationalAlert button {
+  align-self: flex-start;
+}
+
+@media (max-width: 720px) {
+  .modeCards {
+    grid-template-columns: 1fr;
+  }
+
+  .sectionHeaderRow {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
