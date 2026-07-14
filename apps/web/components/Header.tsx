@@ -9,10 +9,8 @@ import { Button } from "@repo/ui/button";
 
 import { Icon } from "./Icon";
 import { emitCtaClick } from "./cta-events";
-import {
-  ensureGlassFilter,
-  supportsGlassRefraction,
-} from "./glassFilter";
+import { supportsGlassRefraction } from "./glassFilter";
+import { ensureLiquidGlassFilter } from "./liquidGlassFilter";
 import styles from "./Header.module.css";
 
 const imgLogo = "/figma-icons/ZerosourcingLogo.svg";
@@ -45,25 +43,25 @@ export function Header() {
     if (!element || !supportsGlassRefraction()) return;
 
     let timer = 0;
+    let requestToken = 0;
     const updateFilter = () => {
       const width = element.offsetWidth;
       const height = element.offsetHeight;
       if (!width || !height) return;
 
-      const filterId = ensureGlassFilter({
-        width,
-        height,
-        radius: height / 2,
-        bezel: 18,
-        scale: 54,
+      const token = ++requestToken;
+      void ensureLiquidGlassFilter({ width, height }).then((filterId) => {
+        // A later resize (or unmount) may have superseded this request.
+        if (!filterId || token !== requestToken) return;
+
+        const filter = `blur(8px) url("#${filterId}") saturate(var(--saturation))`;
+        element.style.backdropFilter = filter;
+        (
+          element.style as CSSStyleDeclaration & {
+            webkitBackdropFilter?: string;
+          }
+        ).webkitBackdropFilter = filter;
       });
-      const filter = `blur(8px) url("#${filterId}") saturate(1.5)`;
-      element.style.backdropFilter = filter;
-      (
-        element.style as CSSStyleDeclaration & {
-          webkitBackdropFilter?: string;
-        }
-      ).webkitBackdropFilter = filter;
     };
     const scheduleUpdate = () => {
       window.clearTimeout(timer);
@@ -75,6 +73,7 @@ export function Header() {
     observer.observe(element);
 
     return () => {
+      requestToken += 1;
       observer.disconnect();
       window.clearTimeout(timer);
     };
