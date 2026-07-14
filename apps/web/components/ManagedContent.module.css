@@ -1,0 +1,7 @@
+.plainText {
+  composes: pretendard-medium-16 from global;
+  margin: 0;
+  color: var(--color-gray-800);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}

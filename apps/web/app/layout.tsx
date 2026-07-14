@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "../../../design-system.css";
+import "@repo/content/rich-content.css";
 import organizationJsonLd from "./organization-json-ld.json";
 import {
   createPageMetadata,
