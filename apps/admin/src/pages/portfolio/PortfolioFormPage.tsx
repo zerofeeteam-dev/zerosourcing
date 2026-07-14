@@ -4,7 +4,17 @@ import {
   AdminButton,
   AdminTrashIcon,
 } from "../../components/admin";
-import { adminFailureMessage } from "../../lib/adminErrors";
+import {
+  adminFailureMessage,
+  networkFailure,
+  saveFailure,
+} from "../../lib/adminErrors";
+import type {
+  PortfolioCreateInput,
+  PortfolioRow,
+  PortfolioStatus,
+} from "../../lib/adminRepositoryTypes";
+import { adminErr } from "../../lib/adminTypes";
 import { ManagedContentSchemaError } from "../../lib/managedContent";
 import {
   createOperationGeneration,
@@ -18,6 +28,16 @@ import {
   updatePortfolio,
 } from "../../lib/portfolioRepository";
 import { supabaseConfig } from "../../lib/supabase";
+import { persistThumbnailChange } from "../../lib/thumbnailPersistence";
+import { usePendingAssetRegistration } from "../../navigation/PendingAssetNavigation";
+import {
+  managedContentActionBlockReason,
+  thumbnailCleanupWarning,
+} from "../content/managedContentFormFeedback";
+import { validateManagedContentImagesForPublish } from "../content/managedContentPublishValidation";
+import { useAdminThumbnailSelection } from "../content/useAdminThumbnailSelection";
+import { useManagedContentEditorState } from "../content/useManagedContentEditorState";
+import { useManagedContentFormState } from "../content/useManagedContentFormState";
 import {
   buildPortfolioInput,
   createEmptyPortfolioFormState,
@@ -28,7 +48,6 @@ import type {
   PortfolioFormRoute,
   PortfolioFormState,
 } from "./portfolioTypes";
-import type { PortfolioStatus } from "../../lib/adminRepositoryTypes";
 import { PortfolioFormFields } from "./PortfolioFormFields";
 import styles from "../PortfolioAdminPage.module.css";
 
@@ -42,35 +61,57 @@ export function PortfolioFormPage({
   route,
 }: PortfolioFormPageProps) {
   const isEditMode = route.id === "portfolioDetail";
-  const [form, setForm] = useState<PortfolioFormState>(() =>
-    createEmptyPortfolioFormState(),
+  const detailParam = route.id === "portfolioDetail" ? route.param : null;
+  const routeKey = detailParam
+    ? `portfolio:detail:${detailParam}`
+    : "portfolio:new";
+  const formOwner = useManagedContentFormState<PortfolioFormState>({
+    createEmptyForm: createEmptyPortfolioFormState,
+    entity: "portfolio",
+  });
+  const editorState = useManagedContentEditorState(
+    formOwner.documentKey,
+    formOwner.documentIsCurrent,
   );
-  const [editingId, setEditingId] = useState<string>();
-  const [editingRouteParam, setEditingRouteParam] = useState<string>();
+  const thumbnail = useAdminThumbnailSelection();
+  const acceptLoadedForm = formOwner.acceptLoaded;
+  const beginFormLoad = formOwner.beginLoad;
+  const invalidateFormLoads = formOwner.invalidateLoads;
+  const formLoadIsCurrent = formOwner.loadIsCurrent;
+  const formMatchesCurrentRoute = formOwner.matchesCurrentRoute;
+  const replaceWithNewForm = formOwner.replaceWithNew;
+  const resetThumbnail = thumbnail.reset;
+
+  const [editingPortfolio, setEditingPortfolio] = useState<PortfolioRow | null>(
+    null,
+  );
   const [isLoading, setIsLoading] = useState(isEditMode);
   const [isPending, setIsPending] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<PortfolioFormErrors>({});
   const [globalError, setGlobalError] = useState<string>();
+  const [cleanupWarning, setCleanupWarning] = useState<string>();
+  const [successMessage, setSuccessMessage] = useState<string>();
   const [contentSchemaError, setContentSchemaError] = useState<string>();
-  const previousRouteId = useRef(route.id);
+
+  usePendingAssetRegistration(editorState.pendingAssetCount);
+
   const mutationControllerRef = useRef<AbortController | null>(null);
   const operationGenerationRef = useRef<OperationGeneration | null>(null);
   if (operationGenerationRef.current === null) {
     operationGenerationRef.current = createOperationGeneration();
   }
   const operationGeneration = operationGenerationRef.current;
-  const routeKey =
-    route.id === "portfolioDetail"
-      ? `portfolio:detail:${route.param}`
-      : "portfolio:new";
   const currentRouteKeyRef = useRef(routeKey);
   currentRouteKeyRef.current = routeKey;
   const operationIsCurrent = (operation: OperationToken) =>
     operationGeneration.isCurrent(operation, currentRouteKeyRef.current);
+  const previousRouteKeyRef = useRef(routeKey);
+
   const hasCurrentEditingPortfolio =
     route.id === "portfolioDetail" &&
-    editingId !== undefined &&
-    editingRouteParam === route.param;
+    editingPortfolio !== null &&
+    editingPortfolio.id === formOwner.recordId &&
+    formOwner.routeParam === route.param;
 
   useEffect(() => {
     mutationControllerRef.current?.abort();
@@ -86,35 +127,59 @@ export function PortfolioFormPage({
   }, [operationGeneration, routeKey]);
 
   useEffect(() => {
-    const previousId = previousRouteId.current;
-    previousRouteId.current = route.id;
-    if (route.id !== "portfolioNew" || previousId === "portfolioNew") return;
+    const routeChanged = previousRouteKeyRef.current !== routeKey;
+    previousRouteKeyRef.current = routeKey;
+    if (isEditMode) return;
 
-    setForm(createEmptyPortfolioFormState());
-    setEditingId(undefined);
-    setEditingRouteParam(undefined);
+    invalidateFormLoads();
+    if (routeChanged) replaceWithNewForm();
+    setEditingPortfolio(null);
+    resetThumbnail();
     setFieldErrors({});
     setGlobalError(undefined);
+    setCleanupWarning(undefined);
+    setSuccessMessage(undefined);
     setContentSchemaError(undefined);
     setIsLoading(false);
-  }, [route.id]);
+  }, [
+    invalidateFormLoads,
+    isEditMode,
+    routeKey,
+    replaceWithNewForm,
+    resetThumbnail,
+  ]);
 
   useEffect(() => {
-    if (!isEditMode) return;
+    if (detailParam === null) return;
+    if (formMatchesCurrentRoute(detailParam)) {
+      setGlobalError(undefined);
+      setContentSchemaError(undefined);
+      setIsLoading(false);
+      return;
+    }
 
     const controller = new AbortController();
-    let isActive = true;
+    const load = beginFormLoad(detailParam);
     setIsLoading(true);
-    setEditingId(undefined);
-    setEditingRouteParam(undefined);
     setFieldErrors({});
     setGlobalError(undefined);
+    setCleanupWarning(undefined);
+    setSuccessMessage(undefined);
     setContentSchemaError(undefined);
 
-    void getPortfolioBySlug(supabaseConfig, route.param, {
-      signal: controller.signal,
-    }).then((result) => {
-      if (!isActive) return;
+    void (async () => {
+      let result: Awaited<ReturnType<typeof getPortfolioBySlug>>;
+      try {
+        result = await getPortfolioBySlug(supabaseConfig, detailParam, {
+          signal: controller.signal,
+        });
+      } catch {
+        if (controller.signal.aborted || !formLoadIsCurrent(load)) return;
+        setIsLoading(false);
+        setGlobalError(adminFailureMessage(networkFailure()));
+        return;
+      }
+      if (controller.signal.aborted || !formLoadIsCurrent(load)) return;
       setIsLoading(false);
       if (!result.ok) {
         setGlobalError(adminFailureMessage(result.error));
@@ -124,8 +189,10 @@ export function PortfolioFormPage({
         setGlobalError("해당 slug의 Portfolio를 찾을 수 없습니다.");
         return;
       }
+
+      let loadedForm: PortfolioFormState;
       try {
-        setForm(portfolioFormFromRow(result.value));
+        loadedForm = portfolioFormFromRow(result.value);
       } catch (error) {
         if (error instanceof ManagedContentSchemaError) {
           setContentSchemaError(error.message);
@@ -134,40 +201,110 @@ export function PortfolioFormPage({
         }
         throw error;
       }
-      setEditingId(result.value.id);
-      setEditingRouteParam(route.param);
-      setGlobalError(undefined);
-    });
 
-    return () => {
-      isActive = false;
-      controller.abort();
-    };
-  }, [isEditMode, route]);
+      if (!acceptLoadedForm(load, result.value, loadedForm)) return;
+      setEditingPortfolio(result.value);
+      resetThumbnail(result.value.thumbnail_public_url);
+    })();
 
-  const isDisabled =
+    return () => controller.abort();
+  }, [
+    acceptLoadedForm,
+    beginFormLoad,
+    formLoadIsCurrent,
+    formMatchesCurrentRoute,
+    detailParam,
+    resetThumbnail,
+  ]);
+
+  const handleFormChange = (nextForm: PortfolioFormState) => {
+    formOwner.updateForDocument(formOwner.documentKey, nextForm);
+  };
+
+  const handleContentChange = (
+    contentValue: Pick<
+      PortfolioFormState,
+      | "content"
+      | "contentAssetBaseEnabled"
+      | "contentAssetScope"
+      | "contentAuthoringMode"
+      | "contentJson"
+      | "contentMode"
+      | "contentSchemaVersion"
+      | "contentSourceBackup"
+    >,
+  ) => {
+    formOwner.updateForDocument(formOwner.documentKey, (current) => ({
+      ...current,
+      ...contentValue,
+    }));
+    setFieldErrors((current) => ({ ...current, content: undefined }));
+  };
+
+  const handleThumbnailChange = (fileList: FileList | null) => {
+    if (!formOwner.documentIsCurrent(formOwner.documentKey)) return;
+    const result = thumbnail.select(fileList);
+    if (!result.ok) {
+      setFieldErrors((current) => ({
+        ...current,
+        thumbnail: result.message,
+      }));
+      return;
+    }
+    setFieldErrors((current) => ({ ...current, thumbnail: undefined }));
+  };
+
+  const handleThumbnailRemove = () => {
+    if (!formOwner.documentIsCurrent(formOwner.documentKey)) return;
+    thumbnail.remove();
+  };
+
+  const hardDisabled =
     isLoading ||
     isPending ||
     contentSchemaError !== undefined ||
     (isEditMode && !hasCurrentEditingPortfolio);
+  const actionBlockReason = managedContentActionBlockReason({
+    editorBusy: editorState.busy,
+    pendingAssetCount: editorState.pendingAssetCount,
+  });
+  const actionDisabled = hardDisabled || actionBlockReason !== undefined;
 
   const savePortfolio = async (status: PortfolioStatus) => {
-    if (isLoading || isPending || contentSchemaError) return;
-    if (isEditMode && (!hasCurrentEditingPortfolio || !editingId)) {
+    if (actionDisabled) return;
+    if (isEditMode && !hasCurrentEditingPortfolio) {
       setGlobalError("저장할 Portfolio를 먼저 불러와야 합니다.");
       return;
     }
-    setFieldErrors({});
-    setGlobalError(undefined);
 
-    const nextForm = { ...form, status };
+    const nextForm = { ...formOwner.form, status };
     const built = buildPortfolioInput(nextForm);
+    setFieldErrors(built.errors);
     if (!built.input) {
-      setFieldErrors(built.errors);
       setGlobalError("입력값을 확인해 주세요.");
       return;
     }
+    const candidate = built.input;
 
+    const imageIssue = validateManagedContentImagesForPublish(
+      supabaseConfig,
+      "portfolio",
+      candidate,
+    );
+    if (imageIssue) {
+      setFieldErrors((current) => ({ ...current, content: imageIssue }));
+      setGlobalError("본문 이미지를 확인해 주세요.");
+      return;
+    }
+
+    const existingPortfolio = editingPortfolio;
+    if (isEditMode && !existingPortfolio) {
+      setGlobalError("저장할 Portfolio를 먼저 불러와야 합니다.");
+      return;
+    }
+
+    const owner = formOwner.captureOwner();
+    if (!formOwner.lockOwner(owner)) return;
     mutationControllerRef.current?.abort();
     const operationController = new AbortController();
     mutationControllerRef.current = operationController;
@@ -179,63 +316,114 @@ export function PortfolioFormPage({
     };
 
     setIsPending(true);
-    let result: Awaited<ReturnType<typeof createPortfolio>>;
-    if (isEditMode) {
-      if (!editingId || !hasCurrentEditingPortfolio) {
-        releaseOperation();
-        setIsPending(false);
-        setGlobalError("저장할 Portfolio를 먼저 불러와야 합니다.");
-        return;
-      }
-      result = await updatePortfolio(supabaseConfig, editingId, built.input, {
-        signal: operationController.signal,
-      });
-    } else {
-      result = await createPortfolio(supabaseConfig, built.input, {
-        signal: operationController.signal,
-      });
-    }
-    if (!operationIsCurrent(operation)) return;
-    releaseOperation();
-    setIsPending(false);
+    setGlobalError(undefined);
+    setCleanupWarning(undefined);
+    setSuccessMessage(undefined);
 
-    if (!result.ok) {
-      if (result.error.kind === "duplicate_slug") {
-        setFieldErrors({ slug: result.error.message });
-      }
-      setGlobalError(adminFailureMessage(result.error));
+    const outcome = await persistThumbnailChange({
+      config: supabaseConfig,
+      current: {
+        path: existingPortfolio?.thumbnail_path ?? null,
+        publicUrl: existingPortfolio?.thumbnail_public_url ?? null,
+      },
+      removed: thumbnail.selection.removed,
+      save: async (nextThumbnail) => {
+        if (
+          operationController.signal.aborted ||
+          !operationIsCurrent(operation) ||
+          !formOwner.ownerIsCurrent(owner)
+        ) {
+          return adminErr(saveFailure());
+        }
+
+        const input: PortfolioCreateInput = {
+          ...candidate,
+          thumbnailPath: nextThumbnail.path,
+          thumbnailPublicUrl: nextThumbnail.publicUrl,
+        };
+        return existingPortfolio
+          ? updatePortfolio(supabaseConfig, existingPortfolio.id, input, {
+              signal: operationController.signal,
+            })
+          : createPortfolio(supabaseConfig, input, {
+              signal: operationController.signal,
+            });
+      },
+      selected: thumbnail.selection.selected,
+      slug: candidate.slug,
+    });
+
+    if (!operationIsCurrent(operation) || !formOwner.ownerIsCurrent(owner)) {
       return;
     }
 
+    const warning = thumbnailCleanupWarning(outcome.cleanupIssues);
+    setCleanupWarning(warning);
+    if (!outcome.result.ok) {
+      const failure = outcome.result.error;
+      formOwner.unlockOwner(owner);
+      releaseOperation();
+      setIsPending(false);
+      if (failure.kind === "duplicate_slug") {
+        setFieldErrors((current) => ({
+          ...current,
+          slug: failure.message,
+        }));
+      }
+      setGlobalError(adminFailureMessage(failure));
+      return;
+    }
+
+    let savedForm: PortfolioFormState;
     try {
-      setForm(portfolioFormFromRow(result.value));
+      savedForm = portfolioFormFromRow(outcome.result.value);
     } catch (error) {
       if (error instanceof ManagedContentSchemaError) {
+        formOwner.unlockOwner(owner);
+        releaseOperation();
+        setIsPending(false);
         setContentSchemaError(error.message);
         setGlobalError(error.message);
         return;
       }
       throw error;
     }
-    setEditingId(result.value.id);
-    setEditingRouteParam(result.value.slug);
-    if (!operationIsCurrent(operation)) return;
-    onNavigate(`/portfolio/${result.value.slug}`);
+
+    if (!formOwner.acceptSaved(owner, outcome.result.value, savedForm)) return;
+    releaseOperation();
+    setIsPending(false);
+    setEditingPortfolio(outcome.result.value);
+    thumbnail.reset(outcome.result.value.thumbnail_public_url);
+    setFieldErrors({});
+    setSuccessMessage(
+      existingPortfolio
+        ? "Portfolio를 저장했습니다."
+        : "Portfolio를 등록했습니다.",
+    );
+
+    if (
+      (route.id !== "portfolioDetail" ||
+        route.param !== outcome.result.value.slug) &&
+      operationIsCurrent(operation) &&
+      formOwner.ownerIsCurrent(owner)
+    ) {
+      onNavigate(`/portfolio/${outcome.result.value.slug}`);
+    }
   };
 
   const deleteCurrentPortfolio = async () => {
     if (
+      actionDisabled ||
       !isEditMode ||
       !hasCurrentEditingPortfolio ||
-      !editingId ||
-      isLoading ||
-      isPending ||
-      contentSchemaError
+      !editingPortfolio ||
+      !window.confirm("이 Portfolio를 삭제하시겠습니까?")
     ) {
       return;
     }
-    if (!window.confirm("이 Portfolio를 삭제하시겠습니까?")) return;
 
+    const owner = formOwner.captureOwner();
+    if (!formOwner.lockOwner(owner)) return;
     mutationControllerRef.current?.abort();
     const operationController = new AbortController();
     mutationControllerRef.current = operationController;
@@ -247,26 +435,27 @@ export function PortfolioFormPage({
     };
 
     setIsPending(true);
-    const result = await deletePortfolio(supabaseConfig, editingId, {
+    const result = await deletePortfolio(supabaseConfig, editingPortfolio.id, {
       signal: operationController.signal,
     });
-    if (!operationIsCurrent(operation)) return;
+    if (!operationIsCurrent(operation) || !formOwner.ownerIsCurrent(owner)) {
+      return;
+    }
     releaseOperation();
     setIsPending(false);
-
     if (!result.ok) {
+      formOwner.unlockOwner(owner);
       setGlobalError(adminFailureMessage(result.error));
       return;
     }
-
-    if (!operationIsCurrent(operation)) return;
+    formOwner.unlockOwner(owner);
     onNavigate("/portfolio");
   };
 
   return (
     <section
-      className={styles.portfolioFormSection}
       aria-labelledby="portfolio-form-title"
+      className={styles.portfolioFormSection}
     >
       <div className={styles.portfolioFormPanel} aria-busy={isPending}>
         <div className={styles.portfolioFormBody}>
@@ -274,7 +463,19 @@ export function PortfolioFormPage({
             {isEditMode ? "포트폴리오 수정" : "신규 포트폴리오 등록"}
           </h1>
           {globalError ? (
-            <p className={styles.globalError}>{globalError}</p>
+            <p className={styles.globalError} role="alert">
+              {globalError}
+            </p>
+          ) : null}
+          {cleanupWarning ? (
+            <p className={styles.cleanupWarning} role="status">
+              {cleanupWarning}
+            </p>
+          ) : null}
+          {successMessage ? (
+            <p className={styles.successMessage} role="status">
+              {successMessage}
+            </p>
           ) : null}
           {isLoading ? (
             <p className={styles.loadingText}>
@@ -282,54 +483,68 @@ export function PortfolioFormPage({
             </p>
           ) : null}
           <PortfolioFormFields
+            documentKey={formOwner.documentKey}
             fieldErrors={fieldErrors}
-            form={form}
-            isDisabled={isDisabled}
-            onFormChange={setForm}
+            form={formOwner.form}
+            isDisabled={hardDisabled}
+            onContentBusyChange={editorState.onBusyChange}
+            onContentChange={handleContentChange}
+            onFormChange={handleFormChange}
+            onPendingAssetCountChange={editorState.onPendingAssetCountChange}
+            onThumbnailChange={handleThumbnailChange}
+            onThumbnailRemove={handleThumbnailRemove}
+            thumbnail={thumbnail.selection}
           />
         </div>
-        <div className={styles.portfolioFormActions}>
-          <AdminButton
-            className={`${styles.portfolioFormActionButton} ${styles.portfolioFormBackButton} ${styles.portfolioFormSecondaryAction}`}
-            disabled={isLoading || isPending}
-            onClick={() => onNavigate("/portfolio")}
-            size="figma"
-            variant="secondary"
-          >
-            목록으로
-          </AdminButton>
-          <div className={styles.portfolioFormActionGroup}>
-            {isEditMode ? (
-              <AdminButton
-                className={styles.portfolioFormActionButton}
-                disabled={isDisabled || !hasCurrentEditingPortfolio}
-                icon={<AdminTrashIcon size={16} />}
-                onClick={deleteCurrentPortfolio}
-                size="figma"
-                variant="danger"
-              >
-                삭제
-              </AdminButton>
-            ) : null}
+        <div className={styles.portfolioActionArea}>
+          {actionBlockReason ? (
+            <p className={styles.actionBlockReason} role="status">
+              {actionBlockReason}
+            </p>
+          ) : null}
+          <div className={styles.portfolioFormActions}>
             <AdminButton
-              className={`${styles.portfolioFormActionButton} ${styles.portfolioFormDraftButton} ${styles.portfolioFormSecondaryAction}`}
-              disabled={isDisabled}
-              onClick={() => savePortfolio("draft")}
+              className={`${styles.portfolioFormActionButton} ${styles.portfolioFormBackButton} ${styles.portfolioFormSecondaryAction}`}
+              disabled={actionDisabled}
+              onClick={() => onNavigate("/portfolio")}
               size="figma"
               variant="secondary"
             >
-              임시저장
+              목록으로
             </AdminButton>
-            <AdminButton
-              className={`${styles.portfolioFormActionButton} ${styles.portfolioFormSubmitButton}`}
-              disabled={isDisabled}
-              icon={<AdminArrowRightIcon size={16} />}
-              iconPosition="right"
-              onClick={() => savePortfolio("published")}
-              size="figma"
-            >
-              {isPending ? "저장 중" : isEditMode ? "수정하기" : "등록하기"}
-            </AdminButton>
+            <div className={styles.portfolioFormActionGroup}>
+              {isEditMode ? (
+                <AdminButton
+                  className={styles.portfolioFormActionButton}
+                  disabled={actionDisabled || !hasCurrentEditingPortfolio}
+                  icon={<AdminTrashIcon size={16} />}
+                  onClick={deleteCurrentPortfolio}
+                  size="figma"
+                  variant="danger"
+                >
+                  삭제
+                </AdminButton>
+              ) : null}
+              <AdminButton
+                className={`${styles.portfolioFormActionButton} ${styles.portfolioFormDraftButton} ${styles.portfolioFormSecondaryAction}`}
+                disabled={actionDisabled}
+                onClick={() => savePortfolio("draft")}
+                size="figma"
+                variant="secondary"
+              >
+                임시저장
+              </AdminButton>
+              <AdminButton
+                className={`${styles.portfolioFormActionButton} ${styles.portfolioFormSubmitButton}`}
+                disabled={actionDisabled}
+                icon={<AdminArrowRightIcon size={16} />}
+                iconPosition="right"
+                onClick={() => savePortfolio("published")}
+                size="figma"
+              >
+                {isPending ? "저장 중" : isEditMode ? "수정하기" : "등록하기"}
+              </AdminButton>
+            </div>
           </div>
         </div>
       </div>

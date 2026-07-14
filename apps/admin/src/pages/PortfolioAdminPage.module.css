@@ -8,6 +8,28 @@
   padding: 12px 14px;
 }
 
+.cleanupWarning,
+.successMessage,
+.actionBlockReason {
+  composes: pretendard-medium-14 from global;
+  border-radius: 8px;
+  margin: 0;
+  padding: 12px 14px;
+}
+
+.cleanupWarning,
+.actionBlockReason {
+  background: var(--color-warning-50);
+  border: 1px solid var(--color-warning-200);
+  color: var(--color-warning-800);
+}
+
+.successMessage {
+  background: var(--color-success-50);
+  border: 1px solid var(--color-success-200);
+  color: var(--color-success-700);
+}
+
 .loadingText {
   composes: pretendard-medium-14 from global;
   background: var(--color-info-50);
@@ -350,16 +372,18 @@
 }
 
 .portfolioField,
-.portfolioEditorField {
+.portfolioThumbnailGroup,
+.portfolioContentField {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.portfolioEditorField {
-  border: 0;
-  margin: 0;
-  padding: 0;
+.portfolioThumbnailPreview {
+  display: block;
+  height: 100%;
+  object-fit: contain;
+  width: 100%;
 }
 
 .portfolioLabel {
@@ -509,53 +533,9 @@
   width: auto;
 }
 
-.portfolioEditorModes {
-  background: var(--color-gray-50);
-  border-radius: 16px;
-  display: flex;
-  gap: 4px;
-  height: 52px;
-  padding: 4px;
-}
-
-.portfolioEditorOption {
-  flex: 1 1 0;
-  position: relative;
-}
-
-.portfolioEditorOption input {
-  height: 1px;
-  opacity: 0;
-  position: absolute;
-  width: 1px;
-}
-
-.portfolioEditorText {
-  composes: pretendard-medium-14-20 from global;
-  align-items: center;
-  border-radius: 12px;
-  color: var(--color-gray-600);
-  cursor: pointer;
-  display: flex;
-  height: 100%;
-  justify-content: center;
-  padding: 0 16px;
-}
-
-.portfolioEditorOption input:checked + .portfolioEditorText {
-  background: var(--color-brand-500);
-  border-radius: 14px;
-  color: #ffffff;
-}
-
-.portfolioContentTextarea,
 .portfolioSeoTextarea {
   padding: 16px;
   resize: none;
-}
-
-.portfolioContentTextarea {
-  height: 400px;
 }
 
 .portfolioSeoTextarea {
@@ -618,6 +598,12 @@
 .portfolioFormActionGroup {
   align-items: center;
   display: flex;
+  gap: 8px;
+}
+
+.portfolioActionArea {
+  display: flex;
+  flex-direction: column;
   gap: 8px;
 }
 

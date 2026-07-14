@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { createRoot } from "react-dom/client";
+import "@repo/content/rich-content.css";
 import "../../../design-system.css";
 import "./App.css";
 import {
@@ -28,13 +29,21 @@ function VisualTest() {
         actions={
           <AdminFormActions
             leading={
-              <AdminButton className={styles.formActionButton} size="figma" variant="secondary">
+              <AdminButton
+                className={styles.formActionButton}
+                size="figma"
+                variant="secondary"
+              >
                 목록으로
               </AdminButton>
             }
             trailing={
               <>
-                <AdminButton className={styles.formActionButton} size="figma" variant="secondary">
+                <AdminButton
+                  className={styles.formActionButton}
+                  size="figma"
+                  variant="secondary"
+                >
                   임시저장
                 </AdminButton>
                 <AdminButton
@@ -52,10 +61,18 @@ function VisualTest() {
         title="신규 블로그 등록"
       >
         <BlogFormFields
+          documentKey="blog:new:visual-test"
           fieldErrors={{}}
           form={form}
           isDisabled={false}
-          onFieldChange={(key, value) => setForm((current) => ({ ...current, [key]: value }))}
+          onContentBusyChange={() => undefined}
+          onContentChange={(value) =>
+            setForm((current) => ({ ...current, ...value }))
+          }
+          onFieldChange={(key, value) =>
+            setForm((current) => ({ ...current, [key]: value }))
+          }
+          onPendingAssetCountChange={() => undefined}
           onThumbnailChange={() => undefined}
           onThumbnailRemove={() => undefined}
           thumbnail={{ removed: false }}

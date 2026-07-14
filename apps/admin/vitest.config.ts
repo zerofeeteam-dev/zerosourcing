@@ -10,6 +10,8 @@ export default defineConfig({
       "src/lib/thumbnailPersistence.test.ts",
       "src/lib/thumbnailStorage.test.ts",
       "src/navigation/**/*.test.tsx",
+      "src/pages/**/*.test.tsx",
+      "src/pages/content/**/*.test.ts",
     ],
   },
 });

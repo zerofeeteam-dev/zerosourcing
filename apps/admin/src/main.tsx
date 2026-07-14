@@ -1,5 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import "@repo/content/rich-content.css";
 import "../../../design-system.css";
 import "./App.css";
 import { App } from "./App";

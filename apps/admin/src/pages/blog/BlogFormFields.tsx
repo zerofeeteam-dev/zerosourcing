@@ -1,12 +1,13 @@
 import {
   AdminDateField,
-  AdminEditorModeSegmentedControl,
   AdminSelectField,
   AdminSettingToggleRow,
   AdminTextField,
   AdminTextareaField,
   AdminUploadControl,
 } from "../../components/admin";
+import { AdminContentEditor } from "../../components/content/AdminContentEditor";
+import type { ManagedContentFormValue } from "../../lib/managedContent";
 import {
   blogFormTypeFromValue,
   blogSectionCount,
@@ -21,10 +22,14 @@ import type {
 import styles from "../BlogAdminPage.module.css";
 
 type BlogFormFieldsProps = {
+  readonly documentKey: string;
   readonly fieldErrors: BlogFieldErrors;
   readonly form: BlogFormState;
   readonly isDisabled: boolean;
+  readonly onContentBusyChange: (busy: boolean) => void;
+  readonly onContentChange: (value: ManagedContentFormValue) => void;
   readonly onFieldChange: BlogFieldChange;
+  readonly onPendingAssetCountChange: (count: number) => void;
   readonly onThumbnailChange: (fileList: FileList | null) => void;
   readonly onThumbnailRemove: () => void;
   readonly thumbnail: BlogThumbnailSelection;
@@ -36,16 +41,22 @@ const blogFormTypeOptions = [
 ] as const;
 
 export function BlogFormFields({
+  documentKey,
   fieldErrors,
   form,
   isDisabled,
+  onContentBusyChange,
+  onContentChange,
   onFieldChange,
+  onPendingAssetCountChange,
   onThumbnailChange,
   onThumbnailRemove,
   thumbnail,
 }: BlogFormFieldsProps) {
   const visiblePreview = thumbnail.previewUrl && !thumbnail.removed;
-  const visibleFileName = thumbnail.selected?.file.name ?? (visiblePreview ? "저장된 썸네일" : undefined);
+  const visibleFileName =
+    thumbnail.selected?.file.name ??
+    (visiblePreview ? "저장된 썸네일" : undefined);
 
   return (
     <div className={styles.blogFormFields}>
@@ -55,7 +66,12 @@ export function BlogFormFields({
         id="blog-type"
         label="블로그 유형"
         layout="stacked"
-        onChange={(event) => onFieldChange("type", blogFormTypeFromValue(event.currentTarget.value))}
+        onChange={(event) =>
+          onFieldChange(
+            "type",
+            blogFormTypeFromValue(event.currentTarget.value),
+          )
+        }
         options={blogFormTypeOptions}
         size="large"
         value={form.type}
@@ -90,7 +106,9 @@ export function BlogFormFields({
         errorMessage={fieldErrors.publishedDate}
         id="blog-published-date"
         label="블로그 작성일"
-        onChange={(event) => onFieldChange("publishedDate", event.currentTarget.value)}
+        onChange={(event) =>
+          onFieldChange("publishedDate", event.currentTarget.value)
+        }
         placeholder="블로그 작성일을 선택해주세요."
         value={form.publishedDate}
       />
@@ -98,10 +116,13 @@ export function BlogFormFields({
       <div className={styles.thumbnailGroup}>
         <AdminTextField
           disabled={isDisabled}
+          errorMessage={fieldErrors.thumbnailAlt}
           id="blog-thumbnail-alt"
           label="블로그 썸네일"
           layout="stacked"
-          onChange={(event) => onFieldChange("thumbnailAlt", event.currentTarget.value)}
+          onChange={(event) =>
+            onFieldChange("thumbnailAlt", event.currentTarget.value)
+          }
           placeholder="IMAGE ALT TAG를 입력해주세요."
           size="large"
           value={form.thumbnailAlt}
@@ -117,7 +138,9 @@ export function BlogFormFields({
           labelHidden
           onChange={(event) => onThumbnailChange(event.currentTarget.files)}
           onFiles={onThumbnailChange}
-          onRemove={visiblePreview || thumbnail.selected ? onThumbnailRemove : undefined}
+          onRemove={
+            visiblePreview || thumbnail.selected ? onThumbnailRemove : undefined
+          }
           preview={
             visiblePreview ? (
               <img
@@ -131,28 +154,35 @@ export function BlogFormFields({
         />
       </div>
 
+      <AdminTextareaField
+        disabled={isDisabled}
+        errorMessage={fieldErrors.summary}
+        id="blog-summary"
+        label="카드 요약"
+        layout="stacked"
+        onChange={(event) =>
+          onFieldChange("summary", event.currentTarget.value)
+        }
+        placeholder="목록과 공유 화면에 표시할 요약을 입력해 주세요."
+        size="large"
+        value={form.summary}
+      />
+
       <div className={styles.contentField}>
-        <AdminEditorModeSegmentedControl
+        <AdminContentEditor
           disabled={isDisabled}
-          fullWidth
-          id="blog-content-mode"
-          label="블로그 내용"
-          name="blog-content-mode"
-          onChange={(mode) => onFieldChange("contentMode", mode)}
-          value={form.contentMode}
+          documentKey={documentKey}
+          entity="blog"
+          onBusyChange={onContentBusyChange}
+          onChange={onContentChange}
+          onPendingAssetCountChange={onPendingAssetCountChange}
+          value={form}
         />
-        <AdminTextareaField
-          controlClassName={styles.contentTextarea}
-          disabled={isDisabled}
-          id="blog-content"
-          label="블로그 내용 입력"
-          labelHidden
-          layout="stacked"
-          onChange={(event) => onFieldChange("content", event.currentTarget.value)}
-          placeholder="블로그 내용을 입력해주세요."
-          size="large"
-          value={form.content}
-        />
+        {fieldErrors.content ? (
+          <p className={styles.contentError} role="alert">
+            {fieldErrors.content}
+          </p>
+        ) : null}
       </div>
 
       <AdminTextareaField
@@ -161,7 +191,9 @@ export function BlogFormFields({
         id="blog-seo-description"
         label="SEO Description"
         layout="stacked"
-        onChange={(event) => onFieldChange("seoDescription", event.currentTarget.value)}
+        onChange={(event) =>
+          onFieldChange("seoDescription", event.currentTarget.value)
+        }
         placeholder="SEO Description을 입력해주세요."
         size="large"
         value={form.seoDescription}

@@ -1,15 +1,30 @@
 import type { ReactNode } from "react";
-import { AdminCheckIcon, AdminChevronDownIcon } from "../../components/admin";
+import {
+  AdminCheckIcon,
+  AdminChevronDownIcon,
+  AdminTextField,
+  AdminUploadControl,
+} from "../../components/admin";
+import { AdminContentEditor } from "../../components/content/AdminContentEditor";
+import type { ManagedContentFormValue } from "../../lib/managedContent";
+import type { AdminThumbnailSelection } from "../content/useAdminThumbnailSelection";
 import { parsePortfolioFormType, portfolioTypeOptions } from "./portfolioModel";
 import { PortfolioRepeatableTextFields } from "./PortfolioRepeatableTextFields";
 import type { PortfolioFormErrors, PortfolioFormState } from "./portfolioTypes";
 import styles from "../PortfolioAdminPage.module.css";
 
 type PortfolioFormFieldsProps = {
+  readonly documentKey: string;
   readonly fieldErrors: PortfolioFormErrors;
   readonly form: PortfolioFormState;
   readonly isDisabled: boolean;
+  readonly onContentBusyChange: (busy: boolean) => void;
+  readonly onContentChange: (value: ManagedContentFormValue) => void;
   readonly onFormChange: (form: PortfolioFormState) => void;
+  readonly onPendingAssetCountChange: (count: number) => void;
+  readonly onThumbnailChange: (fileList: FileList | null) => void;
+  readonly onThumbnailRemove: () => void;
+  readonly thumbnail: AdminThumbnailSelection;
 };
 
 type PortfolioFieldProps = {
@@ -52,11 +67,23 @@ function sectionCount(value: string): number {
 }
 
 export function PortfolioFormFields({
+  documentKey,
   fieldErrors,
   form,
   isDisabled,
+  onContentBusyChange,
+  onContentChange,
   onFormChange,
+  onPendingAssetCountChange,
+  onThumbnailChange,
+  onThumbnailRemove,
+  thumbnail,
 }: PortfolioFormFieldsProps) {
+  const visiblePreview = thumbnail.previewUrl && !thumbnail.removed;
+  const visibleFileName =
+    thumbnail.selected?.file.name ??
+    (visiblePreview ? "저장된 썸네일" : undefined);
+
   return (
     <div className={styles.portfolioFields}>
       <PortfolioField
@@ -206,36 +233,66 @@ export function PortfolioFormFields({
         onChange={(workScopes) => onFormChange({ ...form, workScopes })}
       />
 
-      <fieldset className={styles.portfolioEditorField}>
-        <legend className={styles.portfolioLabel}>포트폴리오 내용</legend>
-        <div className={styles.portfolioEditorModes}>
-          {(["html", "text"] as const).map((mode) => (
-            <label className={styles.portfolioEditorOption} key={mode}>
-              <input
-                checked={form.contentMode === mode}
-                disabled={isDisabled}
-                name="portfolio-content-mode"
-                onChange={() => onFormChange({ ...form, contentMode: mode })}
-                type="radio"
-                value={mode}
-              />
-              <span className={styles.portfolioEditorText}>
-                {mode === "html" ? "HTML 작성" : "TEXT Editer 작성"}
-              </span>
-            </label>
-          ))}
-        </div>
-        <textarea
-          className={`${styles.portfolioControl} ${styles.portfolioContentTextarea}`}
+      <div className={styles.portfolioThumbnailGroup}>
+        <AdminTextField
           disabled={isDisabled}
-          id="portfolio-content"
+          errorMessage={fieldErrors.thumbnailAlt}
+          id="portfolio-thumbnail-alt"
+          label="포트폴리오 썸네일"
+          layout="stacked"
           onChange={(event) =>
-            onFormChange({ ...form, content: event.currentTarget.value })
+            onFormChange({
+              ...form,
+              thumbnailAlt: event.currentTarget.value,
+            })
           }
-          placeholder="포트폴리오 내용을 입력해주세요."
-          value={form.content}
+          placeholder="IMAGE ALT TAG를 입력해주세요."
+          size="large"
+          value={form.thumbnailAlt}
         />
-      </fieldset>
+        <AdminUploadControl
+          accept="image/png,image/jpeg,image/webp"
+          acceptLabel="PNG, JPEG, WEBP 등 / 최대 50MB 제한"
+          disabled={isDisabled}
+          errorMessage={fieldErrors.thumbnail}
+          fileName={visibleFileName}
+          id="portfolio-thumbnail"
+          label="포트폴리오 썸네일 파일"
+          labelHidden
+          onChange={(event) => onThumbnailChange(event.currentTarget.files)}
+          onFiles={onThumbnailChange}
+          onRemove={
+            visiblePreview || thumbnail.selected ? onThumbnailRemove : undefined
+          }
+          preview={
+            visiblePreview ? (
+              <img
+                alt={form.thumbnailAlt || "Portfolio thumbnail preview"}
+                className={styles.portfolioThumbnailPreview}
+                src={thumbnail.previewUrl}
+              />
+            ) : undefined
+          }
+          variant="dropzone"
+        />
+      </div>
+
+      <div className={styles.portfolioContentField}>
+        <AdminContentEditor
+          disabled={isDisabled}
+          documentKey={documentKey}
+          entity="portfolio"
+          onBusyChange={onContentBusyChange}
+          onChange={onContentChange}
+          onPendingAssetCountChange={onPendingAssetCountChange}
+          value={form}
+        />
+        {fieldErrors.content ? (
+          <p className={styles.portfolioFieldError} role="alert">
+            {fieldErrors.content}
+          </p>
+        ) : null}
+      </div>
 
       <PortfolioField
         htmlFor="portfolio-seo-description"

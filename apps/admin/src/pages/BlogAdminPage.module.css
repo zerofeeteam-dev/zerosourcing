@@ -203,14 +203,15 @@
   gap: 8px;
 }
 
-.contentTextarea,
+.contentError {
+  composes: pretendard-medium-12 from global;
+  color: var(--color-error-500);
+  margin: 0;
+}
+
 .seoTextarea {
   padding: 16px;
   resize: none;
-}
-
-.contentTextarea {
-  height: 480px;
 }
 
 .seoTextarea {
@@ -223,6 +224,31 @@
   color: var(--color-brand-500);
   height: 52px;
   padding: 8px 16px;
+}
+
+.formActionArea {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.actionBlockReason,
+.cleanupWarning {
+  composes: pretendard-medium-12 from global;
+  border-radius: 8px;
+  margin: 0;
+  padding: 10px 12px;
+}
+
+.actionBlockReason {
+  background: var(--color-warning-50);
+  color: var(--color-warning-700);
+}
+
+.cleanupWarning {
+  background: var(--color-warning-50);
+  border: 1px solid var(--color-warning-200);
+  color: var(--color-warning-800);
 }
 
 .submitActionButton {

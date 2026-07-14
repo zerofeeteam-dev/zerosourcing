@@ -25,7 +25,9 @@ export type PortfolioFieldKey =
   | "slug"
   | "title"
   | "type";
-export type PortfolioFormErrors = Partial<Record<PortfolioFieldKey, string>>;
+export type PortfolioFormErrors = Partial<
+  Record<keyof PortfolioFormState | "thumbnail", string>
+>;
 
 export type PortfolioFormState = ManagedContentFormValue & {
   readonly companyName: string;
