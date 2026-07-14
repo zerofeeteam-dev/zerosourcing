@@ -6,7 +6,9 @@ import {
   ContentStorageBucketError,
   contentAssetObjectPrefix,
   createContentAssetBaseUrl,
+  isExactPublicStorageObjectUrl,
   isContentAssetScope,
+  parseAllowedAssetHttpUrl,
   parseContentAssetScope,
 } from "./asset-url.ts";
 
@@ -101,7 +103,7 @@ for (const invalidScope of [null, undefined, 42, {}, [], true]) {
   });
 }
 
-test("accepts HTTP when the URL has a hostname", () => {
+test("accepts HTTP for a canonical loopback hostname", () => {
   assert.equal(
     createContentAssetBaseUrl({
       ...createInput("http://localhost:54321/nested?query=1#section"),
@@ -111,10 +113,144 @@ test("accepts HTTP when the URL has a hostname", () => {
   );
 });
 
+test("parses HTTPS and canonical literal loopback HTTP asset URLs", () => {
+  for (const value of [
+    "https://project.supabase.co/path",
+    "http://localhost:54321/path",
+    "http://127.0.0.1:54321/path",
+    "http://127.255.42.7/path",
+    "http://[::1]:54321/path",
+  ]) {
+    assert.equal(parseAllowedAssetHttpUrl(value)?.href, value);
+  }
+  assert.equal(
+    parseAllowedAssetHttpUrl("HTTP://localhost:54321/path")?.href,
+    "http://localhost:54321/path",
+  );
+});
+
+for (const value of [
+  "http://project.supabase.co/path",
+  "http://127.0.0.1.example/path",
+  "http://localhost.example/path",
+  "http://127.1/path",
+  "http://127.000.000.001/path",
+  "http://2130706433/path",
+  "http://[0:0:0:0:0:0:0:1]/path",
+  "http://LOCALHOST/path",
+  "http://localhost:80/path",
+  "http://user:secret@127.0.0.1/path",
+  "https://user:secret@project.supabase.co/path",
+  "https://project.supabase.co\\@evil.example/path",
+  "https://project.supabase.co/path with space",
+  "https://project.supabase.co/path\nnext",
+  "https://project.supabase.co/path\u0085next",
+  "https://project.supabase.co/path\u00a0next",
+  "https://project.supabase.co/path\u200bnext",
+  "https://project.supabase.co/path\u{e0001}next",
+  "https://project.supabase.co/path\ud800next",
+  "https://project.supabase.co/%0anext",
+  "https:////project.supabase.co/path",
+  "https://PROJECT.supabase.co/path",
+  "https://project.supabase.co:443/path",
+  "https://%70roject.supabase.co/path",
+  "https://project.supabase.co./path",
+  "https://project.supabase.co/storage/./v1",
+  "https://project.supabase.co/storage/x/../v1",
+  "https://project.supabase.co/storage/%2e/v1",
+  "https://project.supabase.co/storage/x/%2e%2e/v1",
+]) {
+  test(`rejects a non-canonical or unsafe asset URL ${JSON.stringify(value)}`, () => {
+    assert.equal(parseAllowedAssetHttpUrl(value), null);
+  });
+}
+
+test("matches only the canonical fixed-bucket object href", () => {
+  const input = {
+    objectPath:
+      "content/blog/00000000-0000-4000-8000-000000000001/images/card one.png",
+    supabaseUrl: "http://127.0.0.1:54321/nested?ignored=1#ignored",
+  };
+  const canonical =
+    "http://127.0.0.1:54321/storage/v1/object/public/zerosourcing/" +
+    "content/blog/00000000-0000-4000-8000-000000000001/images/card%20one.png";
+
+  assert.equal(isExactPublicStorageObjectUrl(canonical, input), true);
+  for (const value of [
+    canonical.replace("127.0.0.1", "127.0.0.2"),
+    canonical.replace("127.0.0.1:54321", "127.0.0.1:54322"),
+    canonical.replace("content/blog", "content/%62log"),
+    canonical.replace("00000000-", "%3000000000-"),
+    canonical.replace("card%20one.png", "%63ard%20one.png"),
+    `${canonical}?version=2`,
+    `${canonical}#preview`,
+    canonical.replace("http://", "http://user:secret@"),
+    canonical.replace("http://", "HTTP://"),
+  ]) {
+    assert.equal(isExactPublicStorageObjectUrl(value, input), false, value);
+  }
+});
+
+test("matches canonical HTTPS without browser-normalized aliases", () => {
+  const input = {
+    objectPath: "content/blog/scope/images/card.png",
+    supabaseUrl: "https://project.supabase.co",
+  };
+  const canonical =
+    "https://project.supabase.co/storage/v1/object/public/zerosourcing/" +
+    input.objectPath;
+  assert.equal(isExactPublicStorageObjectUrl(canonical, input), true);
+
+  for (const value of [
+    canonical.replace("https://", "https:////"),
+    canonical.replace("project", "PROJECT"),
+    canonical.replace(".co/", ".co:443/"),
+    canonical.replace("project", "%70roject"),
+    canonical.replace("/storage/v1", "/storage/./v1"),
+    canonical.replace("/storage/v1", "/storage/x/../v1"),
+    canonical.replace("/storage/v1", "/storage/%2e/v1"),
+    canonical.replace("/storage/v1", "/storage/x/%2e%2e/v1"),
+  ]) {
+    assert.equal(isExactPublicStorageObjectUrl(value, input), false, value);
+  }
+});
+
+test("rejects remote HTTP even when candidate and configured origins match", () => {
+  assert.equal(
+    isExactPublicStorageObjectUrl(
+      "http://project.supabase.co/storage/v1/object/public/zerosourcing/path/file.png",
+      {
+        objectPath: "path/file.png",
+        supabaseUrl: "http://project.supabase.co",
+      },
+    ),
+    false,
+  );
+});
+
+test("rejects empty and dot-segment object paths", () => {
+  for (const objectPath of ["", "/leading.png", "a//b.png", "a/../b.png"]) {
+    assert.equal(
+      isExactPublicStorageObjectUrl(
+        "https://project.supabase.co/storage/v1/object/public/zerosourcing/a/b.png",
+        { objectPath, supabaseUrl: "https://project.supabase.co" },
+      ),
+      false,
+    );
+  }
+});
+
 test("rejects an invalid Supabase URL", () => {
   assert.throws(() => createContentAssetBaseUrl(createInput("not a URL")), {
     message: "A valid Supabase URL is required.",
   });
+});
+
+test("rejects a remote HTTP Supabase URL", () => {
+  assert.throws(
+    () => createContentAssetBaseUrl(createInput("http://project.supabase.co")),
+    { message: "A valid Supabase URL is required." },
+  );
 });
 
 for (const [scheme, supabaseUrl] of [
