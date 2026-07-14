@@ -133,12 +133,11 @@ describe("public content configuration", () => {
 
   it.each([
     "http://localhost:54321/nested",
-    "http://LOCALHOST:54321",
     "http://127.0.0.1:54321",
     "http://127.42.0.7:54321",
     "http://127.255.255.255:54321",
     "http://[::1]:54321",
-  ])("allows HTTP only for the local loopback host %s", (url) => {
+  ])("allows HTTP only for the canonical literal loopback host %s", (url) => {
     const local = parsePublicContentConfig({
       SUPABASE_PUBLISHABLE_KEY: "local-key",
       SUPABASE_URL: url,
@@ -153,8 +152,30 @@ describe("public content configuration", () => {
     "http://localhost.example.com:54321",
     "http://127.0.0.1.example.com:54321",
     "http://localhost.:54321",
+    "http://LOCALHOST:54321",
+    "http://localhost:80",
+    "http://127.1:54321",
+    "http://127.000.000.001:54321",
+    "http://2130706433:54321",
     "http://[::2]:54321",
-  ])("rejects non-loopback or deceptive public HTTP at %s", (url) => {
+    "http://[0:0:0:0:0:0:0:1]:54321",
+    "http://user:secret@127.0.0.1:54321",
+    "https://user:secret@project.supabase.co",
+    "https:////project.supabase.co/path",
+    "https://PROJECT.supabase.co/path",
+    "https://project.supabase.co:443/path",
+    "https://%70roject.supabase.co/path",
+    "https://project.supabase.co/storage/./v1",
+    "https://project.supabase.co/x/../storage/v1",
+    "https://project.supabase.co/storage/%2e/v1",
+    "https://project.supabase.co/storage/%2e%2e/v1",
+    "https://project.supabase.co\\@evil.example/path",
+    "https://project.supabase.co/path\nnext",
+    "https://project.supabase.co/path\u0085next",
+    "https://project.supabase.co/path\u00a0next",
+    "https://project.supabase.co/path\u200bnext",
+    "https://project.supabase.co/%0anext",
+  ])("rejects an unsafe or noncanonical asset transport URL at %s", (url) => {
     expect(() =>
       parsePublicContentConfig({
         SUPABASE_PUBLISHABLE_KEY: "key",

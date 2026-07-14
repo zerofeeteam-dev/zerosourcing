@@ -1,3 +1,4 @@
+import { parseAllowedAssetHttpUrl } from "@repo/content/asset-url";
 import sanitizeHtml from "sanitize-html";
 
 const maximumEncodedUrlDepth = 4;
@@ -5,25 +6,6 @@ const percentEscapePattern = /%[\da-f]{2}/iu;
 const malformedPercentPattern = /%(?![\da-f]{2})/iu;
 const pathTraversalPattern = /(?:^|\/)\.{1,2}(?=$|[/?#])/u;
 const allowedLinkProtocols = new Set(["http:", "https:", "mailto:", "tel:"]);
-
-function isIpv4Loopback(hostname: string): boolean {
-  const octets = hostname.split(".");
-  return (
-    octets.length === 4 &&
-    octets[0] === "127" &&
-    octets.every((octet) => /^\d{1,3}$/u.test(octet) && Number(octet) <= 255)
-  );
-}
-
-function isLoopbackHostname(hostname: string): boolean {
-  const normalized = hostname.toLowerCase();
-  return (
-    normalized === "localhost" ||
-    normalized === "::1" ||
-    normalized === "[::1]" ||
-    isIpv4Loopback(normalized)
-  );
-}
 
 function hasUnsafeUrlCharacter(value: string): boolean {
   for (const character of value) {
@@ -99,17 +81,25 @@ function parseAbsoluteUrl(
   }
 }
 
+function parseAllowedContentAssetUrl(value: unknown): URL | null {
+  if (
+    typeof value !== "string" ||
+    value.length === 0 ||
+    hasUnsafeUrlEncoding(value, true)
+  ) {
+    return null;
+  }
+
+  return parseAllowedAssetHttpUrl(value);
+}
+
 function parseAllowedImageBaseUrl(value: unknown): URL | null {
-  const base = parseAbsoluteUrl(value, true);
+  const base = parseAllowedContentAssetUrl(value);
   if (
     base === null ||
-    base.username.length > 0 ||
-    base.password.length > 0 ||
     base.search.length > 0 ||
     base.hash.length > 0 ||
-    !base.pathname.endsWith("/") ||
-    (base.protocol !== "https:" &&
-      !(base.protocol === "http:" && isLoopbackHostname(base.hostname)))
+    !base.pathname.endsWith("/")
   ) {
     return null;
   }
@@ -118,11 +108,9 @@ function parseAllowedImageBaseUrl(value: unknown): URL | null {
 }
 
 function isOwnedByParsedImageBase(source: unknown, base: URL): boolean {
-  const candidate = parseAbsoluteUrl(source, true);
+  const candidate = parseAllowedContentAssetUrl(source);
   if (
     candidate === null ||
-    candidate.username.length > 0 ||
-    candidate.password.length > 0 ||
     candidate.search.length > 0 ||
     candidate.hash.length > 0 ||
     candidate.protocol !== base.protocol ||

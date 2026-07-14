@@ -216,9 +216,62 @@ describe("isOwnedContentImageSource", () => {
     "http://localhost.example.com:54321",
     "http://127.0.0.1.example.com:54321",
     "http://localhost.:54321",
+    "http://LOCALHOST:54321",
+    "http://localhost:80",
+    "http://127.1:54321",
+    "http://127.000.000.001:54321",
+    "http://2130706433:54321",
     "http://[::2]:54321",
-  ])("rejects public or deceptive HTTP ownership for %s", (origin) => {
+    "http://[0:0:0:0:0:0:0:1]:54321",
+    "http://user:secret@127.0.0.1:54321",
+    "https://user:secret@project.supabase.co",
+  ])("rejects unsafe or noncanonical asset ownership for %s", (origin) => {
     const base = `${origin}/storage/v1/object/public/zerosourcing/content/blog/${scope}/`;
     expect(isOwnedContentImageSource(`${base}images/a.webp`, base)).toBe(false);
+  });
+
+  it.each([
+    "http://127.1:54321",
+    "http://127.000.000.001:54321",
+    "http://2130706433:54321",
+    "http://user:secret@127.0.0.1:54321",
+  ])(
+    "rejects a noncanonical local candidate that normalizes to the base for %s",
+    (origin) => {
+      const base = `http://127.0.0.1:54321/storage/v1/object/public/zerosourcing/content/blog/${scope}/`;
+      expect(
+        isOwnedContentImageSource(
+          `${origin}${new URL(ownedImageUrl).pathname}`,
+          base,
+        ),
+      ).toBe(false);
+    },
+  );
+
+  it.each([
+    `${allowedImageBaseUrl}images/a.webp\u200b`,
+    `${allowedImageBaseUrl}images/a.webp%0aevil`,
+    `${allowedImageBaseUrl}images\\a.webp`,
+    `https://user:secret@project.supabase.co${new URL(ownedImageUrl).pathname}`,
+  ])(
+    "rejects hidden, encoded, backslash, or credential smuggling in %s",
+    (source) => {
+      expect(isOwnedContentImageSource(source, allowedImageBaseUrl)).toBe(
+        false,
+      );
+    },
+  );
+
+  it.each([
+    ownedImageUrl.replace("https://", "https:////"),
+    ownedImageUrl.replace("project.supabase.co", "PROJECT.supabase.co"),
+    ownedImageUrl.replace("project.supabase.co", "project.supabase.co:443"),
+    ownedImageUrl.replace("project.supabase.co", "%70roject.supabase.co"),
+    ownedImageUrl.replace("/storage/v1/", "/storage/./v1/"),
+    ownedImageUrl.replace("/storage/v1/", "/x/../storage/v1/"),
+    ownedImageUrl.replace("/storage/v1/", "/storage/%2e/v1/"),
+    ownedImageUrl.replace("/storage/v1/", "/storage/%2e%2e/storage/v1/"),
+  ])("rejects browser-normalized asset aliases in %s", (source) => {
+    expect(isOwnedContentImageSource(source, allowedImageBaseUrl)).toBe(false);
   });
 });
