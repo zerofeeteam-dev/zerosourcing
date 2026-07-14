@@ -133,7 +133,9 @@ export function BlogListClient({ featured, items, top }: BlogListClientProps) {
           {featured ? (
             <Link
               aria-label={`${featured.title} 글 보기`}
-              className={styles.featuredCard}
+              className={`${styles.featuredCard} ${
+                featured.thumbnailUrl ? "" : styles.featuredCardFallback
+              }`}
               href={`/blog/${featured.slug}`}
             >
               <ManagedThumbnail
@@ -142,7 +144,9 @@ export function BlogListClient({ featured, items, top }: BlogListClientProps) {
                 sizes="(max-width: 1080px) calc(100vw - 40px), 1080px"
                 url={featured.thumbnailUrl}
               />
-              <span aria-hidden="true" className={styles.featuredOverlay} />
+              {featured.thumbnailUrl ? (
+                <span aria-hidden="true" className={styles.featuredOverlay} />
+              ) : null}
               <div className={styles.featuredCopy}>
                 <CategoryChip>{featured.category}</CategoryChip>
                 <div className={styles.featuredText}>
@@ -191,8 +195,6 @@ export function BlogListClient({ featured, items, top }: BlogListClientProps) {
                 ) : null}
               </div>
             </section>
-
-            <aside className={styles.stickyColumn} aria-hidden="true" />
           </div>
         </div>
       </section>
