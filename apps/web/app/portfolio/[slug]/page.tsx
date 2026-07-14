@@ -3,9 +3,10 @@ import { notFound } from "next/navigation";
 
 import { Footer } from "../../../components/Footer";
 import { Header } from "../../../components/Header";
+import { ManagedContent } from "../../../components/ManagedContent";
+import { getPublishedPortfolio } from "../../../lib/public-content/queries";
 import { createPageMetadata } from "../../site-metadata";
 import pageStyles from "../../page.module.css";
-import { portfolioDetails } from "../portfolio-items";
 import { PortfolioDetailCtaButton } from "./PortfolioDetailCtaButton";
 import styles from "./portfolio-detail.module.css";
 
@@ -13,13 +14,11 @@ type PortfolioDetailPageProps = {
   params: Promise<{ slug: string }>;
 };
 
-export function generateStaticParams() {
-  return portfolioDetails.map((item) => ({ slug: item.slug }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: PortfolioDetailPageProps) {
   const { slug } = await params;
-  const portfolio = portfolioDetails.find((item) => item.slug === slug);
+  const portfolio = await getPublishedPortfolio(slug);
 
   if (!portfolio) {
     return {};
@@ -27,7 +26,7 @@ export async function generateMetadata({ params }: PortfolioDetailPageProps) {
 
   return createPageMetadata({
     title: portfolio.title,
-    description: portfolio.description,
+    description: portfolio.seoDescription || portfolio.description,
     path: `/portfolio/${portfolio.slug}`,
   });
 }
@@ -36,7 +35,7 @@ export default async function PortfolioDetailPage({
   params,
 }: PortfolioDetailPageProps) {
   const { slug } = await params;
-  const portfolio = portfolioDetails.find((item) => item.slug === slug);
+  const portfolio = await getPublishedPortfolio(slug);
 
   if (!portfolio) {
     notFound();
@@ -72,7 +71,7 @@ export default async function PortfolioDetailPage({
                 </div>
                 <div className={styles.summaryItem}>
                   <p className={styles.summaryLabel}>개발 기간</p>
-                  <p className={styles.summaryValue}>{portfolio.period}</p>
+                  <p className={styles.summaryValue}>{portfolio.duration}</p>
                 </div>
               </div>
               <div className={styles.detailRow}>
@@ -96,8 +95,16 @@ export default async function PortfolioDetailPage({
             </div>
           </div>
 
-          <div className={styles.htmlPreview}>
-            <p>HTML</p>
+          <div className={styles.managedContent}>
+            <ManagedContent
+              assetBaseEnabled={portfolio.assetBaseEnabled}
+              assetScope={portfolio.assetScope}
+              authoringMode={portfolio.contentAuthoringMode}
+              content={portfolio.content}
+              entity="portfolio"
+              outputMode={portfolio.contentMode}
+              title={portfolio.title}
+            />
           </div>
 
           <section className={styles.ctaBanner}>

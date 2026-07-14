@@ -4,11 +4,14 @@ import { notFound } from "next/navigation";
 
 import { Footer } from "../../../components/Footer";
 import { Header } from "../../../components/Header";
-import { createPageMetadata } from "../../site-metadata";
+import { ManagedContent } from "../../../components/ManagedContent";
+import { ManagedThumbnail } from "../../../components/ManagedThumbnail";
 import {
-  blogPosts,
-  type BlogPost,
-} from "../blog-posts";
+  getPublishedBlogPost,
+  getRelatedBlogPosts,
+} from "../../../lib/public-content/queries";
+import type { BlogCard, BlogDetail } from "../../../lib/public-content/types";
+import { createPageMetadata } from "../../site-metadata";
 import { BlogDetailCtaButton } from "./BlogDetailCtaButton";
 import styles from "./blog-detail.module.css";
 
@@ -16,13 +19,11 @@ type BlogDetailPageProps = {
   params: Promise<{ slug: string }>;
 };
 
-export function generateStaticParams() {
-  return blogPosts.map((post) => ({ slug: post.slug }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: BlogDetailPageProps) {
   const { slug } = await params;
-  const post = blogPosts.find((item) => item.slug === slug);
+  const post = await getPublishedBlogPost(slug);
 
   if (!post) {
     return {};
@@ -30,20 +31,22 @@ export async function generateMetadata({ params }: BlogDetailPageProps) {
 
   return createPageMetadata({
     title: post.title,
-    description: post.description,
+    description: post.seoDescription || post.summary,
     path: `/blog/${post.slug}`,
   });
 }
 
-function CategoryChip({ children }: { children: string }) {
+function CategoryChip({ children }: { readonly children: string }) {
   return <span className={styles.categoryChip}>{children}</span>;
 }
 
-function RelatedCategoryChip({ children }: { children: string }) {
+function RelatedCategoryChip({ children }: { readonly children: string }) {
   return <span className={styles.relatedCategoryChip}>{children}</span>;
 }
 
-function Meta({ post }: { post: BlogPost }) {
+function Meta({ post }: { readonly post: BlogCard | BlogDetail }) {
+  const author = "author" in post ? post.author : "제로소싱";
+
   return (
     <p className={styles.meta}>
       <span aria-hidden="true" className={styles.metaMark}>
@@ -54,21 +57,26 @@ function Meta({ post }: { post: BlogPost }) {
           width={16}
         />
       </span>
-      {post.author} <strong>·</strong> {post.date}
+      {author} <strong>·</strong> {post.date}
     </p>
   );
 }
 
-function RelatedPostCard({ post }: { post: BlogPost }) {
+function RelatedPostCard({ post }: { readonly post: BlogCard | BlogDetail }) {
   return (
     <Link className={styles.relatedCard} href={`/blog/${post.slug}`}>
-      <div aria-hidden="true" className={styles.relatedThumbnail} />
+      <ManagedThumbnail
+        alt=""
+        className={styles.relatedThumbnail!}
+        sizes="(max-width: 480px) calc(100vw - 40px), 220px"
+        url={post.thumbnailUrl}
+      />
       <div className={styles.relatedCopy}>
         <div className={styles.relatedText}>
           <RelatedCategoryChip>{post.category}</RelatedCategoryChip>
           <div className={styles.relatedTitleGroup}>
             <h3 className={styles.relatedTitle}>{post.title}</h3>
-            <p className={styles.relatedDescription}>{post.description}</p>
+            <p className={styles.relatedDescription}>{post.summary}</p>
           </div>
         </div>
         <Meta post={post} />
@@ -79,15 +87,13 @@ function RelatedPostCard({ post }: { post: BlogPost }) {
 
 export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
   const { slug } = await params;
-  const post = blogPosts.find((item) => item.slug === slug);
+  const post = await getPublishedBlogPost(slug);
 
   if (!post) {
     notFound();
   }
 
-  const relatedPosts = post.relatedSlugs
-    .map((relatedSlug) => blogPosts.find((item) => item.slug === relatedSlug))
-    .filter((item): item is BlogPost => Boolean(item));
+  const relatedPosts = await getRelatedBlogPosts(post.type, post.slug);
 
   return (
     <main className={styles.page}>
@@ -108,14 +114,21 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
                 </div>
                 <h1 className={styles.title}>{post.title}</h1>
               </div>
-              <p className={styles.description}>{post.description}</p>
+              <p className={styles.description}>{post.summary}</p>
               <Meta post={post} />
             </header>
 
-            <div
-              className={styles.articleBody}
-              dangerouslySetInnerHTML={{ __html: post.contentHtml }}
-            />
+            <div className={styles.articleBody}>
+              <ManagedContent
+                assetBaseEnabled={post.assetBaseEnabled}
+                assetScope={post.assetScope}
+                authoringMode={post.contentAuthoringMode}
+                content={post.content}
+                entity="blog"
+                outputMode={post.contentMode}
+                title={post.title}
+              />
+            </div>
 
             <section className={styles.ctaBanner}>
               <div className={styles.ctaCopy}>
@@ -125,8 +138,8 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
                   MVP·홈페이지 개발 파트너, 제로소싱
                 </h2>
                 <p className={styles.ctaDescription}>
-                  과한 스펙도, 긴 일정도 없이. 핵심만 담아 빠르게 검증하는
-                  MVP 개발 파트너.
+                  과한 스펙도, 긴 일정도 없이. 핵심만 담아 빠르게 검증하는 MVP
+                  개발 파트너.
                 </p>
               </div>
               <BlogDetailCtaButton />
@@ -140,11 +153,8 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
           <section className={styles.relatedSection}>
             <h2 className={styles.relatedHeading}>함께 읽으면 좋은 글</h2>
             <div className={styles.relatedList}>
-              {relatedPosts.map((relatedPost, index) => (
-                <RelatedPostCard
-                  key={`${relatedPost.slug}-${index}`}
-                  post={relatedPost}
-                />
+              {relatedPosts.map((relatedPost) => (
+                <RelatedPostCard key={relatedPost.slug} post={relatedPost} />
               ))}
             </div>
           </section>

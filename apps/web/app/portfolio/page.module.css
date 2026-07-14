@@ -119,6 +119,10 @@
   width: 100%;
 }
 
+.featuredPreview {
+  position: relative;
+}
+
 .thumbnail {
   position: relative;
   width: 100%;
@@ -261,6 +265,13 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 32px 20px;
+}
+
+.emptyText {
+  composes: pretendard-medium-14 from global;
+  padding: 52px 0;
+  color: var(--color-gray-500);
+  text-align: center;
 }
 
 .card {

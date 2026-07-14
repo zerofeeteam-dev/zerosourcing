@@ -2,9 +2,12 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-const blogPagePath = new URL("./page.tsx", import.meta.url);
+const blogPagePath = new URL("./BlogListClient.tsx", import.meta.url);
 const blogStylesPath = new URL("./blog.module.css", import.meta.url);
-const footerStylesPath = new URL("../../components/Footer.module.css", import.meta.url);
+const footerStylesPath = new URL(
+  "../../components/Footer.module.css",
+  import.meta.url,
+);
 
 test("blog applies the 390px Figma card geometry only at 480px and below", async () => {
   const [blogPage, blogStyles] = await Promise.all([

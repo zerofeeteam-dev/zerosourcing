@@ -3,31 +3,30 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 const pagePath = new URL("./page.tsx", import.meta.url);
-const itemsPath = new URL("./portfolio-items.ts", import.meta.url);
+const clientPath = new URL("./PortfolioListClient.tsx", import.meta.url);
 
-test("every portfolio card links to its registered detail slug", async () => {
-  const [items, page] = await Promise.all([
-    readFile(itemsPath, "utf8"),
+test("every managed portfolio card links to its published detail slug", async () => {
+  const [page, client] = await Promise.all([
     readFile(pagePath, "utf8"),
+    readFile(clientPath, "utf8"),
   ]);
-  const portfolioItemsSource = items.split(
-    "export const portfolioDetails =",
-  )[0];
-  const portfolioDetailsSource = items.split(
-    "export const portfolioDetails =",
-  )[1];
 
-  assert.match(page, /import Link from "next\/link";/);
+  assert.match(page, /getPublishedPortfolios/);
+  assert.match(page, /selectPortfolioIndex/);
+  assert.doesNotMatch(page, /portfolio-items/);
+
+  assert.match(client, /import Link from "next\/link";/);
   assert.match(
-    page,
+    client,
     /className=\{`\$\{styles\.featured\} \$\{styles\.clickableCard\}`\}/,
   );
-  assert.match(page, /href=\{`\/portfolio\/\$\{featuredCase\.slug\}`\}/);
+  assert.match(client, /href=\{`\/portfolio\/\$\{featured\.slug\}`\}/);
   assert.match(
-    page,
+    client,
     /<Link[\s\S]*?href=\{`\/portfolio\/\$\{item\.slug\}`\}[\s\S]*?>/,
   );
-  assert.doesNotMatch(page, /useRouter|router\.push|role="link"|tabIndex/);
-  assert.equal(portfolioItemsSource.match(/slug: /g)?.length, 9);
-  assert.equal(portfolioDetailsSource.match(/slug: /g)?.length, 9);
+  assert.doesNotMatch(
+    client,
+    /portfolio-items|useRouter|router\.push|role="link"|tabIndex/,
+  );
 });

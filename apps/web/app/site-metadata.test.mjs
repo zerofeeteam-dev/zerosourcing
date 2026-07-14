@@ -105,7 +105,10 @@ test("every static public route exports the approved metadata copy", async () =>
     const source = await readOrEmpty(expectation.file);
 
     assert.match(source, /createPageMetadata\(\{/);
-    assert.ok(source.includes(JSON.stringify(expectation.title)), expectation.file);
+    assert.ok(
+      source.includes(JSON.stringify(expectation.title)),
+      expectation.file,
+    );
     assert.ok(
       source.includes(JSON.stringify(expectation.description)),
       expectation.file,
@@ -115,20 +118,39 @@ test("every static public route exports the approved metadata copy", async () =>
 });
 
 test("blog and portfolio details derive metadata from their route data", async () => {
-  const [blog, portfolio] = await Promise.all([
+  const [blog, portfolio, blogIndex, portfolioIndex] = await Promise.all([
     readOrEmpty("./blog/[slug]/page.tsx"),
     readOrEmpty("./portfolio/[slug]/page.tsx"),
+    readOrEmpty("./blog/page.tsx"),
+    readOrEmpty("./portfolio/page.tsx"),
   ]);
 
   assert.match(blog, /export async function generateMetadata/);
+  assert.match(blog, /getPublishedBlogPost/);
   assert.match(blog, /title: post\.title/);
-  assert.match(blog, /description: post\.description/);
+  assert.match(blog, /description: post\.seoDescription \|\| post\.summary/);
   assert.match(blog, /path: `\/blog\/\$\{post\.slug\}`/);
+  assert.match(blog, /<ManagedContent/);
+  assert.doesNotMatch(blog, /blog-posts|generateStaticParams/);
 
   assert.match(portfolio, /export async function generateMetadata/);
+  assert.match(portfolio, /getPublishedPortfolio/);
   assert.match(portfolio, /title: portfolio\.title/);
-  assert.match(portfolio, /description: portfolio\.description/);
+  assert.match(
+    portfolio,
+    /description: portfolio\.seoDescription \|\| portfolio\.description/,
+  );
   assert.match(portfolio, /path: `\/portfolio\/\$\{portfolio\.slug\}`/);
+  assert.match(portfolio, /<ManagedContent/);
+  assert.doesNotMatch(portfolio, /portfolio-items|generateStaticParams/);
+
+  assert.match(blogIndex, /getPublishedBlogPosts/);
+  assert.match(blogIndex, /selectBlogIndex/);
+  assert.doesNotMatch(blogIndex, /blog-posts/);
+
+  assert.match(portfolioIndex, /getPublishedPortfolios/);
+  assert.match(portfolioIndex, /selectPortfolioIndex/);
+  assert.doesNotMatch(portfolioIndex, /portfolio-items/);
 });
 
 test("robots and sitemap expose the canonical public routes", async () => {

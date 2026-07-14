@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 const blogMarkSrc = "/brand/zerofee-blog-mark.svg";
-const blogListPagePath = new URL("./page.tsx", import.meta.url);
+const blogListPagePath = new URL("./BlogListClient.tsx", import.meta.url);
 const blogDetailPagePath = new URL("./[slug]/page.tsx", import.meta.url);
 const blogMarkAssetPath = new URL(
   "../../public/brand/zerofee-blog-mark.svg",
