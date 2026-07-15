@@ -37,7 +37,7 @@ export function Header() {
 
   return (
     <>
-      <header className={styles.header} data-node-id="269:32520">
+      <header className={styles.header} data-node-id="611:5728">
         <div className={styles.left}>
           <Link className={styles.logo} href="/" aria-label="ZeroSourcing home">
             <Image
