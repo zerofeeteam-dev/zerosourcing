@@ -66,4 +66,10 @@ test("re-measures for late-loading assets and web fonts", () => {
   assert.match(output, /document\.addEventListener\("load", send, true\)/);
   assert.match(output, /document\.fonts\.ready\.then\(send\)/);
   assert.match(output, /new ResizeObserver\(send\)/);
+  assert.match(output, /zerosourcing:raw-html-measure/);
+  assert.match(output, /window\.addEventListener\("message", \(event\) =>/);
+  assert.match(output, /zerosourcing-raw-html-viewport/);
+  assert.match(output, /height: auto !important/);
+  assert.match(output, /overflow-y: visible !important/);
+  assert.match(output, /scrollingElement \? scrollingElement\.scrollHeight : 0/);
 });

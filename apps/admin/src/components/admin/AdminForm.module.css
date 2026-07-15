@@ -165,7 +165,7 @@
 }
 
 .segmentedFieldFull {
-  gap: 2px;
+  gap: 8px;
   width: 100%;
 }
 
@@ -202,7 +202,7 @@
 }
 
 .segmentText {
-  composes: pretendard-bold-14 from global;
+  composes: pretendard-medium-14 from global;
   border-radius: 6px;
   color: var(--color-gray-500);
   cursor: pointer;
@@ -211,7 +211,6 @@
 }
 
 .segmentTextFull {
-  composes: pretendard-medium-14-20 from global;
   align-items: center;
   border-radius: 12px;
   display: flex;

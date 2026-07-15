@@ -8,6 +8,7 @@ import {
   type TestInfo,
 } from "@playwright/test";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { buildRawHtmlSource } from "@repo/content/raw-html-frame";
 
 import {
   cleanupE2EContent,
@@ -151,6 +152,16 @@ async function portfolioRow(
     .single();
   if (error) throw error;
   return data as PortfolioDatabaseRow;
+}
+
+async function portfolioExists(client: SupabaseClient): Promise<boolean> {
+  const { data, error } = await client
+    .from("portfolios")
+    .select("slug")
+    .eq("slug", PORTFOLIO_SLUG)
+    .maybeSingle();
+  if (error) throw error;
+  return data !== null;
 }
 
 async function blogRow(client: SupabaseClient): Promise<BlogDatabaseRow> {
@@ -352,15 +363,11 @@ async function switchPortfolioToRawHtml(page: Page): Promise<void> {
   const rawMode = page.getByRole("radio", { name: /HTML 원문/u });
   await expect(rawMode).toBeEnabled();
   await rawMode.click();
-  const dialog = page.getByRole("dialog", {
-    name: "HTML 원문으로 전환",
-  });
-  await expect(dialog).toBeVisible();
-  await dialog.getByRole("button", { name: /현재 생성 HTML 사용/u }).click();
   await expect(page.locator('textarea[aria-label="HTML 원문"]')).toBeVisible();
+  await expect(page.getByRole("dialog")).toHaveCount(0);
 }
 
-async function createRawPortfolioDraft(page: Page): Promise<string> {
+async function createRawPortfolioDraft(page: Page): Promise<void> {
   await page.goto(`${ADMIN_URL}/portfolio/new`);
   await expect(
     page.getByRole("heading", { name: "신규 포트폴리오 등록" }),
@@ -385,22 +392,6 @@ async function createRawPortfolioDraft(page: Page): Promise<string> {
   await page
     .locator('textarea[aria-label="HTML 원문"]')
     .fill(RAW_PORTFOLIO_HTML);
-  await page
-    .getByRole("button", { name: "미리보기 새로고침", exact: true })
-    .click();
-
-  const previewElement = page.locator('iframe[title="HTML 원문 미리보기"]');
-  await expect(previewElement).toHaveAttribute("sandbox", "allow-scripts");
-  const previewFrame = page.frameLocator('iframe[title="HTML 원문 미리보기"]');
-  await expect(previewFrame.locator("html")).toHaveAttribute(
-    "data-e2e-script",
-    "ran",
-  );
-  await expect(previewFrame.locator("#e2e-raw-marker")).toContainText(
-    "관리자 미리보기와 공개 상세",
-  );
-  const previewSource = await previewElement.getAttribute("srcdoc");
-  if (!previewSource) throw new Error("The Admin raw preview has no srcdoc.");
 
   const saveDraft = page.getByRole("button", {
     name: "임시저장",
@@ -409,7 +400,6 @@ async function createRawPortfolioDraft(page: Page): Promise<string> {
   await expect(saveDraft).toBeEnabled();
   await saveDraft.click();
   await expect(page).toHaveURL(`${ADMIN_URL}/portfolio/${PORTFOLIO_SLUG}`);
-  return previewSource;
 }
 
 async function publishRawPortfolio(page: Page): Promise<void> {
@@ -454,6 +444,7 @@ async function populateWysiwygEditor(page: Page): Promise<void> {
   await expect(editor).toBeEditable();
   await editor.click();
 
+  await page.getByRole("button", { name: "제목 서식", exact: true }).click();
   await page.getByRole("button", { name: "제목 2", exact: true }).click();
   await editor.pressSequentially(BLOG_HEADING);
   await editor.press("Enter");
@@ -475,14 +466,9 @@ async function populateWysiwygEditor(page: Page): Promise<void> {
       ),
     )
     .toBe(BLOG_LINK_TEXT);
-  page.once("dialog", async (dialog) => {
-    expect(dialog.type()).toBe("prompt");
-    await dialog.accept(BLOG_LINK_URL);
-  });
   await page.getByRole("button", { name: "링크 설정", exact: true }).click();
-  await expect(
-    page.getByRole("button", { name: "링크 해제", exact: true }),
-  ).toBeVisible();
+  await page.getByRole("textbox", { name: "링크 URL", exact: true }).fill(BLOG_LINK_URL);
+  await page.getByRole("button", { name: "링크 적용", exact: true }).click();
   const editorLink = editor.getByRole("link", { name: BLOG_LINK_TEXT });
   await expect(editorLink).toHaveAttribute("href", BLOG_LINK_URL);
   const linkParagraph = editorLink.locator("xpath=parent::p");
@@ -496,6 +482,7 @@ async function populateWysiwygEditor(page: Page): Promise<void> {
   await page.keyboard.press("Enter");
   await expect(editorLink).toHaveAttribute("href", BLOG_LINK_URL);
 
+  await page.getByRole("button", { name: "목록 서식", exact: true }).click();
   await page
     .getByRole("button", { name: "글머리 기호 목록", exact: true })
     .click();
@@ -506,7 +493,7 @@ async function populateWysiwygEditor(page: Page): Promise<void> {
   await editor.press("Enter");
 
   await page
-    .getByLabel("본문 이미지 업로드", { exact: true })
+    .getByLabel("본문 이미지 파일 선택", { exact: true })
     .setInputFiles(WEBP_UPLOAD);
   const alt = page.getByLabel("대체 텍스트", { exact: true });
   await expect(alt).toBeEnabled({ timeout: 20_000 });
@@ -568,7 +555,7 @@ async function expectRawPortfolioPublished(
   await expect(publicLink(page, `/portfolio/${PORTFOLIO_SLUG}`)).toBeVisible();
 
   await gotoFresh(page, `/portfolio/${PORTFOLIO_SLUG}`);
-  await expect(page).toHaveTitle(PORTFOLIO_TITLE);
+  await expect(page).toHaveTitle(`제로소싱 | ${PORTFOLIO_TITLE}`);
   await expect(page.locator('meta[name="description"]')).toHaveAttribute(
     "content",
     PORTFOLIO_SEO_DESCRIPTION,
@@ -581,6 +568,7 @@ async function expectRawPortfolioPublished(
   const frameElement = page.locator(`iframe[title="${PORTFOLIO_TITLE}"]`);
   await expect(frameElement).toHaveAttribute("sandbox", "allow-scripts");
   await expect(frameElement).toHaveAttribute("referrerpolicy", "no-referrer");
+  await expect(frameElement).toHaveAttribute("scrolling", "no");
   await expect(frameElement).toHaveAttribute("srcdoc", adminPreviewSource);
   const frame = page.frameLocator(`iframe[title="${PORTFOLIO_TITLE}"]`);
   await expect(frame.locator("html")).toHaveAttribute("data-e2e-script", "ran");
@@ -600,6 +588,20 @@ async function expectRawPortfolioPublished(
     "data-raw-frame-escaped",
     "true",
   );
+
+  await expect
+    .poll(async () =>
+      frame.locator("html").evaluate(() => {
+        const scrollingElement = document.scrollingElement;
+        if (!scrollingElement) return false;
+        return (
+          scrollingElement.scrollHeight <= scrollingElement.clientHeight &&
+          getComputedStyle(document.documentElement).overflowY !== "scroll" &&
+          getComputedStyle(document.body).overflowY !== "scroll"
+        );
+      }),
+    )
+    .toBe(true);
 
   const initialHeight = (await frameElement.boundingBox())?.height ?? 0;
   const attached = await attachedFrame(frameElement);
@@ -628,7 +630,7 @@ async function expectWysiwygBlogPublished(
   expectedImageUrl: string,
 ): Promise<void> {
   await gotoFresh(page, `/blog/${BLOG_SLUG}`);
-  await expect(page).toHaveTitle(BLOG_TITLE);
+  await expect(page).toHaveTitle(`제로소싱 | ${BLOG_TITLE}`);
   await expect(page.locator('meta[name="description"]')).toHaveAttribute(
     "content",
     BLOG_SEO_DESCRIPTION,
@@ -822,7 +824,7 @@ async function unpublishThroughAdmin(
   await saveDraftThroughAdmin(page, entity);
 }
 
-async function softDeleteThroughAdmin(
+async function deleteThroughAdmin(
   page: Page,
   entity: "blog" | "portfolio",
   slug: string,
@@ -883,9 +885,9 @@ test.describe("Admin-managed public content", () => {
       await loginThroughAdmin(page);
     });
 
-    let adminRawPreviewSource = "";
+    const publicRawFrameSource = buildRawHtmlSource(RAW_PORTFOLIO_HTML);
     await test.step("create an exact raw HTML Portfolio draft", async () => {
-      adminRawPreviewSource = await createRawPortfolioDraft(page);
+      await createRawPortfolioDraft(page);
       const row = await portfolioRow(client);
       expect(row.status).toBe("draft");
       expect(row.content_authoring_mode).toBe("raw_html");
@@ -904,7 +906,7 @@ test.describe("Admin-managed public content", () => {
       expect(row.landing_published).toBe(true);
       expect(row.service_published).toBe(true);
       await updatePortfolioOrderingAndSeedSupport(client);
-      await expectRawPortfolioPublished(page, request, adminRawPreviewSource);
+      await expectRawPortfolioPublished(page, request, publicRawFrameSource);
     });
 
     let blogImageUrl = "";
@@ -992,14 +994,12 @@ test.describe("Admin-managed public content", () => {
       await expectBlogAbsent(page, request, true);
     });
 
-    await test.step("soft-delete both drafts and keep them absent", async () => {
-      await softDeleteThroughAdmin(page, "portfolio", PORTFOLIO_SLUG);
-      await expect
-        .poll(async () => (await portfolioRow(client)).deleted_at)
-        .not.toBeNull();
+    await test.step("permanently delete the Portfolio and soft-delete the Blog", async () => {
+      await deleteThroughAdmin(page, "portfolio", PORTFOLIO_SLUG);
+      await expect.poll(async () => portfolioExists(client)).toBe(false);
       await expectPortfolioAbsent(page, request);
 
-      await softDeleteThroughAdmin(page, "blog", BLOG_SLUG);
+      await deleteThroughAdmin(page, "blog", BLOG_SLUG);
       await expect
         .poll(async () => (await blogRow(client)).deleted_at)
         .not.toBeNull();

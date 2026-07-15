@@ -136,6 +136,10 @@
   width: 100%;
 }
 
+.figmaTriggerPreview {
+  padding: 0;
+}
+
 .figmaIconBubble {
   align-items: center;
   background: var(--color-gray-100);

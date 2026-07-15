@@ -18,6 +18,7 @@ import {
 } from "./lib/router";
 import { usePendingAssetNavigation } from "./navigation/PendingAssetNavigation";
 import { useAdminNavigationController } from "./navigation/useAdminNavigationController";
+import { applyAdminPageTitle } from "./lib/pageTitle";
 import { supabaseConfig, type SupabaseDisabledConfig } from "./lib/supabase";
 import { LoginPage } from "./pages/LoginPage";
 import type { Session } from "@supabase/supabase-js";
@@ -82,6 +83,10 @@ export function App() {
     getPendingAssetCount,
     onRouteAccepted: acceptCurrentRoute,
   });
+
+  useEffect(() => {
+    applyAdminPageTitle();
+  }, []);
 
   useEffect(() => {
     if (supabaseConfig.kind === "disabled") {

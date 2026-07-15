@@ -1,4 +1,7 @@
-import { parseContentAssetScope } from "@repo/content/asset-url";
+import {
+  createContentAssetBaseUrl,
+  parseContentAssetScope,
+} from "@repo/content/asset-url";
 import type { TiptapDocument } from "@repo/content/types";
 import {
   lazy,
@@ -8,8 +11,11 @@ import {
   useMemo,
   useRef,
   useState,
+  type ReactNode,
 } from "react";
+import { createPortal } from "react-dom";
 import { AdminButton } from "../admin/AdminButton";
+import { AdminEditorModeSegmentedControl } from "../admin/AdminEditorMode";
 import { AdminFailureError, type AdminFailure } from "../../lib/adminErrors";
 import {
   isContentImagePublicUrlOwnedBy,
@@ -27,20 +33,16 @@ import {
   type ManagedContentFormValue,
 } from "../../lib/managedContent";
 import { supabaseConfig } from "../../lib/supabase";
-import { AdminChoiceDialog } from "./AdminChoiceDialog";
+import { AdminContentPreview } from "./AdminContentPreview";
 import { AdminRawHtmlEditor } from "./AdminRawHtmlEditor";
 import { GenerationPendingAssetRegistry } from "./generationPendingAssetRegistry";
-import type {
-  RawAssetCleanupIssue,
-  RawPendingAssetWork,
-} from "./useRawAssetLifecycle";
 import type {
   AdminRichTextCanonicalValue,
   PendingEditorAssetWork,
   UploadedEditorImage,
 } from "./AdminRichTextEditor";
-import { useGenerationBoundChoiceDialog } from "./useGenerationBoundChoiceDialog";
 import styles from "./AdminContentEditor.module.css";
+import { replaceImageSlotSource } from "./rawHtmlImageSlots";
 
 const LazyAdminRichTextEditor = lazy(async () => {
   const module = await import("./AdminRichTextEditor");
@@ -54,14 +56,16 @@ export type AdminContentEditorProps = {
   readonly onBusyChange: (busy: boolean) => void;
   readonly onChange: (value: ManagedContentFormValue) => void;
   readonly onPendingAssetCountChange: (count: number) => void;
+  readonly previewContainer?: HTMLElement | null;
   readonly value: ManagedContentFormValue;
 };
 
-const modeDescriptions = {
-  raw_html:
-    "script와 style을 포함한 완성 HTML을 원문 그대로 보존하고 격리된 미리보기로 확인합니다.",
-  wysiwyg: "제목, 목록, 링크, 이미지를 편집 도구로 작성합니다.",
-} as const;
+type RawPreviewImageUpload = {
+  readonly generation: string;
+  readonly requestId: number;
+  readonly slotIndex: number;
+  readonly source: string;
+};
 
 function canonicalScope(value: string): string | null {
   try {
@@ -86,6 +90,7 @@ export function AdminContentEditor({
   onBusyChange,
   onChange,
   onPendingAssetCountChange,
+  previewContainer,
   value,
 }: AdminContentEditorProps) {
   const parsedScope = useMemo(
@@ -105,34 +110,25 @@ export function AdminContentEditor({
   const onPendingAssetCountChangeRef = useRef(onPendingAssetCountChange);
   onPendingAssetCountChangeRef.current = onPendingAssetCountChange;
   const mountedRef = useRef(false);
+  const previewImageInputRef = useRef<HTMLInputElement>(null);
+  const pendingRawPreviewSlotRef = useRef<Pick<
+    RawPreviewImageUpload,
+    "generation" | "slotIndex" | "source"
+  > | null>(null);
+  const nextRawPreviewRequestIdRef = useRef(1);
 
   const [readyGeneration, setReadyGeneration] = useState<string | null>(null);
   const [richPendingCount, setRichPendingCount] = useState(0);
-  const [rawPendingCount, setRawPendingCount] = useState(0);
+  const [rawPreviewImageUpload, setRawPreviewImageUpload] =
+    useState<RawPreviewImageUpload | null>(null);
   const [contentError, setContentError] = useState<string | null>(null);
   const [assetError, setAssetError] = useState<string | null>(null);
-  const [orphanCleanupIssues, setOrphanCleanupIssues] = useState<
-    readonly RawAssetCleanupIssue[]
-  >([]);
   const richPendingRegistryRef = useRef<GenerationPendingAssetRegistry | null>(
     null,
   );
   if (!richPendingRegistryRef.current) {
     richPendingRegistryRef.current = new GenerationPendingAssetRegistry();
   }
-  const rawPendingRegistryRef = useRef<GenerationPendingAssetRegistry | null>(
-    null,
-  );
-  if (!rawPendingRegistryRef.current) {
-    rawPendingRegistryRef.current = new GenerationPendingAssetRegistry();
-  }
-  const {
-    cancelDialog,
-    openDialog,
-    request: dialog,
-    selectDialog,
-  } = useGenerationBoundChoiceDialog(editorGeneration, disabled);
-
   const schemaInvalid =
     parsedScope === null ||
     (value.contentMode !== "text" &&
@@ -142,12 +138,13 @@ export function AdminContentEditor({
     value.contentMode === "text" ||
     value.contentAuthoringMode !== "wysiwyg" ||
     readyGeneration === editorGeneration;
-  const pendingAssetCount = richPendingCount + rawPendingCount;
+  const pendingAssetCount = richPendingCount + (rawPreviewImageUpload ? 1 : 0);
   const busy =
     schemaInvalid ||
     contentError !== null ||
     !canonicalReady ||
     pendingAssetCount > 0;
+  const usesExternalPreview = previewContainer !== undefined;
 
   useEffect(() => {
     mountedRef.current = true;
@@ -161,6 +158,8 @@ export function AdminContentEditor({
   useEffect(() => {
     if (previousGenerationRef.current === editorGeneration) return;
     previousGenerationRef.current = editorGeneration;
+    pendingRawPreviewSlotRef.current = null;
+    setRawPreviewImageUpload(null);
     setContentError(null);
     setAssetError(null);
   }, [editorGeneration]);
@@ -176,41 +175,6 @@ export function AdminContentEditor({
   const commitValue = useCallback((nextValue: ManagedContentFormValue) => {
     onChangeRef.current(nextValue);
   }, []);
-
-  const onRawPendingAssetWorkChange = useCallback(
-    (event: RawPendingAssetWork) => {
-      if (!mountedRef.current) return;
-      setRawPendingCount(rawPendingRegistryRef.current?.update(event) ?? 0);
-    },
-    [],
-  );
-
-  const onRawOrphanCleanupIssue = useCallback((issue: RawAssetCleanupIssue) => {
-    if (!mountedRef.current) return;
-    setOrphanCleanupIssues((current) => {
-      const existingIndex = current.findIndex(
-        (entry) =>
-          entry.generation === issue.generation && entry.path === issue.path,
-      );
-      if (existingIndex < 0) return [...current, issue];
-      if (current[existingIndex]?.message === issue.message) return current;
-      return current.map((entry, index) =>
-        index === existingIndex ? issue : entry,
-      );
-    });
-  }, []);
-
-  const dismissRawOrphanCleanupIssue = useCallback(
-    (issue: RawAssetCleanupIssue) => {
-      setOrphanCleanupIssues((current) =>
-        current.filter(
-          (entry) =>
-            entry.generation !== issue.generation || entry.path !== issue.path,
-        ),
-      );
-    },
-    [],
-  );
 
   const isAllowedImageUrl = useCallback(
     (publicUrl: string) =>
@@ -261,6 +225,112 @@ export function AdminContentEditor({
     [entity, parsedScope],
   );
 
+  const assetBaseUrl = useMemo(() => {
+    if (
+      !value.contentAssetBaseEnabled ||
+      !parsedScope ||
+      supabaseConfig.kind !== "enabled"
+    ) {
+      return undefined;
+    }
+    return createContentAssetBaseUrl({
+      assetScope: parsedScope,
+      entity,
+      supabaseUrl: supabaseConfig.url,
+    });
+  }, [entity, parsedScope, value.contentAssetBaseEnabled]);
+
+  const uploadRawPreviewImage = useCallback(
+    async (request: RawPreviewImageUpload, file: File): Promise<void> => {
+      try {
+        const uploaded = await uploadImage(file);
+        const sourceIsCurrent =
+          mountedRef.current &&
+          activeGenerationRef.current === request.generation &&
+          valueRef.current.content === request.source;
+        const nextContent = sourceIsCurrent
+          ? replaceImageSlotSource(
+              request.source,
+              request.slotIndex,
+              uploaded.url,
+            )
+          : null;
+
+        if (nextContent === null) {
+          await cleanupImage(uploaded);
+          if (
+            mountedRef.current &&
+            activeGenerationRef.current === request.generation
+          ) {
+            setAssetError(
+              "본문이 변경되어 업로드한 이미지를 연결하지 않았습니다. 다시 선택해 주세요.",
+            );
+          }
+          return;
+        }
+
+        onChangeRef.current({
+          ...valueRef.current,
+          content: nextContent,
+        });
+      } catch (error) {
+        if (
+          mountedRef.current &&
+          activeGenerationRef.current === request.generation
+        ) {
+          setAssetError(
+            failureMessage(
+              error,
+              "본문 이미지 업로드에 실패했습니다. 다시 시도해 주세요.",
+            ),
+          );
+        }
+      } finally {
+        if (mountedRef.current) {
+          setRawPreviewImageUpload((current) =>
+            current?.requestId === request.requestId ? null : current,
+          );
+        }
+      }
+    },
+    [cleanupImage, uploadImage],
+  );
+
+  const selectRawPreviewImageSlot = useCallback(
+    (slotIndex: number) => {
+      if (disabled || rawPreviewImageUpload !== null) return;
+      pendingRawPreviewSlotRef.current = {
+        generation: editorGeneration,
+        slotIndex,
+        source: valueRef.current.content,
+      };
+      previewImageInputRef.current?.click();
+    },
+    [disabled, editorGeneration, rawPreviewImageUpload],
+  );
+
+  const selectRawPreviewImageFile = useCallback(
+    (file: File | null) => {
+      const pendingSlot = pendingRawPreviewSlotRef.current;
+      pendingRawPreviewSlotRef.current = null;
+      if (
+        !file ||
+        !pendingSlot ||
+        activeGenerationRef.current !== pendingSlot.generation
+      ) {
+        return;
+      }
+      const request: RawPreviewImageUpload = {
+        ...pendingSlot,
+        requestId: nextRawPreviewRequestIdRef.current,
+      };
+      nextRawPreviewRequestIdRef.current += 1;
+      setRawPreviewImageUpload(request);
+      void uploadRawPreviewImage(request, file);
+    },
+    [uploadRawPreviewImage],
+  );
+
   const applyCanonical = useCallback(
     (canonical: AdminRichTextCanonicalValue, markReady: boolean) => {
       if (activeGenerationRef.current !== editorGeneration) return;
@@ -280,93 +350,24 @@ export function AdminContentEditor({
 
   const requestRawToWysiwyg = () => {
     if (busy || disabled) return;
-    openDialog({
-      choices: [
-        {
-          description:
-            "저장해 둔 WYSIWYG 문서를 다시 열고 최초 원문 백업은 유지합니다.",
-          id: "restore_previous",
-          label: "이전 WYSIWYG 복원",
-        },
-        {
-          description:
-            "현재 HTML 원문을 새 백업으로 바꾸고 빈 문서에서 시작합니다.",
-          id: "new_from_current_backup",
-          label: "현재 원문을 백업하고 새 문서 시작",
-          tone: "danger",
-        },
-      ],
-      description:
-        "HTML 원문을 WYSIWYG로 자동 변환하지 않습니다. 사용할 초안을 선택해 주세요.",
-      onSelect: (choiceId) => {
-        if (
-          choiceId !== "restore_previous" &&
-          choiceId !== "new_from_current_backup"
-        ) {
-          return;
-        }
-        setReadyGeneration(null);
-        commitValue(switchRawToWysiwyg(valueRef.current, choiceId));
-      },
-      title: "WYSIWYG 에디터로 전환",
-    });
+    setReadyGeneration(null);
+    commitValue(switchRawToWysiwyg(valueRef.current, "restore_previous"));
   };
 
   const requestWysiwygToRaw = () => {
     if (busy || disabled) return;
-    openDialog({
-      choices: [
-        {
-          description: "처음 보관한 HTML 원문 초안을 다시 사용합니다.",
-          id: "backup",
-          label: "이전 원문 복원",
-        },
-        {
-          description: "현재 WYSIWYG 문서가 생성한 HTML을 원문으로 사용합니다.",
-          id: "generated",
-          label: "현재 생성 HTML 사용",
-        },
-      ],
-      description:
-        "WYSIWYG 문서는 그대로 보관됩니다. 원문 편집기에 표시할 소스를 선택해 주세요.",
-      onSelect: (choiceId) => {
-        if (choiceId !== "backup" && choiceId !== "generated") return;
-        commitValue(switchWysiwygToRaw(valueRef.current, choiceId));
-      },
-      title: "HTML 원문으로 전환",
-    });
+    commitValue(switchWysiwygToRaw(valueRef.current, "generated"));
   };
 
   const requestLegacyConversion = (target: "raw_html" | "wysiwyg") => {
     if (busy || disabled) return;
     const isRaw = target === "raw_html";
-    openDialog({
-      choices: [
-        {
-          description: isRaw
-            ? "문자와 따옴표를 안전하게 이스케이프한 HTML 초안을 만듭니다."
-            : "기존 문자를 그대로 유지한 WYSIWYG 문서를 만듭니다.",
-          id: "convert",
-          label: isRaw ? "HTML 원문으로 변환" : "WYSIWYG로 변환",
-        },
-        {
-          description: "기존 TEXT 본문을 바꾸지 않습니다.",
-          id: "keep_text",
-          label: "기존 TEXT 유지",
-        },
-      ],
-      description: "변환 후에도 안전하게 이스케이프한 원문 백업을 보관합니다.",
-      onSelect: (choiceId) => {
-        if (choiceId !== "convert") return;
-        if (!isRaw) setReadyGeneration(null);
-        commitValue(
-          isRaw
-            ? convertLegacyTextToRaw(valueRef.current)
-            : convertLegacyTextToWysiwyg(valueRef.current),
-        );
-      },
-      title: isRaw ? "기존 TEXT를 HTML로 변환" : "기존 TEXT를 WYSIWYG로 변환",
-    });
+    if (!isRaw) setReadyGeneration(null);
+    commitValue(
+      isRaw
+        ? convertLegacyTextToRaw(valueRef.current)
+        : convertLegacyTextToWysiwyg(valueRef.current),
+    );
   };
 
   const renderLegacyEditor = () => (
@@ -474,42 +475,56 @@ export function AdminContentEditor({
     );
   };
 
+  const renderEditorWorkspace = (editor: ReactNode) => {
+    const preview = (
+      <AdminContentPreview
+        assetBaseUrl={assetBaseUrl}
+        disabled={disabled || rawPreviewImageUpload !== null}
+        html={value.content}
+        interactiveImages={value.contentAuthoringMode === "raw_html"}
+        onSelectImage={selectRawPreviewImageSlot}
+        uploadingSlot={rawPreviewImageUpload?.slotIndex ?? null}
+      />
+    );
+
+    return (
+      <>
+        <div
+          className={
+            usesExternalPreview
+              ? styles.editorWorkspaceExternalPreview
+              : styles.editorWorkspace
+          }
+        >
+          <div className={styles.editorColumn}>{editor}</div>
+          {!usesExternalPreview ? preview : null}
+        </div>
+        {usesExternalPreview && previewContainer
+          ? createPortal(preview, previewContainer)
+          : null}
+      </>
+    );
+  };
+
   return (
     <section className={styles.root}>
       {value.contentMode === "text" ? (
         renderLegacyEditor()
       ) : (
         <>
-          <fieldset className={styles.modeFieldset}>
-            <legend className={styles.modeLegend}>본문 작성 방식</legend>
-            <div className={styles.modeCards}>
-              {(["raw_html", "wysiwyg"] as const).map((mode) => (
-                <label className={styles.modeCard} key={mode}>
-                  <input
-                    checked={value.contentAuthoringMode === mode}
-                    disabled={disabled || busy}
-                    name="managed-content-mode"
-                    onChange={() => {
-                      if (mode === value.contentAuthoringMode) return;
-                      if (mode === "wysiwyg") requestRawToWysiwyg();
-                      else requestWysiwygToRaw();
-                    }}
-                    type="radio"
-                    value={mode}
-                  />
-                  <span className={styles.modeCardText}>
-                    <span className={styles.modeName}>
-                      {mode === "raw_html" ? "HTML 원문" : "WYSIWYG 에디터"}
-                    </span>
-                    <span className={styles.modeDescription}>
-                      {modeDescriptions[mode]}
-                    </span>
-                  </span>
-                </label>
-              ))}
-            </div>
-          </fieldset>
-          <span aria-hidden="true" className={styles.divider} />
+          <AdminEditorModeSegmentedControl
+            disabled={disabled || busy}
+            fullWidth
+            id="managed-content-mode"
+            label="본문 작성 방식"
+            name="managed-content-mode"
+            onChange={(mode) => {
+              if (mode === value.contentAuthoringMode) return;
+              if (mode === "wysiwyg") requestRawToWysiwyg();
+              else requestWysiwygToRaw();
+            }}
+            value={value.contentAuthoringMode}
+          />
           {schemaInvalid ? (
             <p className={styles.error} role="alert">
               {managedContentSchemaErrorMessage}
@@ -518,56 +533,40 @@ export function AdminContentEditor({
             <p className={styles.error} role="alert">
               {contentError}
             </p>
-          ) : value.contentAuthoringMode === "raw_html" && parsedScope ? (
-            <AdminRawHtmlEditor
-              busy={busy}
-              contentAssetScope={parsedScope}
-              disabled={disabled}
-              documentKey={documentKey}
-              editorGeneration={editorGeneration}
-              entity={entity}
-              onChange={commitValue}
-              onOrphanCleanupIssue={onRawOrphanCleanupIssue}
-              onPendingAssetWorkChange={onRawPendingAssetWorkChange}
-              openDialog={openDialog}
-              value={value}
-            />
+          ) : value.contentAuthoringMode === "raw_html" ? (
+            <>
+              {renderEditorWorkspace(
+                <AdminRawHtmlEditor
+                  disabled={disabled}
+                  documentKey={documentKey}
+                  onChange={commitValue}
+                  value={value}
+                />,
+              )}
+              <input
+                accept="image/png,image/jpeg,image/webp"
+                aria-label="HTML 이미지 파일 선택"
+                className={styles.visuallyHiddenInput}
+                disabled={disabled || rawPreviewImageUpload !== null}
+                onChange={(event) =>
+                  selectRawPreviewImageFile(
+                    event.currentTarget.files?.[0] ?? null,
+                  )
+                }
+                ref={previewImageInputRef}
+                type="file"
+              />
+              {assetError ? (
+                <p className={styles.error} role="alert">
+                  {assetError}
+                </p>
+              ) : null}
+            </>
           ) : (
-            renderWysiwygEditor()
+            renderEditorWorkspace(renderWysiwygEditor())
           )}
         </>
       )}
-      {orphanCleanupIssues.map((issue) => (
-        <div
-          className={styles.operationalAlert}
-          key={JSON.stringify([issue.generation, issue.path])}
-          role="alert"
-        >
-          <p className={styles.operationalAlertText}>{issue.message}</p>
-          <p
-            className={`${styles.operationalAlertText} ${styles.operationalIssuePath}`}
-          >
-            Storage 관리자에서 수동 정리할 경로: {issue.path}
-          </p>
-          <AdminButton
-            aria-label={`고립 asset 알림 닫기: ${issue.path}`}
-            onClick={() => dismissRawOrphanCleanupIssue(issue)}
-            size="sm"
-            variant="secondary"
-          >
-            알림 닫기
-          </AdminButton>
-        </div>
-      ))}
-      <AdminChoiceDialog
-        cancelLabel={dialog?.cancelLabel}
-        choices={dialog?.choices ?? []}
-        description={dialog?.description ?? ""}
-        onCancel={cancelDialog}
-        onSelect={selectDialog}
-        open={dialog !== null}
-        title={dialog?.title ?? ""}
-      />
     </section>
   );
 }

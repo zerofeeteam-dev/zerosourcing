@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   AdminArrowRightIcon,
   AdminButton,
@@ -23,10 +23,10 @@ import {
 } from "../../lib/operationGeneration";
 import {
   createPortfolio,
-  deletePortfolio,
   getPortfolioBySlug,
   updatePortfolio,
 } from "../../lib/portfolioRepository";
+import { deletePortfolioWithStorageCleanup } from "../../lib/portfolioDeletion";
 import { supabaseConfig } from "../../lib/supabase";
 import { persistThumbnailChange } from "../../lib/thumbnailPersistence";
 import { usePendingAssetRegistration } from "../../navigation/PendingAssetNavigation";
@@ -92,6 +92,8 @@ export function PortfolioFormPage({
   const [cleanupWarning, setCleanupWarning] = useState<string>();
   const [successMessage, setSuccessMessage] = useState<string>();
   const [contentSchemaError, setContentSchemaError] = useState<string>();
+  const [contentPreviewContainer, setContentPreviewContainer] =
+    useState<HTMLDivElement | null>(null);
 
   usePendingAssetRegistration(editorState.pendingAssetCount);
 
@@ -112,6 +114,15 @@ export function PortfolioFormPage({
     editingPortfolio !== null &&
     editingPortfolio.id === formOwner.recordId &&
     formOwner.routeParam === route.param;
+
+  const setContentPreviewContainerRef = useCallback(
+    (element: HTMLDivElement | null) => {
+      setContentPreviewContainer((current) =>
+        current === element ? current : element,
+      );
+    },
+    [],
+  );
 
   useEffect(() => {
     mutationControllerRef.current?.abort();
@@ -435,17 +446,21 @@ export function PortfolioFormPage({
     };
 
     setIsPending(true);
-    const result = await deletePortfolio(supabaseConfig, editingPortfolio.id, {
-      signal: operationController.signal,
-    });
+    const outcome = await deletePortfolioWithStorageCleanup(
+      supabaseConfig,
+      editingPortfolio.id,
+      {
+        signal: operationController.signal,
+      },
+    );
     if (!operationIsCurrent(operation) || !formOwner.ownerIsCurrent(owner)) {
       return;
     }
     releaseOperation();
     setIsPending(false);
-    if (!result.ok) {
+    if (!outcome.result.ok) {
       formOwner.unlockOwner(owner);
-      setGlobalError(adminFailureMessage(result.error));
+      setGlobalError(adminFailureMessage(outcome.result.error));
       return;
     }
     formOwner.unlockOwner(owner);
@@ -458,43 +473,55 @@ export function PortfolioFormPage({
       className={styles.portfolioFormSection}
     >
       <div className={styles.portfolioFormPanel} aria-busy={isPending}>
-        <div className={styles.portfolioFormBody}>
-          <h1 className={styles.portfolioFormTitle} id="portfolio-form-title">
-            {isEditMode ? "포트폴리오 수정" : "신규 포트폴리오 등록"}
-          </h1>
-          {globalError ? (
-            <p className={styles.globalError} role="alert">
-              {globalError}
-            </p>
-          ) : null}
-          {cleanupWarning ? (
-            <p className={styles.cleanupWarning} role="status">
-              {cleanupWarning}
-            </p>
-          ) : null}
-          {successMessage ? (
-            <p className={styles.successMessage} role="status">
-              {successMessage}
-            </p>
-          ) : null}
-          {isLoading ? (
-            <p className={styles.loadingText}>
-              Portfolio 상세 정보를 불러오는 중입니다.
-            </p>
-          ) : null}
-          <PortfolioFormFields
-            documentKey={formOwner.documentKey}
-            fieldErrors={fieldErrors}
-            form={formOwner.form}
-            isDisabled={hardDisabled}
-            onContentBusyChange={editorState.onBusyChange}
-            onContentChange={handleContentChange}
-            onFormChange={handleFormChange}
-            onPendingAssetCountChange={editorState.onPendingAssetCountChange}
-            onThumbnailChange={handleThumbnailChange}
-            onThumbnailRemove={handleThumbnailRemove}
-            thumbnail={thumbnail.selection}
-          />
+        <div className={styles.portfolioFormLayout}>
+          <div className={styles.portfolioFormBody}>
+            <h1 className={styles.portfolioFormTitle} id="portfolio-form-title">
+              {isEditMode ? "포트폴리오 수정" : "신규 포트폴리오 등록"}
+            </h1>
+            {globalError ? (
+              <p className={styles.globalError} role="alert">
+                {globalError}
+              </p>
+            ) : null}
+            {cleanupWarning ? (
+              <p className={styles.cleanupWarning} role="status">
+                {cleanupWarning}
+              </p>
+            ) : null}
+            {successMessage ? (
+              <p className={styles.successMessage} role="status">
+                {successMessage}
+              </p>
+            ) : null}
+            {isLoading ? (
+              <p className={styles.loadingText}>
+                Portfolio 상세 정보를 불러오는 중입니다.
+              </p>
+            ) : null}
+            <PortfolioFormFields
+              contentPreviewContainer={contentPreviewContainer}
+              documentKey={formOwner.documentKey}
+              fieldErrors={fieldErrors}
+              form={formOwner.form}
+              isDisabled={hardDisabled}
+              onContentBusyChange={editorState.onBusyChange}
+              onContentChange={handleContentChange}
+              onFormChange={handleFormChange}
+              onPendingAssetCountChange={editorState.onPendingAssetCountChange}
+              onThumbnailChange={handleThumbnailChange}
+              onThumbnailRemove={handleThumbnailRemove}
+              thumbnail={thumbnail.selection}
+            />
+          </div>
+          <aside
+            aria-label="포트폴리오 본문 미리보기"
+            className={styles.portfolioPreviewColumn}
+          >
+            <div
+              className={styles.portfolioPreviewMount}
+              ref={setContentPreviewContainerRef}
+            />
+          </aside>
         </div>
         <div className={styles.portfolioActionArea}>
           {actionBlockReason ? (

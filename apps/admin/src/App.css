@@ -1,3 +1,6 @@
+@import './styles/_variables.scss';
+@import './styles/_keyframe-animations.scss';
+
 @font-face {
   font-display: swap;
   font-family: "Pretendard";
@@ -14,6 +17,7 @@ body {
   margin: 0;
   background: var(--color-gray-50);
   color: var(--color-gray-900);
+  font-family: var(--font-sans);
 }
 
 button,

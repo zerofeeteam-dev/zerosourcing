@@ -1,16 +1,16 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styles from "./RawHtmlFrame.module.css";
 import {
   buildRawHtmlSource,
   RAW_HTML_HEIGHT_MESSAGE_TYPE,
+  RAW_HTML_MEASURE_REQUEST_TYPE,
 } from "./raw-html-source";
 
 export { buildRawHtmlSource } from "./raw-html-source";
 
 const MIN_HEIGHT = 160;
-const MAX_HEIGHT = 200_000;
 
 type RawHtmlFrameProps = {
   readonly assetBaseUrl?: string;
@@ -25,6 +25,12 @@ export function RawHtmlFrame({ assetBaseUrl, html, title }: RawHtmlFrameProps) {
     () => buildRawHtmlSource(html, assetBaseUrl),
     [assetBaseUrl, html],
   );
+  const requestHeight = useCallback(() => {
+    frameRef.current?.contentWindow?.postMessage(
+      { type: RAW_HTML_MEASURE_REQUEST_TYPE },
+      "*",
+    );
+  }, []);
 
   useEffect(() => {
     const onMessage = (event: MessageEvent<unknown>) => {
@@ -38,20 +44,21 @@ export function RawHtmlFrame({ assetBaseUrl, html, title }: RawHtmlFrameProps) {
         return;
       }
       if (!Number.isFinite(data.height) || data.height <= 0) return;
-      setHeight(
-        Math.min(MAX_HEIGHT, Math.max(MIN_HEIGHT, Math.ceil(data.height))),
-      );
+      setHeight(Math.max(MIN_HEIGHT, Math.ceil(data.height)));
     };
     window.addEventListener("message", onMessage);
+    requestHeight();
     return () => window.removeEventListener("message", onMessage);
-  }, []);
+  }, [requestHeight]);
 
   return (
     <iframe
       className={styles.frame}
+      onLoad={requestHeight}
       ref={frameRef}
       referrerPolicy="no-referrer"
       sandbox="allow-scripts"
+      scrolling="no"
       srcDoc={source}
       style={{ height }}
       title={title}

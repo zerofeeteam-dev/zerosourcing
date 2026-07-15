@@ -1,0 +1,38 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.title {
+  composes: pretendard-bold-14 from global;
+  color: var(--color-gray-800);
+  margin: 0;
+}
+
+.frameViewport {
+  background: #ffffff;
+  border: 1px solid var(--color-gray-100);
+  border-radius: 16px;
+  max-height: 2300px;
+  overflow: auto;
+  width: 100%;
+}
+
+.frame {
+  border: 0;
+  display: block;
+  width: 100%;
+}
+
+.frameViewport:focus-within {
+  border-color: var(--color-brand-500);
+  outline: 3px solid var(--color-brand-50);
+  outline-offset: 1px;
+}
+
+.description {
+  composes: pretendard-medium-12 from global;
+  color: var(--color-gray-500);
+  margin: 0;
+}

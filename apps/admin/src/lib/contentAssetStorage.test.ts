@@ -1,17 +1,13 @@
-import {
-  CONTENT_STORAGE_BUCKET,
-  createContentAssetBaseUrl,
-} from "@repo/content/asset-url";
+import { CONTENT_STORAGE_BUCKET } from "@repo/content/asset-url";
 import { StorageApiError } from "@supabase/supabase-js";
 import { describe, expect, it, vi } from "vitest";
 import { adminFailureMessage } from "./adminErrors";
 import {
-  adminContentAssetBaseUrl,
   contentImageMaxSizeBytes,
   isContentImagePublicUrlOwnedBy,
   removeContentAsset,
+  removeContentAssetScope,
   uploadContentAsset,
-  uploadRawHtmlAsset,
 } from "./contentAssetStorage";
 import type { SupabaseConfig } from "./supabase";
 
@@ -20,6 +16,14 @@ const supabaseUrl = "https://project.supabase.co";
 
 type FakeStorageOptions = {
   readonly configUrl?: string;
+  readonly listByPath?: Readonly<
+    Record<
+      string,
+      readonly { readonly id: string | null; readonly name: string }[]
+    >
+  >;
+  readonly listError?: unknown;
+  readonly listThrownError?: unknown;
   readonly publicUrl?: string;
   readonly publicUrlError?: unknown;
   readonly removeError?: unknown;
@@ -72,13 +76,19 @@ function createFakeStorage(options: FakeStorageOptions = {}) {
       },
     };
   });
+  const list = vi.fn(async (path: string) => {
+    events.push(`list:${path}`);
+    if (options.listThrownError) throw options.listThrownError;
+    if (options.listError) return { data: null, error: options.listError };
+    return { data: options.listByPath?.[path] ?? [], error: null };
+  });
   const remove = vi.fn(async (paths: readonly string[]) => {
     events.push(`remove:${paths.join(",")}`);
     if (options.removeThrownError) throw options.removeThrownError;
     if (options.removeError) return { data: null, error: options.removeError };
     return { data: [], error: null };
   });
-  const bucketApi = { getPublicUrl, remove, upload };
+  const bucketApi = { getPublicUrl, list, remove, upload };
   const from = vi.fn(() => bucketApi);
   const config = {
     client: { storage: { from } },
@@ -86,7 +96,7 @@ function createFakeStorage(options: FakeStorageOptions = {}) {
     url: configUrl,
   } as unknown as SupabaseConfig;
 
-  return { config, events, from, getPublicUrl, remove, upload };
+  return { config, events, from, getPublicUrl, list, remove, upload };
 }
 
 function disabledConfig(): SupabaseConfig {
@@ -98,23 +108,8 @@ function disabledConfig(): SupabaseConfig {
 }
 
 describe("content asset URL contract", () => {
-  it("uses the exact shared base URL and fixed bucket", () => {
-    const { config } = createFakeStorage();
-
-    expect(adminContentAssetBaseUrl(config, "blog", assetScope)).toBe(
-      createContentAssetBaseUrl({
-        assetScope,
-        entity: "blog",
-        supabaseUrl,
-      }),
-    );
+  it("uses the fixed content Storage bucket", () => {
     expect(CONTENT_STORAGE_BUCKET).toBe("zerosourcing");
-  });
-
-  it("does not construct a base URL when Supabase is disabled", () => {
-    expect(
-      adminContentAssetBaseUrl(disabledConfig(), "portfolio", assetScope),
-    ).toBeUndefined();
   });
 
   it("accepts an immutable HTTPS image in the exact entity and scope", () => {
@@ -511,153 +506,6 @@ describe("uploadContentAsset", () => {
   });
 });
 
-describe("uploadRawHtmlAsset", () => {
-  for (const [relativePath, mimeType] of [
-    ["images/meetit-feature-01.png", "image/png"],
-    ["images/photo.jpg", "image/jpeg"],
-    ["images/photo.JPEG", "image/jpeg"],
-    ["한글 이미지/기능.webp", "image/webp"],
-  ] as const) {
-    it(`preserves the exact raw path ${relativePath}`, async () => {
-      const fake = createFakeStorage();
-      const result = await uploadRawHtmlAsset(fake.config, {
-        assetScope,
-        entity: "portfolio",
-        file: createImageFile(
-          relativePath.split("/").at(-1) ?? "asset",
-          mimeType,
-        ),
-        relativePath,
-      });
-
-      expect(result).toEqual({
-        ok: true,
-        value: {
-          assetScope,
-          entity: "portfolio",
-          path: `content/portfolio/${assetScope}/${relativePath}`,
-          publicUrl: expect.stringMatching(/^https:\/\//),
-          relativePath,
-        },
-      });
-      expect(fake.upload).toHaveBeenCalledWith(
-        `content/portfolio/${assetScope}/${relativePath}`,
-        expect.any(File),
-        expect.objectContaining({ upsert: false }),
-      );
-    });
-  }
-
-  it("preserves Korean NFC and NFD paths without normalization", async () => {
-    const nfcPath = "이미지/한글-기능.png";
-    const nfdPath = nfcPath.normalize("NFD");
-    expect(nfdPath).not.toBe(nfcPath);
-
-    for (const relativePath of [nfcPath, nfdPath]) {
-      const fake = createFakeStorage();
-      const result = await uploadRawHtmlAsset(fake.config, {
-        assetScope,
-        entity: "blog",
-        file: createImageFile("한글-기능.png", "image/png"),
-        relativePath,
-      });
-
-      expect(result).toEqual({
-        ok: true,
-        value: expect.objectContaining({
-          path: `content/blog/${assetScope}/${relativePath}`,
-          relativePath,
-        }),
-      });
-      expect(fake.upload).toHaveBeenCalledWith(
-        `content/blog/${assetScope}/${relativePath}`,
-        expect.any(File),
-        expect.any(Object),
-      );
-    }
-  });
-
-  it.each([
-    "",
-    "/images/feature.png",
-    "//cdn.example.com/feature.png",
-    "https://cdn.example.com/feature.png",
-    "images\\feature.png",
-    "images/feature:2.png",
-    "images/feature%20image.png",
-    "images/feature.png?version=1",
-    "images/feature.png#section",
-    "images/control\u0000.png",
-    "images/control\u0085.png",
-    "images/lone-high-surrogate-\uD800.png",
-    "images/lone-low-surrogate-\uDC00.png",
-    "images//feature.png",
-    "images/./feature.png",
-    "images/../feature.png",
-    "images/feature.png/",
-    `images/${"a".repeat(129)}.png`,
-    `${"a".repeat(110)}/${"b".repeat(110)}/${"c".repeat(110)}/${"d".repeat(110)}/${"e".repeat(110)}.png`,
-  ])(
-    "rejects unsafe or overlong raw path %j before Storage",
-    async (relativePath) => {
-      const fake = createFakeStorage();
-      const result = await uploadRawHtmlAsset(fake.config, {
-        assetScope,
-        entity: "blog",
-        file: createImageFile("feature.png", "image/png"),
-        relativePath,
-      });
-
-      expect(result).toEqual({
-        error: expect.objectContaining({
-          kind: "content_asset_validation",
-          reason: "invalid_relative_path",
-        }),
-        ok: false,
-      });
-      expect(fake.from).not.toHaveBeenCalled();
-    },
-  );
-
-  it("rejects MIME-extension mismatch and size overflow before Storage", async () => {
-    const mismatch = createFakeStorage();
-    const mismatchResult = await uploadRawHtmlAsset(mismatch.config, {
-      assetScope,
-      entity: "blog",
-      file: createImageFile("feature.png", "image/webp"),
-      relativePath: "images/feature.png",
-    });
-    const oversized = createFakeStorage();
-    const oversizedResult = await uploadRawHtmlAsset(oversized.config, {
-      assetScope,
-      entity: "blog",
-      file: createImageFile(
-        "feature.webp",
-        "image/webp",
-        contentImageMaxSizeBytes + 1,
-      ),
-      relativePath: "images/feature.webp",
-    });
-
-    expect(mismatchResult).toEqual({
-      error: expect.objectContaining({
-        kind: "content_asset_validation",
-        reason: "mime_extension_mismatch",
-      }),
-      ok: false,
-    });
-    expect(oversizedResult).toEqual({
-      error: expect.objectContaining({
-        kind: "content_asset_validation",
-        reason: "file_too_large",
-      }),
-      ok: false,
-    });
-    expect(mismatch.from).not.toHaveBeenCalled();
-    expect(oversized.from).not.toHaveBeenCalled();
-  });
-});
-
 describe("removeContentAsset", () => {
   const path = `content/blog/${assetScope}/images/00000000-0000-4000-8000-000000000002.webp`;
 
@@ -781,5 +629,98 @@ describe("removeContentAsset", () => {
       error: expect.objectContaining({ kind: "network_failure" }),
       ok: false,
     });
+  });
+});
+
+describe("removeContentAssetScope", () => {
+  const prefix = `content/portfolio/${assetScope}`;
+
+  it("removes every nested raw and editor image in only the selected scope", async () => {
+    const fake = createFakeStorage({
+      listByPath: {
+        [prefix]: [
+          { id: "legacy-asset", name: "hero.webp" },
+          { id: null, name: "images" },
+        ],
+        [`${prefix}/images`]: [
+          {
+            id: "editor-image",
+            name: "00000000-0000-4000-8000-000000000099.png",
+          },
+        ],
+      },
+    });
+
+    const result = await removeContentAssetScope(fake.config, {
+      assetScope: assetScope.toUpperCase(),
+      entity: "portfolio",
+    });
+
+    const legacyPath = `${prefix}/hero.webp`;
+    const editorPath =
+      `${prefix}/images/` + "00000000-0000-4000-8000-000000000099.png";
+    expect(result).toEqual({ ok: true, value: [legacyPath, editorPath] });
+    expect(fake.list).toHaveBeenNthCalledWith(
+      1,
+      prefix,
+      expect.objectContaining({ limit: 1000, offset: 0 }),
+    );
+    expect(fake.list).toHaveBeenNthCalledWith(
+      2,
+      `${prefix}/images`,
+      expect.objectContaining({ limit: 1000, offset: 0 }),
+    );
+    expect(fake.remove).toHaveBeenCalledWith([legacyPath, editorPath]);
+  });
+
+  it("rejects an invalid scope before listing Storage", async () => {
+    const fake = createFakeStorage();
+    const result = await removeContentAssetScope(fake.config, {
+      assetScope: "not-a-uuid",
+      entity: "portfolio",
+    });
+
+    expect(result).toEqual({
+      error: expect.objectContaining({
+        kind: "content_asset_validation",
+        reason: "invalid_scope",
+      }),
+      ok: false,
+    });
+    expect(fake.from).not.toHaveBeenCalled();
+  });
+
+  it("does not remove any files when Storage returns an unsafe entry or list error", async () => {
+    const unsafe = createFakeStorage({
+      listByPath: {
+        [prefix]: [{ id: "foreign", name: "../other-portfolio.webp" }],
+      },
+    });
+    const unavailable = createFakeStorage({
+      listError: new StorageApiError("Unavailable", 503, "Unavailable"),
+    });
+
+    const unsafeResult = await removeContentAssetScope(unsafe.config, {
+      assetScope,
+      entity: "portfolio",
+    });
+    const unavailableResult = await removeContentAssetScope(
+      unavailable.config,
+      {
+        assetScope,
+        entity: "portfolio",
+      },
+    );
+
+    expect(unsafeResult).toEqual({
+      error: expect.objectContaining({ kind: "content_asset_cleanup_failure" }),
+      ok: false,
+    });
+    expect(unavailableResult).toEqual({
+      error: expect.objectContaining({ kind: "network_failure" }),
+      ok: false,
+    });
+    expect(unsafe.remove).not.toHaveBeenCalled();
+    expect(unavailable.remove).not.toHaveBeenCalled();
   });
 });

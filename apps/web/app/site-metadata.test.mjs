@@ -127,7 +127,7 @@ test("blog and portfolio details derive metadata from their route data", async (
 
   assert.match(blog, /export async function generateMetadata/);
   assert.match(blog, /getPublishedBlogPost/);
-  assert.match(blog, /title: post\.title/);
+  assert.match(blog, /title: `제로소싱 \| \$\{post\.title\}`/);
   assert.match(blog, /description: post\.seoDescription \|\| post\.summary/);
   assert.match(blog, /path: `\/blog\/\$\{post\.slug\}`/);
   assert.match(blog, /<ManagedContent/);
@@ -135,7 +135,7 @@ test("blog and portfolio details derive metadata from their route data", async (
 
   assert.match(portfolio, /export async function generateMetadata/);
   assert.match(portfolio, /getPublishedPortfolio/);
-  assert.match(portfolio, /title: portfolio\.title/);
+  assert.match(portfolio, /title: `제로소싱 \| \$\{portfolio\.title\}`/);
   assert.match(
     portfolio,
     /description: portfolio\.seoDescription \|\| portfolio\.description/,

@@ -33,7 +33,6 @@ export {
 } from "./AdminForm";
 export {
   AdminEditorModeSegmentedControl,
-  type AdminEditorMode,
 } from "./AdminEditorMode";
 export { AdminUploadControl } from "./AdminUpload";
 export {

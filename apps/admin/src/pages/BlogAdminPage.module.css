@@ -195,6 +195,51 @@
   gap: 20px;
 }
 
+.blogFormSection {
+  background: #ffffff;
+  display: flex;
+  justify-content: center;
+  padding: 52px 40px 104px;
+}
+
+.blogFormPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 52px;
+  max-width: 1300px;
+  width: 100%;
+}
+
+.blogFormLayout {
+  align-items: flex-start;
+  display: flex;
+  gap: 20px;
+  width: 100%;
+}
+
+.blogFormBody,
+.blogFormFields {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.blogFormBody,
+.blogPreviewColumn {
+  flex: 1 1 0;
+  width: 100%;
+}
+
+.blogPreviewMount {
+  width: 100%;
+}
+
+.blogFormTitle {
+  composes: pretendard-bold-18 from global;
+  color: var(--color-brand-800);
+  margin: 0;
+}
+
 .thumbnailGroup,
 .contentField,
 .settingsRows {
@@ -232,6 +277,30 @@
   gap: 8px;
 }
 
+.blogActionArea {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 640px;
+  width: 100%;
+}
+
+.blogFormActions,
+.blogFormActionGroup {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+}
+
+.blogFormActions {
+  justify-content: space-between;
+}
+
+.blogFormSecondaryAction {
+  border-color: var(--color-brand-500);
+  color: var(--color-brand-500);
+}
+
 .actionBlockReason,
 .cleanupWarning {
   composes: pretendard-medium-12 from global;
@@ -261,6 +330,20 @@
 }
 
 @media (max-width: 720px) {
+  .blogFormSection {
+    padding: 40px 20px 72px;
+  }
+
+  .blogFormLayout {
+    flex-direction: column;
+  }
+
+  .blogFormBody,
+  .blogPreviewColumn {
+    flex: 0 1 auto;
+    width: 100%;
+  }
+
   .filterSelect {
     flex-basis: auto;
   }
@@ -278,7 +361,19 @@
     flex-direction: column-reverse;
   }
 
+  .blogFormActions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
   .formActionButton {
+    width: 100%;
+  }
+
+  .blogFormActionGroup {
+    align-items: stretch;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     width: 100%;
   }
 }

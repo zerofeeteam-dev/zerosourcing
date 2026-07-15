@@ -2,7 +2,6 @@ import type { ReactNode } from "react";
 import {
   AdminCheckIcon,
   AdminChevronDownIcon,
-  AdminTextField,
   AdminUploadControl,
 } from "../../components/admin";
 import { AdminContentEditor } from "../../components/content/AdminContentEditor";
@@ -14,6 +13,7 @@ import type { PortfolioFormErrors, PortfolioFormState } from "./portfolioTypes";
 import styles from "../PortfolioAdminPage.module.css";
 
 type PortfolioFormFieldsProps = {
+  readonly contentPreviewContainer: HTMLElement | null;
   readonly documentKey: string;
   readonly fieldErrors: PortfolioFormErrors;
   readonly form: PortfolioFormState;
@@ -67,6 +67,7 @@ function sectionCount(value: string): number {
 }
 
 export function PortfolioFormFields({
+  contentPreviewContainer,
   documentKey,
   fieldErrors,
   form,
@@ -195,9 +196,13 @@ export function PortfolioFormFields({
           disabled={isDisabled}
           id="portfolio-estimate-label"
           onChange={(event) =>
-            onFormChange({ ...form, estimateLabel: event.currentTarget.value })
+            onFormChange({
+              ...form,
+              estimateLabel: event.currentTarget.value,
+            })
           }
           placeholder="견적을 입력해주세요."
+          type="text"
           value={form.estimateLabel}
         />
       </PortfolioField>
@@ -234,22 +239,31 @@ export function PortfolioFormFields({
       />
 
       <div className={styles.portfolioThumbnailGroup}>
-        <AdminTextField
-          disabled={isDisabled}
+        <PortfolioField
           errorMessage={fieldErrors.thumbnailAlt}
-          id="portfolio-thumbnail-alt"
+          htmlFor="portfolio-thumbnail-alt"
           label="포트폴리오 썸네일"
-          layout="stacked"
-          onChange={(event) =>
-            onFormChange({
-              ...form,
-              thumbnailAlt: event.currentTarget.value,
-            })
-          }
-          placeholder="IMAGE ALT TAG를 입력해주세요."
-          size="large"
-          value={form.thumbnailAlt}
-        />
+        >
+          <input
+            aria-describedby={
+              fieldErrors.thumbnailAlt
+                ? "portfolio-thumbnail-alt-error"
+                : undefined
+            }
+            aria-invalid={fieldErrors.thumbnailAlt ? true : undefined}
+            className={styles.portfolioControl}
+            disabled={isDisabled}
+            id="portfolio-thumbnail-alt"
+            onChange={(event) =>
+              onFormChange({
+                ...form,
+                thumbnailAlt: event.currentTarget.value,
+              })
+            }
+            placeholder="IMAGE ALT TAG를 입력해주세요."
+            value={form.thumbnailAlt}
+          />
+        </PortfolioField>
         <AdminUploadControl
           accept="image/png,image/jpeg,image/webp"
           acceptLabel="PNG, JPEG, WEBP 등 / 최대 50MB 제한"
@@ -273,6 +287,7 @@ export function PortfolioFormFields({
               />
             ) : undefined
           }
+          previewFullBleed
           variant="dropzone"
         />
       </div>
@@ -285,6 +300,7 @@ export function PortfolioFormFields({
           onBusyChange={onContentBusyChange}
           onChange={onContentChange}
           onPendingAssetCountChange={onPendingAssetCountChange}
+          previewContainer={contentPreviewContainer}
           value={form}
         />
         {fieldErrors.content ? (
@@ -357,10 +373,7 @@ export function PortfolioFormFields({
                 <span>{label}</span>
               </span>
               <span className={styles.portfolioSettingsCount}>
-                {(
-                  sectionCount(sections) || (key === "landing" ? 6 : 3)
-                ).toString()}
-                개 등록됨
+                {sectionCount(sections).toString()}개 등록됨
               </span>
             </span>
           </label>

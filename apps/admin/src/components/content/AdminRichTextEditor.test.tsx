@@ -62,6 +62,16 @@ if (!("revokeObjectURL" in URL)) {
     value: () => undefined,
   });
 }
+if (typeof window.matchMedia !== "function") {
+  Object.defineProperty(window, "matchMedia", {
+    configurable: true,
+    value: () => ({
+      addEventListener: () => undefined,
+      matches: false,
+      removeEventListener: () => undefined,
+    }),
+  });
+}
 
 const emptyDocument: TiptapDocument = {
   type: "doc",
@@ -1386,7 +1396,7 @@ describe("AdminRichTextEditor", () => {
     ).toBe(true);
   });
 
-  it("shares the link allowlist between editor commands and toolbar prompts", async () => {
+  it("shares the link allowlist between editor commands and the official link popover", async () => {
     const props = createEditorProps({ document: savedDocument });
     renderEditor(props);
     const editor = await readyEditor(props);
@@ -1398,19 +1408,17 @@ describe("AdminRichTextEditor", () => {
     );
     expect(instance.getHTML()).not.toContain("<a");
 
-    const prompt = vi
-      .spyOn(window, "prompt")
-      .mockReturnValue("example.com/docs");
-    await userEvent
-      .setup()
-      .click(screen.getByRole("button", { name: "링크 설정" }));
+    const user = userEvent.setup();
+    await user.click(screen.getByRole("button", { name: "링크 설정" }));
+    const url = await screen.findByRole("textbox", { name: "링크 URL" });
+    await user.type(url, "example.com/docs");
+    await user.click(screen.getByRole("button", { name: "링크 적용" }));
 
     await waitFor(() =>
       expect(editor.querySelector("a")?.getAttribute("href")).toBe(
         "https://example.com/docs",
       ),
     );
-    expect(prompt).toHaveBeenCalledTimes(1);
   });
 
   it("subscribes toolbar pressed and command state with no H1 control", async () => {
@@ -1423,27 +1431,23 @@ describe("AdminRichTextEditor", () => {
     expect(bold.getAttribute("aria-pressed")).toBe("false");
     await user.click(bold);
     await waitFor(() => expect(bold.getAttribute("aria-pressed")).toBe("true"));
-    expect(screen.queryByRole("button", { name: "제목 1" })).toBeNull();
+    expect(screen.queryByText("제목 1")).toBeNull();
     expect(
-      screen.getByLabelText("본문 이미지 업로드").getAttribute("accept"),
+      screen.getByLabelText("본문 이미지 파일 선택").getAttribute("accept"),
     ).toBe("image/png,image/jpeg,image/webp");
     expect(
       screen
         .getByRole("toolbar", { name: "본문 서식 도구" })
-        .querySelectorAll("[data-toolbar-divider='true']").length,
+        .querySelectorAll(".tiptap-separator").length,
     ).toBe(4);
     for (const label of [
-      "본문 단락",
-      "제목 2",
-      "제목 3",
-      "제목 4",
+      "제목 서식",
+      "목록 서식",
       "굵게",
       "기울임",
       "밑줄",
       "취소선",
       "링크 설정",
-      "글머리 기호 목록",
-      "번호 목록",
       "인용문",
       "구분선",
       "왼쪽 정렬",

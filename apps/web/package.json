@@ -20,7 +20,8 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "sanitize-html": "2.17.4",
-    "server-only": "0.0.1"
+    "server-only": "0.0.1",
+    "simple-liquid-glass": "4.1.0"
   },
   "devDependencies": {
     "@playwright/test": "1.60.0",

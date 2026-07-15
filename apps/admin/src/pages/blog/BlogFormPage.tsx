@@ -1,9 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   AdminArrowRightIcon,
   AdminButton,
-  AdminFormActions,
-  AdminFormPage,
   AdminTrashIcon,
 } from "../../components/admin";
 import {
@@ -25,10 +23,10 @@ import {
 import { adminErr } from "../../lib/adminTypes";
 import {
   createBlogPost,
-  deleteBlogPost,
   getBlogPostBySlug,
   updateBlogPost,
 } from "../../lib/blogRepository";
+import { deleteBlogPostWithStorageCleanup } from "../../lib/blogDeletion";
 import { supabaseConfig } from "../../lib/supabase";
 import { persistThumbnailChange } from "../../lib/thumbnailPersistence";
 import { usePendingAssetRegistration } from "../../navigation/PendingAssetNavigation";
@@ -93,6 +91,8 @@ export function BlogFormPage({ onNavigate, route }: BlogFormPageProps) {
   const [successMessage, setSuccessMessage] = useState<string>();
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [contentPreviewContainer, setContentPreviewContainer] =
+    useState<HTMLDivElement | null>(null);
 
   usePendingAssetRegistration(editorState.pendingAssetCount);
 
@@ -113,6 +113,15 @@ export function BlogFormPage({ onNavigate, route }: BlogFormPageProps) {
     editingPost !== null &&
     editingPost.id === formOwner.recordId &&
     formOwner.routeParam === route.param;
+
+  const setContentPreviewContainerRef = useCallback(
+    (element: HTMLDivElement | null) => {
+      setContentPreviewContainer((current) =>
+        current === element ? current : element,
+      );
+    },
+    [],
+  );
 
   useEffect(() => {
     mutationControllerRef.current?.abort();
@@ -443,114 +452,139 @@ export function BlogFormPage({ onNavigate, route }: BlogFormPageProps) {
     setIsSaving(false);
     setIsDeleting(true);
     setGlobalError(undefined);
-    const result = await deleteBlogPost(supabaseConfig, editingPost.id, {
-      signal: operationController.signal,
-    });
+    setCleanupWarning(undefined);
+    const outcome = await deleteBlogPostWithStorageCleanup(
+      supabaseConfig,
+      editingPost.id,
+      {
+        signal: operationController.signal,
+      },
+    );
     if (!operationIsCurrent(operation) || !formOwner.ownerIsCurrent(owner)) {
       return;
     }
-    if (!result.ok) {
+    if (!outcome.result.ok) {
       formOwner.unlockOwner(owner);
       releaseOperation();
-      setGlobalError(adminFailureMessage(result.error));
+      setGlobalError(adminFailureMessage(outcome.result.error));
       setIsDeleting(false);
       return;
     }
     formOwner.unlockOwner(owner);
     releaseOperation();
     setIsDeleting(false);
+    setCleanupWarning(thumbnailCleanupWarning(outcome.cleanupIssues));
     onNavigate("/blog");
   };
 
   return (
-    <AdminFormPage
-      actions={
-        <div className={styles.formActionArea}>
+    <section
+      aria-labelledby="blog-form-title"
+      className={styles.blogFormSection}
+    >
+      <div
+        aria-busy={isSaving || isDeleting || detailState === "loading"}
+        className={styles.blogFormPanel}
+      >
+        <div className={styles.blogFormLayout}>
+          <div className={styles.blogFormBody}>
+            <h1 className={styles.blogFormTitle} id="blog-form-title">
+              {isNewRoute ? "신규 블로그 등록" : "블로그 수정"}
+            </h1>
+            {globalError ? (
+              <BlogMessage message={globalError} tone="error" />
+            ) : null}
+            {cleanupWarning ? (
+              <p className={styles.cleanupWarning} role="status">
+                {cleanupWarning}
+              </p>
+            ) : null}
+            {successMessage ? (
+              <BlogMessage message={successMessage} tone="success" />
+            ) : null}
+            {detailState === "loading" ? (
+              <BlogMessage
+                message="Blog 글을 불러오는 중입니다."
+                tone="success"
+              />
+            ) : null}
+            <BlogFormFields
+              contentPreviewContainer={contentPreviewContainer}
+              documentKey={formOwner.documentKey}
+              fieldErrors={fieldErrors}
+              form={formOwner.form}
+              isDisabled={hardDisabled}
+              onContentBusyChange={editorState.onBusyChange}
+              onContentChange={handleContentChange}
+              onFieldChange={updateForm}
+              onPendingAssetCountChange={editorState.onPendingAssetCountChange}
+              onThumbnailChange={handleThumbnailChange}
+              onThumbnailRemove={handleThumbnailRemove}
+              thumbnail={thumbnail.selection}
+            />
+          </div>
+          <aside
+            aria-label="블로그 본문 미리보기"
+            className={styles.blogPreviewColumn}
+          >
+            <div
+              className={styles.blogPreviewMount}
+              ref={setContentPreviewContainerRef}
+            />
+          </aside>
+        </div>
+        <div className={styles.blogActionArea}>
           {actionBlockReason ? (
             <p className={styles.actionBlockReason} role="status">
               {actionBlockReason}
             </p>
           ) : null}
-          <AdminFormActions
-            leading={
-              <>
+          <div className={styles.blogFormActions}>
+            <AdminButton
+              className={`${styles.formActionButton} ${styles.blogFormSecondaryAction}`}
+              disabled={actionDisabled}
+              onClick={() => onNavigate("/blog")}
+              size="figma"
+              variant="secondary"
+            >
+              목록으로
+            </AdminButton>
+            <div className={styles.blogFormActionGroup}>
+              {!isNewRoute ? (
                 <AdminButton
-                  className={styles.formActionButton}
-                  disabled={actionDisabled}
-                  onClick={() => onNavigate("/blog")}
+                  className={`${styles.formActionButton} ${styles.deleteActionButton}`}
+                  disabled={actionDisabled || !hasCurrentEditingPost}
+                  icon={<AdminTrashIcon size={16} />}
+                  onClick={deletePost}
                   size="figma"
-                  variant="secondary"
+                  variant="danger"
                 >
-                  목록으로
+                  {isDeleting ? "삭제 중" : "삭제"}
                 </AdminButton>
-                {!isNewRoute ? (
-                  <AdminButton
-                    className={`${styles.formActionButton} ${styles.deleteActionButton}`}
-                    disabled={actionDisabled || !hasCurrentEditingPost}
-                    icon={<AdminTrashIcon size={16} />}
-                    onClick={deletePost}
-                    size="figma"
-                    variant="danger"
-                  >
-                    {isDeleting ? "삭제 중" : "삭제"}
-                  </AdminButton>
-                ) : null}
-              </>
-            }
-            trailing={
-              <>
-                <AdminButton
-                  className={styles.formActionButton}
-                  disabled={actionDisabled}
-                  onClick={() => savePost("draft")}
-                  size="figma"
-                  variant="secondary"
-                >
-                  임시저장
-                </AdminButton>
-                <AdminButton
-                  className={`${styles.formActionButton} ${styles.submitActionButton}`}
-                  disabled={actionDisabled}
-                  icon={<AdminArrowRightIcon size={16} />}
-                  iconPosition="right"
-                  onClick={() => savePost("published")}
-                  size="figma"
-                >
-                  {isSaving ? "저장 중" : isNewRoute ? "등록하기" : "수정하기"}
-                </AdminButton>
-              </>
-            }
-          />
+              ) : null}
+              <AdminButton
+                className={`${styles.formActionButton} ${styles.blogFormSecondaryAction}`}
+                disabled={actionDisabled}
+                onClick={() => savePost("draft")}
+                size="figma"
+                variant="secondary"
+              >
+                임시저장
+              </AdminButton>
+              <AdminButton
+                className={`${styles.formActionButton} ${styles.submitActionButton}`}
+                disabled={actionDisabled}
+                icon={<AdminArrowRightIcon size={16} />}
+                iconPosition="right"
+                onClick={() => savePost("published")}
+                size="figma"
+              >
+                {isSaving ? "저장 중" : isNewRoute ? "등록하기" : "수정하기"}
+              </AdminButton>
+            </div>
+          </div>
         </div>
-      }
-      busy={isSaving || isDeleting || detailState === "loading"}
-      title={isNewRoute ? "신규 블로그 등록" : "블로그 수정"}
-    >
-      {globalError ? <BlogMessage message={globalError} tone="error" /> : null}
-      {cleanupWarning ? (
-        <p className={styles.cleanupWarning} role="status">
-          {cleanupWarning}
-        </p>
-      ) : null}
-      {successMessage ? (
-        <BlogMessage message={successMessage} tone="success" />
-      ) : null}
-      {detailState === "loading" ? (
-        <BlogMessage message="Blog 글을 불러오는 중입니다." tone="success" />
-      ) : null}
-      <BlogFormFields
-        documentKey={formOwner.documentKey}
-        fieldErrors={fieldErrors}
-        form={formOwner.form}
-        isDisabled={hardDisabled}
-        onContentBusyChange={editorState.onBusyChange}
-        onContentChange={handleContentChange}
-        onFieldChange={updateForm}
-        onPendingAssetCountChange={editorState.onPendingAssetCountChange}
-        onThumbnailChange={handleThumbnailChange}
-        onThumbnailRemove={handleThumbnailRemove}
-        thumbnail={thumbnail.selection}
-      />
-    </AdminFormPage>
+      </div>
+    </section>
   );
 }

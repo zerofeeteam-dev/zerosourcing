@@ -55,7 +55,13 @@ export const RAW_PORTFOLIO_HTML = `<!doctype html>
   <head>
     <meta charset="utf-8">
     <style>
-      html, body { margin: 0; padding: 0; }
+      html, body {
+        height: 8px !important;
+        margin: 0;
+        max-height: 8px !important;
+        overflow-y: scroll !important;
+        padding: 0;
+      }
       body { color: #111827; font-family: sans-serif; }
       #e2e-shell { padding: 24px; }
       #e2e-late-image { display: block; height: 1px; width: 1px; }

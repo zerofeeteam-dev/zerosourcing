@@ -1,5 +1,10 @@
-import { adminFailureMessage } from "../../lib/adminErrors";
-import type { ThumbnailCleanupIssue } from "../../lib/thumbnailPersistence";
+import { adminFailureMessage, type AdminFailure } from "../../lib/adminErrors";
+
+type StorageCleanupIssue = {
+  readonly failure: AdminFailure;
+  readonly path: string;
+  readonly stage?: string;
+};
 
 export function managedContentActionBlockReason(input: {
   readonly editorBusy: boolean;
@@ -15,7 +20,7 @@ export function managedContentActionBlockReason(input: {
 }
 
 export function thumbnailCleanupWarning(
-  issues: readonly ThumbnailCleanupIssue[],
+  issues: readonly StorageCleanupIssue[],
 ): string | undefined {
   if (issues.length === 0) return undefined;
   return issues

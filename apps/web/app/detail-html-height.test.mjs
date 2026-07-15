@@ -34,8 +34,12 @@ test("raw HTML details use the sandboxed, measured iframe bridge", async () => {
   ]);
 
   assert.match(frame, /sandbox="allow-scripts"/);
+  assert.match(frame, /scrolling="no"/);
+  assert.match(frame, /RAW_HTML_MEASURE_REQUEST_TYPE/);
+  assert.match(frame, /onLoad=\{requestHeight\}/);
   assert.match(frame, /window\.addEventListener\("message", onMessage\)/);
   assert.match(frame, /style=\{\{ height \}\}/);
+  assert.doesNotMatch(frame, /MAX_HEIGHT/);
   assert.match(source, /parent\.postMessage/);
 });
 

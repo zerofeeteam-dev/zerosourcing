@@ -7,7 +7,7 @@ import { ManagedContent } from "../../../components/ManagedContent";
 import { getPublishedPortfolio } from "../../../lib/public-content/queries";
 import { createPageMetadata } from "../../site-metadata";
 import pageStyles from "../../page.module.css";
-import { PortfolioDetailCtaButton } from "./PortfolioDetailCtaButton";
+import { QuickConsultCtaButton } from "../../../components/QuickConsultCtaButton";
 import styles from "./portfolio-detail.module.css";
 
 type PortfolioDetailPageProps = {
@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: PortfolioDetailPageProps) {
   }
 
   return createPageMetadata({
-    title: portfolio.title,
+    title: `제로소싱 | ${portfolio.title}`,
     description: portfolio.seoDescription || portfolio.description,
     path: `/portfolio/${portfolio.slug}`,
   });
@@ -119,7 +119,7 @@ export default async function PortfolioDetailPage({
                 개발 파트너.
               </p>
             </div>
-            <PortfolioDetailCtaButton />
+            <QuickConsultCtaButton />
           </section>
 
           <Link className={styles.backLink} href="/portfolio">

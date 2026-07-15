@@ -17,6 +17,7 @@ type AdminUploadControlProps = Omit<
   readonly onFiles?: (files: FileList | null) => void;
   readonly onRemove?: () => void;
   readonly preview?: ReactNode;
+  readonly previewFullBleed?: boolean;
   readonly variant?: "default" | "dropzone";
 };
 
@@ -50,6 +51,7 @@ export function AdminUploadControl({
   onFiles,
   onRemove,
   preview,
+  previewFullBleed = false,
   variant = "default",
   ...props
 }: AdminUploadControlProps) {
@@ -91,7 +93,14 @@ export function AdminUploadControl({
               id={id}
               type="file"
             />
-            <label className={styles.figmaTrigger} htmlFor={id}>
+            <label
+              className={
+                preview && previewFullBleed
+                  ? `${styles.figmaTrigger} ${styles.figmaTriggerPreview}`
+                  : styles.figmaTrigger
+              }
+              htmlFor={id}
+            >
               {preview ? (
                 <span className={styles.figmaPreview}>{preview}</span>
               ) : (

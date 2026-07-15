@@ -42,9 +42,7 @@ type PortfolioInsert = {
   readonly service_sections: PortfolioCreateInput["serviceSections"];
 };
 
-type PortfolioUpdate = Partial<PortfolioInsert> & {
-  readonly deleted_at?: string;
-};
+type PortfolioUpdate = Partial<PortfolioInsert>;
 
 type PortfolioUpdateDraft = {
   status?: PortfolioInsert["status"];
@@ -248,10 +246,9 @@ export async function deletePortfolio(
 ): Promise<AdminRepositoryResult<PortfolioRow>> {
   if (config.kind === "disabled") return adminErr(supabaseDisabledFailure(config));
 
-  const update: PortfolioUpdate = { deleted_at: new Date().toISOString() };
   let query = config.client
     .from("portfolios")
-    .update(update)
+    .delete()
     .eq("id", id)
     .is("deleted_at", null)
     .select(portfolioColumns);

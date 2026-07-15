@@ -13,7 +13,7 @@ import { PortfolioFormPage } from "./PortfolioFormPage";
 
 const mocks = vi.hoisted(() => ({
   createPortfolio: vi.fn(),
-  deletePortfolio: vi.fn(),
+  deletePortfolioWithStorageCleanup: vi.fn(),
   getPortfolioBySlug: vi.fn(),
   persistThumbnailChange: vi.fn(),
   updatePortfolio: vi.fn(),
@@ -21,9 +21,12 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("../../lib/portfolioRepository", () => ({
   createPortfolio: mocks.createPortfolio,
-  deletePortfolio: mocks.deletePortfolio,
   getPortfolioBySlug: mocks.getPortfolioBySlug,
   updatePortfolio: mocks.updatePortfolio,
+}));
+
+vi.mock("../../lib/portfolioDeletion", () => ({
+  deletePortfolioWithStorageCleanup: mocks.deletePortfolioWithStorageCleanup,
 }));
 
 vi.mock("../../lib/thumbnailPersistence", () => ({
@@ -190,6 +193,112 @@ describe("PortfolioFormPage", () => {
       configurable: true,
       value: vi.fn(),
     });
+  });
+
+  it("shows the actual empty landing and service section counts", () => {
+    render(
+      <Page
+        onNavigate={vi.fn()}
+        route={{
+          id: "portfolioNew",
+          path: "/portfolio/new",
+          protected: true,
+        }}
+      />,
+    );
+
+    expect(screen.getAllByText("0개 등록됨")).toHaveLength(2);
+    expect(screen.queryByText("6개 등록됨")).toBeNull();
+    expect(screen.queryByText("3개 등록됨")).toBeNull();
+  });
+
+  it("navigates to the list only after permanently deleting the loaded Portfolio and its Storage files", async () => {
+    const user = userEvent.setup();
+    const onNavigate = vi.fn();
+    const row = loadedPortfolioRow({
+      id: "00000000-0000-4000-8000-000000000611",
+      slug: "delete-portfolio",
+      thumbnailPublicUrl: "https://project.supabase.co/storage/delete.webp",
+    });
+    vi.spyOn(window, "confirm").mockReturnValue(true);
+    mocks.getPortfolioBySlug.mockResolvedValue({ ok: true, value: row });
+    mocks.deletePortfolioWithStorageCleanup.mockResolvedValue({
+      cleanupIssues: [],
+      result: { ok: true, value: row },
+    });
+
+    render(
+      <Page
+        onNavigate={onNavigate}
+        route={{
+          id: "portfolioDetail",
+          param: row.slug,
+          path: `/portfolio/${row.slug}`,
+          protected: true,
+        }}
+      />,
+    );
+
+    await screen.findByRole("button", { name: "삭제" });
+    await user.click(
+      screen.getByRole("button", { name: "portfolio editor ready" }),
+    );
+    await user.click(screen.getByRole("button", { name: "삭제" }));
+
+    await waitFor(() =>
+      expect(mocks.deletePortfolioWithStorageCleanup).toHaveBeenCalledWith(
+        expect.anything(),
+        row.id,
+        expect.objectContaining({ signal: expect.any(AbortSignal) }),
+      ),
+    );
+    await waitFor(() => expect(onNavigate).toHaveBeenCalledWith("/portfolio"));
+  });
+
+  it("keeps the edit screen open when Portfolio deletion fails", async () => {
+    const user = userEvent.setup();
+    const onNavigate = vi.fn();
+    const row = loadedPortfolioRow({
+      id: "00000000-0000-4000-8000-000000000612",
+      slug: "delete-failure-portfolio",
+      thumbnailPublicUrl:
+        "https://project.supabase.co/storage/delete-failure.webp",
+    });
+    vi.spyOn(window, "confirm").mockReturnValue(true);
+    mocks.getPortfolioBySlug.mockResolvedValue({ ok: true, value: row });
+    mocks.deletePortfolioWithStorageCleanup.mockResolvedValue({
+      cleanupIssues: [],
+      result: {
+        error: {
+          kind: "save_failure",
+          message: "Portfolio를 삭제하지 못했습니다.",
+        },
+        ok: false,
+      },
+    });
+
+    render(
+      <Page
+        onNavigate={onNavigate}
+        route={{
+          id: "portfolioDetail",
+          param: row.slug,
+          path: `/portfolio/${row.slug}`,
+          protected: true,
+        }}
+      />,
+    );
+
+    await screen.findByRole("button", { name: "삭제" });
+    await user.click(
+      screen.getByRole("button", { name: "portfolio editor ready" }),
+    );
+    await user.click(screen.getByRole("button", { name: "삭제" }));
+
+    expect((await screen.findByRole("alert")).textContent).toContain(
+      "Portfolio를 삭제하지 못했습니다.",
+    );
+    expect(onNavigate).not.toHaveBeenCalled();
   });
 
   it("uses the shared editor and thumbnail transaction without remounting after save", async () => {

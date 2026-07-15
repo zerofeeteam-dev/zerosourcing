@@ -2,7 +2,6 @@ import {
   CONTENT_STORAGE_BUCKET,
   ContentAssetScopeError,
   contentAssetObjectPrefix,
-  createContentAssetBaseUrl,
   isExactPublicStorageObjectUrl,
   parseAllowedAssetHttpUrl,
   parseContentAssetScope,
@@ -32,14 +31,16 @@ export type ContentAssetUploadInput = {
   readonly file: File;
 };
 
-export type RawHtmlAssetUploadInput = ContentAssetUploadInput & {
-  readonly relativePath: string;
-};
-
 export type ContentAssetRemoveInput = {
   readonly assetScope: string;
   readonly entity: ContentEntity;
   readonly path: string;
+};
+
+/** Removes every object owned by one content document's immutable asset scope. */
+export type ContentAssetScopeRemoveInput = {
+  readonly assetScope: string;
+  readonly entity: ContentEntity;
 };
 
 export type ContentAssetOwnership = {
@@ -59,10 +60,6 @@ export type ContentImagePublicUrlOwnershipInput = {
   readonly publicUrl: string;
 };
 
-export type RawHtmlAssetUpload = ContentAssetOwnership & {
-  readonly relativePath: string;
-};
-
 type EnabledSupabaseConfig = Extract<
   SupabaseConfig,
   { readonly kind: "enabled" }
@@ -78,13 +75,12 @@ type ValidatedAssetLocation = {
 
 type ImageFormat = {
   readonly extension: "jpg" | "png" | "webp";
-  readonly rawExtensions: readonly string[];
 };
 
 const allowedImageFormats = new Map<string, ImageFormat>([
-  ["image/png", { extension: "png", rawExtensions: ["png"] }],
-  ["image/jpeg", { extension: "jpg", rawExtensions: ["jpg", "jpeg"] }],
-  ["image/webp", { extension: "webp", rawExtensions: ["webp"] }],
+  ["image/png", { extension: "png" }],
+  ["image/jpeg", { extension: "jpg" }],
+  ["image/webp", { extension: "webp" }],
 ]);
 
 const maxRelativePathLength = 512;
@@ -94,19 +90,8 @@ const unsafeUnicodeCategories = /[\p{Cc}\p{Cs}]/u;
 
 export const contentImageMaxSizeBytes = 10 * 1024 * 1024;
 
-export function adminContentAssetBaseUrl(
-  config: SupabaseConfig,
-  entity: ContentEntity,
-  assetScope: string,
-): string | undefined {
-  if (config.kind === "disabled") return undefined;
-
-  return createContentAssetBaseUrl({
-    assetScope,
-    entity,
-    supabaseUrl: config.url,
-  });
-}
+const storageListPageSize = 1_000;
+const storageRemoveBatchSize = 1_000;
 
 function validateAssetLocation(
   entity: ContentEntity,
@@ -263,30 +248,136 @@ async function removeExactObject(
   path: string,
   failureMode: "compensation" | "explicit",
 ): Promise<AdminRepositoryResult<null>> {
-  let response: Awaited<ReturnType<typeof bucket.remove>>;
-  try {
-    response = await bucket.remove([path]);
-  } catch (error) {
-    if (failureMode === "compensation") {
-      return adminErr(contentAssetCleanupFailure(path));
-    }
-    if (error instanceof StorageApiError) {
-      return adminErr(storageApiFailure(error, path, "cleanup"));
-    }
-    if (isStatuslessStorageUnknownError(error)) {
-      return adminErr(networkFailure());
-    }
-    return adminErr(contentAssetCleanupFailure(path));
-  }
+  return removeExactObjects(bucket, [path], failureMode);
+}
 
-  if (response.error) {
-    if (failureMode === "compensation") {
-      return adminErr(contentAssetCleanupFailure(path));
+async function removeExactObjects(
+  bucket: StorageBucketClient,
+  paths: readonly string[],
+  failureMode: "compensation" | "explicit",
+): Promise<AdminRepositoryResult<null>> {
+  for (
+    let offset = 0;
+    offset < paths.length;
+    offset += storageRemoveBatchSize
+  ) {
+    const batch = paths.slice(offset, offset + storageRemoveBatchSize);
+    const failurePath = batch[0];
+    if (!failurePath) continue;
+
+    let response: Awaited<ReturnType<typeof bucket.remove>>;
+    try {
+      response = await bucket.remove(batch);
+    } catch (error) {
+      if (failureMode === "compensation") {
+        return adminErr(contentAssetCleanupFailure(failurePath));
+      }
+      if (error instanceof StorageApiError) {
+        return adminErr(storageApiFailure(error, failurePath, "cleanup"));
+      }
+      if (isStatuslessStorageUnknownError(error)) {
+        return adminErr(networkFailure());
+      }
+      return adminErr(contentAssetCleanupFailure(failurePath));
     }
-    return adminErr(storageResponseFailure(response.error, path, "cleanup"));
+
+    if (response.error) {
+      if (failureMode === "compensation") {
+        return adminErr(contentAssetCleanupFailure(failurePath));
+      }
+      return adminErr(
+        storageResponseFailure(response.error, failurePath, "cleanup"),
+      );
+    }
   }
 
   return adminOk(null);
+}
+
+function safeListedEntryName(value: unknown): value is string {
+  return (
+    typeof value === "string" &&
+    !value.includes("/") &&
+    safeRelativeAssetPath(value) === value
+  );
+}
+
+async function listScopeObjectPaths(
+  bucket: StorageBucketClient,
+  prefix: string,
+): Promise<AdminRepositoryResult<readonly string[]>> {
+  const rootDirectory = prefix.slice(0, -1);
+  const directories = [{ directory: rootDirectory, relativeDirectory: "" }];
+  const paths: string[] = [];
+
+  for (
+    let directoryIndex = 0;
+    directoryIndex < directories.length;
+    directoryIndex += 1
+  ) {
+    const current = directories[directoryIndex];
+    if (!current) continue;
+
+    for (let offset = 0; ; offset += storageListPageSize) {
+      let response: Awaited<ReturnType<typeof bucket.list>>;
+      try {
+        response = await bucket.list(current.directory, {
+          limit: storageListPageSize,
+          offset,
+          sortBy: { column: "name", order: "asc" },
+        });
+      } catch (error) {
+        if (error instanceof StorageApiError) {
+          return adminErr(
+            storageApiFailure(error, current.directory, "cleanup"),
+          );
+        }
+        if (isStatuslessStorageUnknownError(error))
+          return adminErr(networkFailure());
+        return adminErr(contentAssetCleanupFailure(current.directory));
+      }
+
+      if (response.error) {
+        return adminErr(
+          storageResponseFailure(response.error, current.directory, "cleanup"),
+        );
+      }
+      if (!response.data) {
+        return adminErr(contentAssetCleanupFailure(current.directory));
+      }
+
+      for (const entry of response.data) {
+        if (!safeListedEntryName(entry.name)) {
+          return adminErr(contentAssetCleanupFailure(current.directory));
+        }
+
+        const relativePath = current.relativeDirectory
+          ? `${current.relativeDirectory}/${entry.name}`
+          : entry.name;
+        if (safeRelativeAssetPath(relativePath) === null) {
+          return adminErr(contentAssetCleanupFailure(current.directory));
+        }
+
+        if (entry.id === null) {
+          directories.push({
+            directory: `${current.directory}/${entry.name}`,
+            relativeDirectory: relativePath,
+          });
+          continue;
+        }
+
+        const path = `${prefix}${relativePath}`;
+        if (!isExactObjectPath(prefix, path)) {
+          return adminErr(contentAssetCleanupFailure(current.directory));
+        }
+        paths.push(path);
+      }
+
+      if (response.data.length < storageListPageSize) break;
+    }
+  }
+
+  return adminOk(paths);
 }
 
 async function rejectUploadedObject(
@@ -389,45 +480,6 @@ export async function uploadContentAsset(
   });
 }
 
-export async function uploadRawHtmlAsset(
-  config: SupabaseConfig,
-  input: RawHtmlAssetUploadInput,
-): Promise<AdminRepositoryResult<RawHtmlAssetUpload>> {
-  if (config.kind === "disabled") {
-    return adminErr(supabaseDisabledFailure(config));
-  }
-
-  const location = validateAssetLocation(input.entity, input.assetScope);
-  if (!location.ok) return location;
-  const imageFormat = validateImageFile(input.file);
-  if (!imageFormat.ok) return imageFormat;
-  const relativePath = safeRelativeAssetPath(input.relativePath);
-  if (!relativePath) {
-    return adminErr(contentAssetValidationFailure("invalid_relative_path"));
-  }
-
-  const suffix = relativePath
-    .split("/")
-    .at(-1)
-    ?.split(".")
-    .at(-1)
-    ?.toLowerCase();
-  if (!suffix || !imageFormat.value.rawExtensions.includes(suffix)) {
-    return adminErr(contentAssetValidationFailure("mime_extension_mismatch"));
-  }
-
-  const path = `${location.value.prefix}${relativePath}`;
-  const uploaded = await uploadExactAsset(config, input, location.value, path);
-  if (!uploaded.ok) return uploaded;
-
-  return adminOk({
-    assetScope: location.value.assetScope,
-    entity: input.entity,
-    relativePath,
-    ...uploaded.value,
-  });
-}
-
 export async function removeContentAsset(
   config: SupabaseConfig,
   input: ContentAssetRemoveInput,
@@ -444,4 +496,31 @@ export async function removeContentAsset(
 
   const bucket = config.client.storage.from(CONTENT_STORAGE_BUCKET);
   return removeExactObject(bucket, input.path, "explicit");
+}
+
+/**
+ * Removes every Storage object in a document's own namespace, including
+ * legacy raw-HTML asset paths and unreferenced editor uploads. The scope is
+ * validated before listing, and every listed path is checked again before
+ * removal so this cannot cross into another document's files.
+ */
+export async function removeContentAssetScope(
+  config: SupabaseConfig,
+  input: ContentAssetScopeRemoveInput,
+): Promise<AdminRepositoryResult<readonly string[]>> {
+  if (config.kind === "disabled") {
+    return adminErr(supabaseDisabledFailure(config));
+  }
+
+  const location = validateAssetLocation(input.entity, input.assetScope);
+  if (!location.ok) return location;
+
+  const bucket = config.client.storage.from(CONTENT_STORAGE_BUCKET);
+  const listed = await listScopeObjectPaths(bucket, location.value.prefix);
+  if (!listed.ok) return listed;
+
+  const removed = await removeExactObjects(bucket, listed.value, "explicit");
+  if (!removed.ok) return removed;
+
+  return adminOk(listed.value);
 }

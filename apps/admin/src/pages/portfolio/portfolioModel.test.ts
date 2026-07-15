@@ -170,6 +170,19 @@ test("empty-form factories allocate stable, record-specific asset scopes", () =>
   assert.equal(rebuilt.input.contentAssetScope, first.contentAssetScope);
 });
 
+test("portfolioFormFromRow preserves estimate labels as entered", () => {
+  assert.equal(
+    portfolioModel.portfolioFormFromRow(portfolioRow({ estimate_label: "298만 원" }))
+      .estimateLabel,
+    "298만 원",
+  );
+  assert.equal(
+    portfolioModel.portfolioFormFromRow(portfolioRow({ estimate_label: "1200000" }))
+      .estimateLabel,
+    "1200000",
+  );
+});
+
 test("row mapping fails closed for unsupported schemas and malformed documents", () => {
   assert.throws(
     () =>

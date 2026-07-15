@@ -12,7 +12,7 @@ import {
 } from "../../../lib/public-content/queries";
 import type { BlogCard, BlogDetail } from "../../../lib/public-content/types";
 import { createPageMetadata } from "../../site-metadata";
-import { BlogDetailCtaButton } from "./BlogDetailCtaButton";
+import { QuickConsultCtaButton } from "../../../components/QuickConsultCtaButton";
 import styles from "./blog-detail.module.css";
 
 type BlogDetailPageProps = {
@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: BlogDetailPageProps) {
   }
 
   return createPageMetadata({
-    title: post.title,
+    title: `제로소싱 | ${post.title}`,
     description: post.seoDescription || post.summary,
     path: `/blog/${post.slug}`,
   });
@@ -142,7 +142,7 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
                   개발 파트너.
                 </p>
               </div>
-              <BlogDetailCtaButton />
+              <QuickConsultCtaButton />
             </section>
 
             <Link className={styles.backLink} href="/blog">

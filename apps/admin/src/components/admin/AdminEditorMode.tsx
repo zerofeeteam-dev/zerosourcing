@@ -1,6 +1,5 @@
+import type { ContentAuthoringMode } from "@repo/content/types";
 import styles from "./AdminForm.module.css";
-
-export type AdminEditorMode = "html" | "text";
 
 type AdminEditorModeSegmentedControlProps = {
   readonly description?: string;
@@ -9,14 +8,17 @@ type AdminEditorModeSegmentedControlProps = {
   readonly id: string;
   readonly label: string;
   readonly name: string;
-  readonly onChange: (mode: AdminEditorMode) => void;
-  readonly value: AdminEditorMode;
+  readonly onChange: (mode: ContentAuthoringMode) => void;
+  readonly value: ContentAuthoringMode;
 };
 
 const editorModeOptions = [
-  { label: "HTML 작성", value: "html" },
-  { label: "TEXT Editer 작성", value: "text" },
-] as const satisfies readonly { readonly label: string; readonly value: AdminEditorMode }[];
+  { label: "HTML 원문", value: "raw_html" },
+  { label: "WYSIWYG 에디터", value: "wysiwyg" },
+] as const satisfies readonly {
+  readonly label: string;
+  readonly value: ContentAuthoringMode;
+}[];
 
 function descriptionId(id: string): string {
   return `${id}-description`;
@@ -33,8 +35,14 @@ export function AdminEditorModeSegmentedControl({
   value,
 }: AdminEditorModeSegmentedControlProps) {
   return (
-    <fieldset className={`${styles.segmentedField} ${fullWidth ? styles.segmentedFieldFull : ""}`}>
-      <legend className={styles.legend}>{label}</legend>
+    <fieldset
+      className={`${styles.segmentedField} ${fullWidth ? styles.segmentedFieldFull : ""}`}
+    >
+      <legend
+        className={fullWidth ? styles.labelLarge : styles.legend}
+      >
+        {label}
+      </legend>
       {description ? (
         <p className={styles.description} id={descriptionId(id)}>
           {description}
@@ -58,7 +66,9 @@ export function AdminEditorModeSegmentedControl({
               type="radio"
               value={option.value}
             />
-            <span className={`${styles.segmentText} ${fullWidth ? styles.segmentTextFull : ""}`}>
+            <span
+              className={`${styles.segmentText} ${fullWidth ? styles.segmentTextFull : ""}`}
+            >
               {option.label}
             </span>
           </label>

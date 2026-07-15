@@ -1,11 +1,10 @@
 .root,
 .modeBody,
 .legacySection,
-.sourceSection,
-.assetSection,
-.previewSection,
+.rawHtmlEditor,
 .sectionHeader,
-.field {
+.field,
+.editorColumn {
   display: flex;
   flex-direction: column;
 }
@@ -13,13 +12,12 @@
 .root,
 .modeBody,
 .legacySection {
-  gap: 20px;
+  gap: 8px;
 }
 
-.sourceSection,
-.assetSection,
-.previewSection {
-  gap: 14px;
+.modeBody,
+.legacySection {
+  gap: 20px;
 }
 
 .sectionHeader,
@@ -27,116 +25,49 @@
   gap: 6px;
 }
 
-.sectionHeaderRow,
-.assetRowHeader,
 .buttonRow,
-.baseOption,
-.assetResultRow {
+.sourceFileRow {
   align-items: center;
   display: flex;
   gap: 10px;
 }
 
-.sectionHeaderRow,
-.assetRowHeader,
-.assetResultRow {
-  justify-content: space-between;
+.sourceFileRow {
+  justify-content: flex-end;
 }
 
-.sectionHeaderRow .sectionHeader {
-  flex: 1 1 auto;
+.rawHtmlEditor {
+  gap: 12px;
+}
+
+.editorWorkspace {
+  align-items: start;
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.editorWorkspaceExternalPreview {
+  display: block;
+}
+
+.editorColumn {
+  gap: 12px;
 }
 
 .buttonRow {
   flex-wrap: wrap;
 }
 
-.modeFieldset {
-  border: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin: 0;
-  padding: 0;
-}
-
-.modeLegend,
-.sectionTitle,
-.label {
-  color: var(--color-gray-800);
-}
-
-.modeLegend {
-  composes: pretendard-bold-14 from global;
-}
-
-.modeCards {
-  display: grid;
-  gap: 10px;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.modeCard {
-  position: relative;
-}
-
-.modeCard input {
-  height: 1px;
-  opacity: 0;
-  position: absolute;
-  width: 1px;
-}
-
-.modeCardText {
-  background: #ffffff;
-  border: 1px solid var(--color-gray-200);
-  border-radius: 12px;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 14px;
-}
-
-.modeCard input:checked + .modeCardText {
-  background: var(--color-brand-50);
-  border-color: var(--color-brand-400);
-}
-
-.modeCard input:focus-visible + .modeCardText {
-  outline: 3px solid var(--color-brand-50);
-  outline-offset: 2px;
-}
-
-.modeCard input:disabled + .modeCardText {
-  cursor: not-allowed;
-  opacity: 0.56;
-}
-
-.modeName {
-  composes: pretendard-bold-14 from global;
-  color: var(--color-gray-900);
-}
-
-.modeDescription,
 .description,
 .fileMeta,
-.scopeValue,
-.assetStatus,
-.assetResult,
-.loading,
-.copyStatus {
+.loading {
   composes: pretendard-medium-12 from global;
   margin: 0;
 }
 
-.modeDescription,
 .description,
-.fileMeta,
-.scopeValue,
-.assetStatus,
-.assetResult,
-.copyStatus {
+.fileMeta {
   color: var(--color-gray-500);
   overflow-wrap: anywhere;
 }
@@ -147,39 +78,31 @@
 }
 
 .label,
-.baseOption,
-.fileButton,
-.assetPicker {
+.fileButton {
   composes: pretendard-bold-14 from global;
 }
 
-.sourceTextarea,
-.pathInput {
-  composes: pretendard-medium-14 from global;
+.sourceTextarea {
+  composes: pretendard-medium-14-20 from global;
   background: #ffffff;
-  border: 1px solid var(--color-gray-200);
-  border-radius: 8px;
+  border: 1px solid var(--color-gray-100);
+  border-radius: 16px;
   color: var(--color-gray-900);
+  height: 400px;
   outline: 0;
-  padding: 12px;
+  padding: 16px;
+  resize: vertical;
+  white-space: pre;
   width: 100%;
 }
 
-.sourceTextarea {
-  height: 360px;
-  resize: vertical;
-  white-space: pre;
-}
-
-.sourceTextarea:focus,
-.pathInput:focus {
+.sourceTextarea:focus {
   border-color: var(--color-brand-500);
   outline: 3px solid var(--color-brand-50);
   outline-offset: 1px;
 }
 
-.sourceTextarea:disabled,
-.pathInput:disabled {
+.sourceTextarea:disabled {
   background: var(--color-gray-50);
   color: var(--color-gray-400);
   cursor: not-allowed;
@@ -197,8 +120,7 @@
   white-space: pre-wrap;
 }
 
-.fileButton,
-.assetPicker {
+.fileButton {
   align-items: center;
   background: #ffffff;
   border: 1px solid var(--color-gray-200);
@@ -211,8 +133,7 @@
   width: fit-content;
 }
 
-.fileButton[aria-disabled="true"],
-.assetPicker[aria-disabled="true"] {
+.fileButton[aria-disabled="true"] {
   cursor: not-allowed;
   opacity: 0.48;
 }
@@ -227,73 +148,9 @@
   clip-path: inset(50%);
 }
 
-.baseOption {
-  color: var(--color-gray-800);
-  width: fit-content;
-}
-
-.baseOption input {
-  accent-color: var(--color-brand-500);
-}
-
-.assetList {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.assetRow {
-  background: var(--color-gray-50);
-  border: 1px solid var(--color-gray-100);
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 14px;
-}
-
-.assetName {
-  composes: pretendard-bold-14 from global;
-  color: var(--color-gray-800);
-  overflow-wrap: anywhere;
-}
-
-.assetStatus {
-  flex: 0 0 auto;
-}
-
-.assetResultRow .assetResult {
-  flex: 1 1 auto;
-}
-
-.copyStatus {
-  color: var(--color-brand-600);
-}
-
-.divider {
-  background: var(--color-gray-100);
-  display: block;
-  height: 1px;
-  width: 100%;
-}
-
 .error {
   composes: pretendard-medium-12 from global;
   color: var(--color-error-600);
-  margin: 0;
-}
-
-.previewDirty {
-  composes: pretendard-medium-12 from global;
-  color: var(--color-brand-600);
-  margin: 0;
-}
-
-.warningText {
-  composes: pretendard-medium-12 from global;
   margin: 0;
 }
 
@@ -301,48 +158,8 @@
   color: var(--color-gray-500);
 }
 
-.warning {
-  background: var(--color-error-50);
-  border: 1px solid var(--color-error-200);
-  border-radius: 8px;
-  color: var(--color-error-700);
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 12px;
-}
-
-.operationalAlert {
-  background: var(--color-error-50);
-  border: 1px solid var(--color-error-200);
-  border-radius: 8px;
-  color: var(--color-error-700);
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 12px;
-}
-
-.operationalAlertText {
-  composes: pretendard-medium-12 from global;
-  margin: 0;
-}
-
-.operationalIssuePath {
-  overflow-wrap: anywhere;
-}
-
-.operationalAlert button {
-  align-self: flex-start;
-}
-
 @media (max-width: 720px) {
-  .modeCards {
+  .editorWorkspace {
     grid-template-columns: 1fr;
-  }
-
-  .sectionHeaderRow {
-    align-items: stretch;
-    flex-direction: column;
   }
 }

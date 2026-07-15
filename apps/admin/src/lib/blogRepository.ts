@@ -38,9 +38,7 @@ type BlogPostInsert = {
   readonly banner_sections: BlogPostCreateInput["bannerSections"];
 };
 
-type BlogPostUpdate = Partial<BlogPostInsert> & {
-  readonly deleted_at?: string;
-};
+type BlogPostUpdate = Partial<BlogPostInsert>;
 
 type BlogPostUpdateDraft = {
   status?: BlogPostInsert["status"];
@@ -231,10 +229,9 @@ export async function deleteBlogPost(
 ): Promise<AdminRepositoryResult<BlogPostRow>> {
   if (config.kind === "disabled") return adminErr(supabaseDisabledFailure(config));
 
-  const update: BlogPostUpdate = { deleted_at: new Date().toISOString() };
   let query = config.client
     .from("blog_posts")
-    .update(update)
+    .delete()
     .eq("id", id)
     .is("deleted_at", null)
     .select(blogPostColumns);

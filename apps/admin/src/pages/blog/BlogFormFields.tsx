@@ -22,6 +22,7 @@ import type {
 import styles from "../BlogAdminPage.module.css";
 
 type BlogFormFieldsProps = {
+  readonly contentPreviewContainer?: HTMLElement | null;
   readonly documentKey: string;
   readonly fieldErrors: BlogFieldErrors;
   readonly form: BlogFormState;
@@ -41,6 +42,7 @@ const blogFormTypeOptions = [
 ] as const;
 
 export function BlogFormFields({
+  contentPreviewContainer,
   documentKey,
   fieldErrors,
   form,
@@ -150,6 +152,7 @@ export function BlogFormFields({
               />
             ) : undefined
           }
+          previewFullBleed
           variant="dropzone"
         />
       </div>
@@ -176,6 +179,7 @@ export function BlogFormFields({
           onBusyChange={onContentBusyChange}
           onChange={onContentChange}
           onPendingAssetCountChange={onPendingAssetCountChange}
+          previewContainer={contentPreviewContainer}
           value={form}
         />
         {fieldErrors.content ? (

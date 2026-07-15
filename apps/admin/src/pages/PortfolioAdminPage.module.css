@@ -354,7 +354,14 @@
   display: flex;
   flex-direction: column;
   gap: 52px;
-  max-width: 640px;
+  max-width: 1300px;
+  width: 100%;
+}
+
+.portfolioFormLayout {
+  align-items: flex-start;
+  display: flex;
+  gap: 20px;
   width: 100%;
 }
 
@@ -363,6 +370,16 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
+
+.portfolioFormBody,
+.portfolioPreviewColumn {
+  flex: 1 1 0;
+  width: 100%;
+}
+
+.portfolioPreviewMount {
+  width: 100%;
 }
 
 .portfolioFormTitle {
@@ -377,6 +394,11 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+.portfolioActionArea {
+  max-width: 640px;
+  width: 100%;
 }
 
 .portfolioThumbnailPreview {
@@ -666,6 +688,20 @@
 
   .portfolioFormSection {
     padding: 40px 20px 72px;
+  }
+
+  .portfolioFormLayout {
+    flex-direction: column;
+  }
+
+  .portfolioFormBody,
+  .portfolioPreviewColumn {
+    flex: 0 1 auto;
+    width: 100%;
+  }
+
+  .portfolioPreviewColumn {
+    padding-top: 0;
   }
 
   .repeatableRow,

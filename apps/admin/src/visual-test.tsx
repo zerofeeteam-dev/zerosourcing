@@ -2,7 +2,7 @@ import {
   SUPPORTED_CONTENT_SCHEMA_VERSION,
   type TiptapDocument,
 } from "@repo/content/types";
-import { useState, type ReactNode, type SyntheticEvent } from "react";
+import { useEffect, useState, type ReactNode, type SyntheticEvent } from "react";
 import { createRoot } from "react-dom/client";
 import "@repo/content/rich-content.css";
 import "../../../design-system.css";
@@ -16,6 +16,7 @@ import {
 } from "./components/admin";
 import { BlogFormFields } from "./pages/blog/BlogFormFields";
 import type { BlogFormState } from "./pages/blog/blogTypes";
+import { applyAdminPageTitle } from "./lib/pageTitle";
 import styles from "./pages/BlogAdminPage.module.css";
 
 type VisualTestVariant =
@@ -351,6 +352,10 @@ const visualTestConfig = visualTestConfigs[visualTestVariant];
 
 function VisualTest() {
   const [form, setForm] = useState<BlogFormState>(visualTestConfig.form);
+
+  useEffect(() => {
+    applyAdminPageTitle();
+  }, []);
 
   return (
     <AdminShell activeItem="blog">
