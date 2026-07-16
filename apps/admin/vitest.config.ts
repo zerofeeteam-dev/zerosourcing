@@ -12,7 +12,6 @@ export default defineConfig({
       "src/components/admin/AdminForm.test.tsx",
       "src/components/content/**/*.test.ts",
       "src/components/content/**/*.test.tsx",
-      "src/lib/adminValidation.test.ts",
       "src/lib/contentAssetStorage.test.ts",
       "src/lib/router.test.ts",
       "src/lib/thumbnailPersistence.test.ts",

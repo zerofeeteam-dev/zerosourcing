@@ -2,6 +2,10 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
+const managedThumbnailComponentPath = new URL(
+  "./ManagedThumbnail.tsx",
+  import.meta.url,
+);
 const managedThumbnailStylesPath = new URL(
   "./ManagedThumbnail.module.css",
   import.meta.url,
@@ -41,6 +45,12 @@ function selectorBodies(styles, selector) {
     ...styles.matchAll(new RegExp(`\\.${selector}\\s*\\{([^}]*)\\}`, "gu")),
   ].map((match) => match[1]);
 }
+
+test("managed thumbnails serve the stored asset without next/image optimization", async () => {
+  const component = await readFile(managedThumbnailComponentPath, "utf8");
+
+  assert.match(component, /\bunoptimized\b/u);
+});
 
 test("managed thumbnails preserve the stored 3:2 image ratio", async () => {
   const styles = await readFile(managedThumbnailStylesPath, "utf8");

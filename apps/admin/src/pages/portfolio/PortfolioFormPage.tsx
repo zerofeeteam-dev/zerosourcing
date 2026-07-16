@@ -15,10 +15,6 @@ import type {
   PortfolioStatus,
 } from "../../lib/adminRepositoryTypes";
 import { adminErr } from "../../lib/adminTypes";
-import {
-  adminThumbnailImageDimensions,
-  normalizeAdminThumbnailFile,
-} from "../../lib/adminValidation";
 import { ManagedContentSchemaError } from "../../lib/managedContent";
 import {
   createOperationGeneration,
@@ -336,40 +332,6 @@ export function PortfolioFormPage({
       return;
     }
 
-    const normalizedThumbnail = thumbnail.selection.selected
-      ? await normalizeAdminThumbnailFile(
-          thumbnail.selection.selected,
-          "thumbnail",
-          adminThumbnailImageDimensions,
-        )
-      : undefined;
-    if (normalizedThumbnail && !normalizedThumbnail.ok) {
-      setFieldErrors((current) => ({
-        ...current,
-        thumbnail: normalizedThumbnail.error.message,
-      }));
-      setGlobalError("썸네일 이미지를 자동 조정하지 못했습니다.");
-      requestFailureNavigation();
-      return;
-    }
-
-    const normalizedBanner = banner.selection.selected
-      ? await normalizeAdminThumbnailFile(
-          banner.selection.selected,
-          "banner",
-          adminThumbnailImageDimensions,
-        )
-      : undefined;
-    if (normalizedBanner && !normalizedBanner.ok) {
-      setFieldErrors((current) => ({
-        ...current,
-        banner: normalizedBanner.error.message,
-      }));
-      setGlobalError("배너 이미지를 자동 조정하지 못했습니다.");
-      requestFailureNavigation();
-      return;
-    }
-
     const existingPortfolio = editingPortfolio;
     if (isEditMode && !existingPortfolio) {
       setGlobalError("저장할 Portfolio를 먼저 불러와야 합니다.");
@@ -430,14 +392,14 @@ export function PortfolioFormPage({
               signal: operationController.signal,
             });
       },
-      selected: normalizedThumbnail?.value,
+      selected: thumbnail.selection.selected,
       secondary: {
         current: {
           path: existingPortfolio?.banner_path ?? null,
           publicUrl: existingPortfolio?.banner_public_url ?? null,
         },
         removed: banner.selection.removed,
-        selected: normalizedBanner?.value,
+        selected: banner.selection.selected,
       },
       slug: candidate.slug,
     });

@@ -276,7 +276,7 @@ export function PortfolioFormFields({
         </PortfolioField>
         <AdminUploadControl
           accept="image/png,image/jpeg,image/webp"
-          acceptLabel="1080 × 720 자동 맞춤 / PNG, JPEG, WEBP 등 / 최대 50MB 제한"
+          acceptLabel="PNG, JPEG, WEBP / 최대 50MB"
           disabled={isDisabled}
           errorMessage={fieldErrors.thumbnail}
           fileName={visibleFileName}
@@ -328,7 +328,7 @@ export function PortfolioFormFields({
         </PortfolioField>
         <AdminUploadControl
           accept="image/png,image/jpeg,image/webp"
-          acceptLabel="1080 × 720 자동 맞춤 / PNG, JPEG, WEBP 등 / 최대 50MB 제한"
+          acceptLabel="PNG, JPEG, WEBP / 최대 50MB"
           disabled={isDisabled}
           errorMessage={fieldErrors.banner}
           fileName={visibleBannerFileName}

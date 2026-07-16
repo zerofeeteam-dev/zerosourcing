@@ -22,10 +22,6 @@ import {
 } from "../../lib/operationGeneration";
 import { adminErr } from "../../lib/adminTypes";
 import {
-  adminThumbnailImageDimensions,
-  normalizeAdminThumbnailFile,
-} from "../../lib/adminValidation";
-import {
   createBlogPost,
   getBlogPostBySlug,
   updateBlogPost,
@@ -323,23 +319,6 @@ export function BlogFormPage({ onNavigate, route }: BlogFormPageProps) {
       return;
     }
 
-    const normalizedThumbnail = thumbnail.selection.selected
-      ? await normalizeAdminThumbnailFile(
-          thumbnail.selection.selected,
-          "thumbnail",
-          adminThumbnailImageDimensions,
-        )
-      : undefined;
-    if (normalizedThumbnail && !normalizedThumbnail.ok) {
-      setFieldErrors((current) => ({
-        ...current,
-        thumbnail: normalizedThumbnail.error.message,
-      }));
-      setGlobalError("썸네일 이미지를 자동 조정하지 못했습니다.");
-      requestFailureNavigation();
-      return;
-    }
-
     const existingPost = editingPost;
     if (!isNewRoute && !existingPost) {
       setGlobalError("저장할 Blog 글을 먼저 불러와야 합니다.");
@@ -395,7 +374,7 @@ export function BlogFormPage({ onNavigate, route }: BlogFormPageProps) {
               signal: operationController.signal,
             });
       },
-      selected: normalizedThumbnail?.value,
+      selected: thumbnail.selection.selected,
       slug: parsed.value.slug,
     });
 

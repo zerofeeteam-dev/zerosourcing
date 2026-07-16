@@ -27,6 +27,7 @@ export function ManagedThumbnail({
           loading={loading}
           sizes={sizes}
           src={url}
+          unoptimized
         />
       ) : null}
     </div>
