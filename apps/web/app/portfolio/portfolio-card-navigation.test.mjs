@@ -4,6 +4,7 @@ import test from "node:test";
 
 const pagePath = new URL("./page.tsx", import.meta.url);
 const clientPath = new URL("./PortfolioListClient.tsx", import.meta.url);
+const stylesPath = new URL("./page.module.css", import.meta.url);
 
 test("every managed portfolio card links to its published detail slug", async () => {
   const [page, client] = await Promise.all([
@@ -29,4 +30,19 @@ test("every managed portfolio card links to its published detail slug", async ()
     client,
     /portfolio-items|useRouter|router\.push|role="link"|tabIndex/,
   );
+});
+
+test("featured portfolio tag rows use an 8px gap without changing mobile tags", async () => {
+  const styles = await readFile(stylesPath, "utf8");
+  const mobileStyles = styles.slice(styles.indexOf("@media (max-width: 480px)"));
+
+  assert.match(
+    styles,
+    /\.tagList\s*\{[^}]*gap:\s*12px;[^}]*\}/,
+  );
+  assert.match(
+    styles,
+    /@media \(min-width: 481px\)\s*\{[\s\S]*?\.featured \.tagList\s*\{[\s\S]*?column-gap:\s*12px;[\s\S]*?row-gap:\s*8px;/,
+  );
+  assert.doesNotMatch(mobileStyles, /\.featured \.tagList\s*\{/);
 });
