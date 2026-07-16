@@ -99,6 +99,7 @@ export default async function PortfolioDetailPage({
           <ManagedThumbnail
             alt={portfolio.bannerAlt}
             className={styles.bannerFrame!}
+            loading="eager"
             sizes="(max-width: 1120px) calc(100vw - 40px), 1080px"
             url={portfolio.bannerUrl}
           />

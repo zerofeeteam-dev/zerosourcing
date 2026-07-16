@@ -374,11 +374,9 @@
   }
 }
 
-@media (min-width: 481px) {
-  .featured .tagList {
-    column-gap: 12px;
-    row-gap: 8px;
-  }
+.featured .tagList {
+  column-gap: 12px;
+  row-gap: 8px;
 }
 
 @media (max-width: 480px) {
@@ -419,6 +417,12 @@
   .filterBar {
     width: calc(100vw - 40px);
     overflow-x: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .filterBar::-webkit-scrollbar {
+    display: none;
   }
 
   .grid {

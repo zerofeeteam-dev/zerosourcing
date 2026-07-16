@@ -141,7 +141,7 @@ export function BlogFormFields({
         />
         <AdminUploadControl
           accept="image/png,image/jpeg,image/webp"
-          acceptLabel="1080 × 800 비율 / PNG, JPEG, WEBP 등 / 최대 50MB 제한"
+          acceptLabel="1080 × 720 자동 맞춤 / PNG, JPEG, WEBP 등 / 최대 50MB 제한"
           disabled={isDisabled}
           errorMessage={fieldErrors.thumbnail}
           fileName={visibleFileName}
@@ -183,7 +183,7 @@ export function BlogFormFields({
         />
         <AdminUploadControl
           accept="image/png,image/jpeg,image/webp"
-          acceptLabel="PNG, JPEG, WEBP 등 / 최대 50MB 제한"
+          acceptLabel="1080 × 720 자동 맞춤 / PNG, JPEG, WEBP 등 / 최대 50MB 제한"
           disabled={isDisabled}
           errorMessage={fieldErrors.banner}
           fileName={visibleBannerFileName}

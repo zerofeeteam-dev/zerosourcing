@@ -85,6 +85,7 @@ export function PortfolioListClient({
                 <ManagedThumbnail
                   alt=""
                   className={styles.thumbnail!}
+                  loading="eager"
                   sizes="(max-width: 1023px) calc(100vw - 40px), 520px"
                   url={featured.thumbnailUrl}
                 />

@@ -32,9 +32,8 @@ test("every managed portfolio card links to its published detail slug", async ()
   );
 });
 
-test("featured portfolio tag rows use an 8px gap without changing mobile tags", async () => {
+test("featured portfolio tag rows use an 8px gap at every viewport", async () => {
   const styles = await readFile(stylesPath, "utf8");
-  const mobileStyles = styles.slice(styles.indexOf("@media (max-width: 480px)"));
 
   assert.match(
     styles,
@@ -42,7 +41,22 @@ test("featured portfolio tag rows use an 8px gap without changing mobile tags", 
   );
   assert.match(
     styles,
-    /@media \(min-width: 481px\)\s*\{[\s\S]*?\.featured \.tagList\s*\{[\s\S]*?column-gap:\s*12px;[\s\S]*?row-gap:\s*8px;/,
+    /\.featured \.tagList\s*\{[\s\S]*?column-gap:\s*12px;[\s\S]*?row-gap:\s*8px;/,
   );
-  assert.doesNotMatch(mobileStyles, /\.featured \.tagList\s*\{/);
+  assert.doesNotMatch(styles, /@media \(min-width: 481px\)/);
+});
+
+test("mobile portfolio filters remain swipeable without a visible scrollbar", async () => {
+  const styles = await readFile(stylesPath, "utf8");
+
+  const mobileStyles = styles.match(
+    /@media \(max-width: 480px\)\s*\{([\s\S]*)\}\s*$/,
+  )?.[1];
+
+  assert.ok(mobileStyles);
+  assert.match(
+    mobileStyles,
+    /\.filterBar\s*\{[\s\S]*?width:\s*calc\(100vw\s*-\s*40px\);[\s\S]*?overflow-x:\s*auto;[\s\S]*?scrollbar-width:\s*none;/,
+  );
+  assert.match(mobileStyles, /\.filterBar::\-webkit-scrollbar\s*\{[\s\S]*?display:\s*none;/);
 });

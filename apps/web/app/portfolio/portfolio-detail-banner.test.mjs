@@ -18,6 +18,7 @@ test("portfolio detail renders the managed banner in the Figma frame", async () 
   assert.match(page, /className=\{styles\.bannerFrame!?\}/);
   assert.match(page, /url=\{portfolio\.bannerUrl\}/);
   assert.match(page, /alt=\{portfolio\.bannerAlt\}/);
+  assert.match(page, /loading="eager"/);
   assert.match(
     styles,
     /\.bannerFrame\s*\{[\s\S]*?aspect-ratio:\s*9\s*\/\s*4;[\s\S]*?border-radius:\s*16px;[\s\S]*?background:\s*var\(--color-gray-100\);/,
