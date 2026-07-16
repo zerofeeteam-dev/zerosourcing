@@ -126,8 +126,7 @@
 .thumbnail {
   position: relative;
   width: 100%;
-  max-height: 320px;
-  aspect-ratio: 520 / 320;
+  aspect-ratio: 3 / 2;
   border-radius: 16px;
   background: var(--color-gray-100);
 }
@@ -295,7 +294,7 @@
 
 .cardThumbnail {
   width: 100%;
-  aspect-ratio: 346 / 212;
+  aspect-ratio: 3 / 2;
   border-radius: 16px;
   background: var(--color-gray-100);
 }
@@ -337,9 +336,6 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 32px 8px;
   }
-  .cardThumbnail {
-    aspect-ratio: 341 / 212;
-  }
 }
 
 @media (max-width: 1023px) {
@@ -376,15 +372,11 @@
   .featured {
     grid-template-columns: 1fr;
   }
+}
 
-  .thumbnail {
-    aspect-ratio: 560 / 320;
-  }
-
-  .cardThumbnail {
-    aspect-ratio: auto;
-    height: 184px;
-  }
+.featured .tagList {
+  column-gap: 12px;
+  row-gap: 8px;
 }
 
 @media (max-width: 480px) {
@@ -406,11 +398,6 @@
     flex: 0 0 auto;
   }
 
-  .thumbnail {
-    aspect-ratio: auto;
-    height: 240px;
-  }
-
   .featuredDescription {
     white-space: normal;
   }
@@ -430,6 +417,12 @@
   .filterBar {
     width: calc(100vw - 40px);
     overflow-x: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .filterBar::-webkit-scrollbar {
+    display: none;
   }
 
   .grid {
@@ -439,9 +432,5 @@
 
   .card:nth-child(2n):not(:last-child) {
     margin-bottom: 24px;
-  }
-
-  .cardThumbnail {
-    height: 220px;
   }
 }

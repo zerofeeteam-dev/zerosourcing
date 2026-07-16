@@ -15,7 +15,10 @@ import type {
   PortfolioStatus,
 } from "../../lib/adminRepositoryTypes";
 import { adminErr } from "../../lib/adminTypes";
-import { validateAdminImageDimensions } from "../../lib/adminValidation";
+import {
+  adminThumbnailImageDimensions,
+  normalizeAdminThumbnailFile,
+} from "../../lib/adminValidation";
 import { ManagedContentSchemaError } from "../../lib/managedContent";
 import {
   createOperationGeneration,
@@ -330,38 +333,36 @@ export function PortfolioFormPage({
       return;
     }
 
-    const thumbnailFile = thumbnail.selection.selected?.file;
-    if (thumbnailFile) {
-      const dimensions = await validateAdminImageDimensions(
-        thumbnailFile,
-        "thumbnail",
-        { height: 800, width: 1080 },
-      );
-      if (!dimensions.ok) {
-        setFieldErrors((current) => ({
-          ...current,
-          thumbnail: dimensions.error.message,
-        }));
-        setGlobalError("썸네일 이미지 비율을 확인해 주세요.");
-        return;
-      }
+    const normalizedThumbnail = thumbnail.selection.selected
+      ? await normalizeAdminThumbnailFile(
+          thumbnail.selection.selected,
+          "thumbnail",
+          adminThumbnailImageDimensions,
+        )
+      : undefined;
+    if (normalizedThumbnail && !normalizedThumbnail.ok) {
+      setFieldErrors((current) => ({
+        ...current,
+        thumbnail: normalizedThumbnail.error.message,
+      }));
+      setGlobalError("썸네일 이미지를 자동 조정하지 못했습니다.");
+      return;
     }
 
-    const bannerFile = banner.selection.selected?.file;
-    if (bannerFile) {
-      const dimensions = await validateAdminImageDimensions(
-        bannerFile,
-        "banner",
-        { height: 800, width: 1080 },
-      );
-      if (!dimensions.ok) {
-        setFieldErrors((current) => ({
-          ...current,
-          banner: dimensions.error.message,
-        }));
-        setGlobalError("배너 이미지 비율을 확인해 주세요.");
-        return;
-      }
+    const normalizedBanner = banner.selection.selected
+      ? await normalizeAdminThumbnailFile(
+          banner.selection.selected,
+          "banner",
+          adminThumbnailImageDimensions,
+        )
+      : undefined;
+    if (normalizedBanner && !normalizedBanner.ok) {
+      setFieldErrors((current) => ({
+        ...current,
+        banner: normalizedBanner.error.message,
+      }));
+      setGlobalError("배너 이미지를 자동 조정하지 못했습니다.");
+      return;
     }
 
     const existingPortfolio = editingPortfolio;
@@ -424,14 +425,14 @@ export function PortfolioFormPage({
               signal: operationController.signal,
             });
       },
-      selected: thumbnail.selection.selected,
+      selected: normalizedThumbnail?.value,
       secondary: {
         current: {
           path: existingPortfolio?.banner_path ?? null,
           publicUrl: existingPortfolio?.banner_public_url ?? null,
         },
         removed: banner.selection.removed,
-        selected: banner.selection.selected,
+        selected: normalizedBanner?.value,
       },
       slug: candidate.slug,
     });

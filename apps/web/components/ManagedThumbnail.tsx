@@ -5,6 +5,7 @@ import styles from "./ManagedThumbnail.module.css";
 type ManagedThumbnailProps = {
   readonly alt: string;
   readonly className: string;
+  readonly loading?: "eager" | "lazy";
   readonly sizes: string;
   readonly url: string | null;
 };
@@ -12,6 +13,7 @@ type ManagedThumbnailProps = {
 export function ManagedThumbnail({
   alt,
   className,
+  loading,
   sizes,
   url,
 }: ManagedThumbnailProps) {
@@ -22,6 +24,7 @@ export function ManagedThumbnail({
           alt={alt}
           className={styles.image}
           fill
+          loading={loading}
           sizes={sizes}
           src={url}
         />

@@ -30,7 +30,7 @@ export function selectPortfolioIndex<
     landingIndex >= 0 ? landingIndex : rows.length > 0 ? 0 : -1;
   return {
     featured: featuredIndex >= 0 ? (rows[featuredIndex] ?? null) : null,
-    list: withoutIndex(rows, featuredIndex),
+    list: rows,
   };
 }
 

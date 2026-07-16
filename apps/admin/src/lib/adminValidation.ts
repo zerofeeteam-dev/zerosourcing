@@ -106,36 +106,114 @@ export function parseAdminThumbnailFile(
 
 export const adminThumbnailMaxSizeBytes = maxThumbnailSizeBytes;
 
-export async function validateAdminImageDimensions(
-  file: File,
+export const adminThumbnailImageDimensions = {
+  height: 720,
+  width: 1080,
+} as const;
+
+type ImageDimensions = {
+  readonly height: number;
+  readonly width: number;
+};
+
+function imageNormalizationIssue(field: string): AdminValidationIssue {
+  return validationIssue(
+    "invalid_thumbnail_type",
+    field,
+    "이미지를 1080 × 720px로 자동 조정할 수 없습니다.",
+  );
+}
+
+function cropToFill(image: ImageBitmap, dimensions: ImageDimensions) {
+  const targetRatio = dimensions.width / dimensions.height;
+  const sourceRatio = image.width / image.height;
+  const sourceWidth =
+    sourceRatio > targetRatio ? image.height * targetRatio : image.width;
+  const sourceHeight =
+    sourceRatio > targetRatio ? image.height : image.width / targetRatio;
+
+  return {
+    height: sourceHeight,
+    width: sourceWidth,
+    x: (image.width - sourceWidth) / 2,
+    y: (image.height - sourceHeight) / 2,
+  };
+}
+
+function canvasBlob(
+  canvas: HTMLCanvasElement,
+  mimeType: AdminThumbnailMimeType,
+): Promise<Blob | null> {
+  return new Promise((resolve) => {
+    canvas.toBlob(
+      resolve,
+      mimeType,
+      mimeType === "image/png" ? undefined : 0.92,
+    );
+  });
+}
+
+export async function normalizeAdminThumbnailFile(
+  thumbnail: AdminThumbnailFile,
   field: string,
-  dimensions: { readonly height: number; readonly width: number },
-): Promise<AdminResult<null, AdminValidationIssue>> {
-  if (typeof createImageBitmap !== "function") return adminOk(null);
+  dimensions: ImageDimensions = adminThumbnailImageDimensions,
+): Promise<AdminResult<AdminThumbnailFile, AdminValidationIssue>> {
+  if (
+    typeof createImageBitmap !== "function" ||
+    typeof document === "undefined"
+  ) {
+    return adminOk(thumbnail);
+  }
 
   let image: ImageBitmap;
   try {
-    image = await createImageBitmap(file);
+    image = await createImageBitmap(thumbnail.file);
   } catch {
-    return adminErr(
-      validationIssue(
-        "invalid_thumbnail_type",
-        field,
-        "이미지 크기를 확인할 수 없습니다.",
-      ),
-    );
+    return adminErr(imageNormalizationIssue(field));
   }
 
-  const matches =
-    image.width === dimensions.width && image.height === dimensions.height;
-  image.close();
-  if (matches) return adminOk(null);
+  try {
+    if (
+      image.width === dimensions.width &&
+      image.height === dimensions.height
+    ) {
+      return adminOk(thumbnail);
+    }
 
-  return adminErr(
-    validationIssue(
-      "invalid_thumbnail_type",
+    const canvas = document.createElement("canvas");
+    canvas.height = dimensions.height;
+    canvas.width = dimensions.width;
+    const context = canvas.getContext("2d");
+    if (!context) return adminErr(imageNormalizationIssue(field));
+
+    const crop = cropToFill(image, dimensions);
+    context.drawImage(
+      image,
+      crop.x,
+      crop.y,
+      crop.width,
+      crop.height,
+      0,
+      0,
+      dimensions.width,
+      dimensions.height,
+    );
+
+    const blob = await canvasBlob(canvas, thumbnail.mimeType);
+    if (!blob || blob.type !== thumbnail.mimeType) {
+      return adminErr(imageNormalizationIssue(field));
+    }
+
+    return parseAdminThumbnailFile(
+      new File([blob], thumbnail.file.name, {
+        lastModified: thumbnail.file.lastModified,
+        type: thumbnail.mimeType,
+      }),
       field,
-      `이미지는 ${dimensions.width} × ${dimensions.height}px만 업로드할 수 있습니다.`,
-    ),
-  );
+    );
+  } catch {
+    return adminErr(imageNormalizationIssue(field));
+  } finally {
+    image.close();
+  }
 }

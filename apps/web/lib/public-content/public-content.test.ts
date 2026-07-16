@@ -604,7 +604,7 @@ describe("public selectors", () => {
     ]);
   });
 
-  it("uses flags first and falls back deterministically for index features", () => {
+  it("keeps the featured portfolio in the latest-first index list", () => {
     const portfolios = [
       { landingPublished: false, slug: "newest" },
       { landingPublished: true, slug: "landing" },
@@ -619,7 +619,7 @@ describe("public selectors", () => {
 
     expect(selectPortfolioIndex(portfolios)).toEqual({
       featured: portfolios[1],
-      list: [portfolios[0], portfolios[2]],
+      list: portfolios,
     });
     expect(selectBlogIndex(blogs)).toEqual({
       featured: blogs[1],
