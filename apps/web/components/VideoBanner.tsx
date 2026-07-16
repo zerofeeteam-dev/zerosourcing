@@ -1,6 +1,6 @@
 "use client";
 
-import type { CSSProperties, ReactNode } from "react";
+import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import { Button, type ButtonColor } from "@repo/ui/button";
 
 import { BannerEyebrowChip } from "./BannerEyebrowChip";
@@ -37,6 +37,8 @@ type VideoBannerProps = {
 };
 
 const bannerVideoSrc = "/banner_video.mp4";
+const bannerVideoMobileSrc = "/banner_video_mobile.mp4";
+const bannerPosterSrc = "/banner-poster.webp";
 const actionButtonStyle = {
   borderRadius: 32,
   padding: "8px 20px",
@@ -51,17 +53,50 @@ export function VideoBanner({
   eyebrow,
   title,
 }: VideoBannerProps) {
+  const [shouldPlayVideo, setShouldPlayVideo] = useState(false);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
+
+    const events = ["keydown", "pointermove", "scroll", "touchstart"] as const;
+    const removeListeners = () => {
+      events.forEach((event) => window.removeEventListener(event, startVideo));
+    };
+    const startVideo = () => {
+      removeListeners();
+      setShouldPlayVideo(true);
+    };
+
+    events.forEach((event) =>
+      window.addEventListener(event, startVideo, { once: true, passive: true }),
+    );
+
+    return removeListeners;
+  }, []);
+
   return (
     <section className={styles.banner} data-node-id="292:74456">
-      <video
-        aria-hidden="true"
-        autoPlay
-        className={styles.video}
-        loop
-        muted
-        playsInline
-        src={bannerVideoSrc}
-      />
+      {shouldPlayVideo ? (
+        <video
+          aria-hidden="true"
+          autoPlay
+          className={styles.video}
+          loop
+          muted
+          playsInline
+          poster={bannerPosterSrc}
+          preload="metadata"
+        >
+          <source
+            media="(max-width: 768px)"
+            src={bannerVideoMobileSrc}
+            type="video/mp4"
+          />
+          <source src={bannerVideoSrc} type="video/mp4" />
+        </video>
+      ) : null}
       <div
         className={`${styles.content} ${styles[align]} ${styles[`content-${actionsPosition}`]}`}
       >

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { unstable_cache } from "next/cache";
 import type { CSSProperties } from "react";
 
 import { BottomCtaBanner } from "../components/BottomCtaBanner";
@@ -44,13 +45,16 @@ export const metadata = createPageMetadata({
   path: "/",
 });
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
+
+const getHomeContent = unstable_cache(
+  () => Promise.all([getPublishedPortfolios(), getPublishedBlogPosts()]),
+  ["home-public-content"],
+  { revalidate },
+);
 
 export default async function Home() {
-  const [portfolioRows, blogRows] = await Promise.all([
-    getPublishedPortfolios(),
-    getPublishedBlogPosts(),
-  ]);
+  const [portfolioRows, blogRows] = await getHomeContent();
   const homePortfolios = selectHomePortfolios(portfolioRows);
   const homeInsights = selectHomeBlogPosts(blogRows);
   const homeLeftPortfolios = homePortfolios.filter(

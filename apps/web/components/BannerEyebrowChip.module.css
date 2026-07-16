@@ -1,3 +1,10 @@
+.slot {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .chip {
   display: inline-flex;
   width: max-content;

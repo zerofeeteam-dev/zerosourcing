@@ -196,7 +196,7 @@
 .scopeSection::before {
   position: absolute;
   inset: 0;
-  background-image: url("/images/s4_bg.png");
+  background-image: url("/images/s4_bg.webp");
   background-position: center top;
   background-repeat: no-repeat;
   background-size: cover;
@@ -806,7 +806,7 @@
 .logo {
   display: block;
   width: 100%;
-  height: auto;
+  height: 52px;
   object-fit: contain;
 }
 
