@@ -206,7 +206,7 @@
 
 .relatedThumbnail {
   width: 220px;
-  height: 152px;
+  aspect-ratio: 3 / 2;
   border-radius: 16px;
   background: var(--color-gray-100);
   flex: 0 0 220px;
@@ -286,7 +286,6 @@
 
   .relatedThumbnail {
     width: 100%;
-    height: 240px;
     flex-basis: auto;
   }
 
