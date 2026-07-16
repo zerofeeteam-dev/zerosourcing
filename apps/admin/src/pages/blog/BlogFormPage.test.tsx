@@ -208,6 +208,10 @@ describe("BlogFormPage", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    Object.defineProperty(HTMLElement.prototype, "scrollIntoView", {
+      configurable: true,
+      value: vi.fn(),
+    });
     Object.defineProperty(URL, "createObjectURL", {
       configurable: true,
       value: vi.fn(() => "blob:thumbnail-preview"),
@@ -265,6 +269,15 @@ describe("BlogFormPage", () => {
 
     await user.click(publish);
     expect(mocks.persistThumbnailChange).not.toHaveBeenCalled();
+    await waitFor(() =>
+      expect(document.activeElement).toBe(
+        screen.getByRole("combobox", { name: "블로그 유형" }),
+      ),
+    );
+    expect(HTMLElement.prototype.scrollIntoView).toHaveBeenCalledWith({
+      behavior: "smooth",
+      block: "center",
+    });
     const summary = screen.getByRole("textbox", { name: "카드 요약" });
     expect(summary.getAttribute("aria-invalid")).toBe("true");
     expect(document.getElementById("blog-summary-error")?.textContent).toBe(
@@ -308,7 +321,7 @@ describe("BlogFormPage", () => {
       await finishPersistence?.();
     });
     await waitFor(() =>
-      expect(onNavigate).toHaveBeenCalledWith("/blog/managed-blog"),
+      expect(onNavigate).toHaveBeenCalledWith("/blog"),
     );
 
     const persistenceInput = mocks.persistThumbnailChange.mock.calls[0]?.[0];
@@ -380,7 +393,9 @@ describe("BlogFormPage", () => {
     await user.upload(screen.getByLabelText("블로그 썸네일 파일"), file);
     await user.click(screen.getByRole("button", { name: "임시저장" }));
 
-    await waitFor(() => expect(screen.getByText("네트워크 오류")).toBeTruthy());
+    const globalError = await screen.findByRole("alert");
+    await waitFor(() => expect(document.activeElement).toBe(globalError));
+    expect(globalError.textContent).toContain("네트워크 오류");
     expect(mocks.createBlogPost).not.toHaveBeenCalled();
     expect(onNavigate).not.toHaveBeenCalled();
     expect(
@@ -696,9 +711,7 @@ describe("BlogFormPage", () => {
       expect(mocks.persistThumbnailChange).toHaveBeenCalledTimes(2),
     );
     await waitFor(() => expect(mocks.updateBlogPost).toHaveBeenCalledTimes(1));
-    await waitFor(() =>
-      expect(screen.getByText("Blog 글을 저장했습니다.")).toBeTruthy(),
-    );
+    await waitFor(() => expect(onNavigate).toHaveBeenCalledWith("/blog"));
     expect((title as HTMLInputElement).value).toBe("Blog A edited");
 
     const staleAdapterResult = await firstPersistenceInput?.save({
@@ -724,7 +737,8 @@ describe("BlogFormPage", () => {
 
     expect((title as HTMLInputElement).value).toBe("Blog A edited");
     expect(mocks.updateBlogPost).toHaveBeenCalledTimes(1);
-    expect(onNavigate).not.toHaveBeenCalled();
+    expect(onNavigate).toHaveBeenCalledTimes(1);
+    expect(onNavigate).not.toHaveBeenCalledWith("/blog/stale-blog");
     expect(screen.queryByText("stale save")).toBeNull();
   });
 });

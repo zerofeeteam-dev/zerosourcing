@@ -3,18 +3,22 @@
 }
 
 .track {
-  display: flex;
   gap: var(--carousel-gap);
 }
 
+.viewport[data-mode="row"] .track {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .viewport[data-mode="row"] .track > * {
-  flex: 1 1 0;
   min-width: 0;
 }
 
 /* 캐러셀 모드: 트랙은 bleed만큼 컨테이너 밖으로 확장되고,
    좌우 여백은 컨테이너 패딩 대신 첫/마지막 카드 마진으로 적용된다. */
 .viewport[data-mode="carousel"] .track {
+  display: flex;
   gap: var(--carousel-gap-narrow);
   margin-inline: calc(-1 * var(--carousel-bleed));
   overflow-x: auto;
@@ -46,7 +50,9 @@
   margin-inline-end: var(--carousel-bleed);
 }
 
-.viewport[data-mode="carousel"][data-snap-align="center"] .track > :first-child {
+.viewport[data-mode="carousel"][data-snap-align="center"]
+  .track
+  > :first-child {
   scroll-snap-align: start;
 }
 

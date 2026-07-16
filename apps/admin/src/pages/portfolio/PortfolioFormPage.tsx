@@ -40,6 +40,7 @@ import {
 } from "../content/managedContentFormFeedback";
 import { validateManagedContentImagesForPublish } from "../content/managedContentPublishValidation";
 import { useAdminThumbnailSelection } from "../content/useAdminThumbnailSelection";
+import { useAdminFormFailureNavigation } from "../content/useAdminFormFailureNavigation";
 import { useManagedContentEditorState } from "../content/useManagedContentEditorState";
 import { useManagedContentFormState } from "../content/useManagedContentFormState";
 import {
@@ -96,12 +97,13 @@ export function PortfolioFormPage({
   const [fieldErrors, setFieldErrors] = useState<PortfolioFormErrors>({});
   const [globalError, setGlobalError] = useState<string>();
   const [cleanupWarning, setCleanupWarning] = useState<string>();
-  const [successMessage, setSuccessMessage] = useState<string>();
   const [contentSchemaError, setContentSchemaError] = useState<string>();
   const [contentPreviewContainer, setContentPreviewContainer] =
     useState<HTMLDivElement | null>(null);
 
   usePendingAssetRegistration(editorState.pendingAssetCount);
+  const { formRef, requestFailureNavigation } =
+    useAdminFormFailureNavigation();
 
   const mutationControllerRef = useRef<AbortController | null>(null);
   const operationGenerationRef = useRef<OperationGeneration | null>(null);
@@ -156,7 +158,6 @@ export function PortfolioFormPage({
     setFieldErrors({});
     setGlobalError(undefined);
     setCleanupWarning(undefined);
-    setSuccessMessage(undefined);
     setContentSchemaError(undefined);
     setIsLoading(false);
   }, [
@@ -183,7 +184,6 @@ export function PortfolioFormPage({
     setFieldErrors({});
     setGlobalError(undefined);
     setCleanupWarning(undefined);
-    setSuccessMessage(undefined);
     setContentSchemaError(undefined);
 
     void (async () => {
@@ -310,6 +310,7 @@ export function PortfolioFormPage({
     if (actionDisabled) return;
     if (isEditMode && !hasCurrentEditingPortfolio) {
       setGlobalError("저장할 Portfolio를 먼저 불러와야 합니다.");
+      requestFailureNavigation();
       return;
     }
 
@@ -318,6 +319,7 @@ export function PortfolioFormPage({
     setFieldErrors(built.errors);
     if (!built.input) {
       setGlobalError("입력값을 확인해 주세요.");
+      requestFailureNavigation();
       return;
     }
     const candidate = built.input;
@@ -330,6 +332,7 @@ export function PortfolioFormPage({
     if (imageIssue) {
       setFieldErrors((current) => ({ ...current, content: imageIssue }));
       setGlobalError("본문 이미지를 확인해 주세요.");
+      requestFailureNavigation();
       return;
     }
 
@@ -346,6 +349,7 @@ export function PortfolioFormPage({
         thumbnail: normalizedThumbnail.error.message,
       }));
       setGlobalError("썸네일 이미지를 자동 조정하지 못했습니다.");
+      requestFailureNavigation();
       return;
     }
 
@@ -362,12 +366,14 @@ export function PortfolioFormPage({
         banner: normalizedBanner.error.message,
       }));
       setGlobalError("배너 이미지를 자동 조정하지 못했습니다.");
+      requestFailureNavigation();
       return;
     }
 
     const existingPortfolio = editingPortfolio;
     if (isEditMode && !existingPortfolio) {
       setGlobalError("저장할 Portfolio를 먼저 불러와야 합니다.");
+      requestFailureNavigation();
       return;
     }
 
@@ -386,7 +392,6 @@ export function PortfolioFormPage({
     setIsPending(true);
     setGlobalError(undefined);
     setCleanupWarning(undefined);
-    setSuccessMessage(undefined);
 
     const outcome = await persistThumbnailChange({
       config: supabaseConfig,
@@ -455,6 +460,7 @@ export function PortfolioFormPage({
         }));
       }
       setGlobalError(adminFailureMessage(failure));
+      requestFailureNavigation();
       return;
     }
 
@@ -468,6 +474,7 @@ export function PortfolioFormPage({
         setIsPending(false);
         setContentSchemaError(error.message);
         setGlobalError(error.message);
+        requestFailureNavigation();
         return;
       }
       throw error;
@@ -480,20 +487,7 @@ export function PortfolioFormPage({
     thumbnail.reset(outcome.result.value.thumbnail_public_url);
     banner.reset(outcome.result.value.banner_public_url);
     setFieldErrors({});
-    setSuccessMessage(
-      existingPortfolio
-        ? "Portfolio를 저장했습니다."
-        : "Portfolio를 등록했습니다.",
-    );
-
-    if (
-      (route.id !== "portfolioDetail" ||
-        route.param !== outcome.result.value.slug) &&
-      operationIsCurrent(operation) &&
-      formOwner.ownerIsCurrent(owner)
-    ) {
-      onNavigate(`/portfolio/${outcome.result.value.slug}`);
-    }
+    onNavigate("/portfolio");
   };
 
   const deleteCurrentPortfolio = async () => {
@@ -545,6 +539,7 @@ export function PortfolioFormPage({
     <section
       aria-labelledby="portfolio-form-title"
       className={styles.portfolioFormSection}
+      ref={formRef}
     >
       <div className={styles.portfolioFormPanel} aria-busy={isPending}>
         <div className={styles.portfolioFormLayout}>
@@ -553,18 +548,18 @@ export function PortfolioFormPage({
               {isEditMode ? "포트폴리오 수정" : "신규 포트폴리오 등록"}
             </h1>
             {globalError ? (
-              <p className={styles.globalError} role="alert">
+              <p
+                className={styles.globalError}
+                data-admin-global-error-target=""
+                role="alert"
+                tabIndex={-1}
+              >
                 {globalError}
               </p>
             ) : null}
             {cleanupWarning ? (
               <p className={styles.cleanupWarning} role="status">
                 {cleanupWarning}
-              </p>
-            ) : null}
-            {successMessage ? (
-              <p className={styles.successMessage} role="status">
-                {successMessage}
               </p>
             ) : null}
             {isLoading ? (

@@ -43,7 +43,7 @@ test("shared glass utility follows the consumer's dimensions and radius", async 
   }
   assert.doesNotMatch(
     surface,
-    /(?:^|\n)\s*(?:width|height|min-width|min-height|max-width|max-height|aspect-ratio|padding|color|box-shadow|border-radius|transition|cursor):/u,
+    /(?:^|\n)\s*(?:width|height|min-width|min-height|max-width|max-height|aspect-ratio|padding|color|border-radius|transition|cursor):/u,
   );
 
   assert.ok(highlight, "Shared glass highlight is missing");

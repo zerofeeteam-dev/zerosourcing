@@ -79,6 +79,9 @@ test("About content is JSX-free route data exported as const", async () => {
     page,
     /const (?:principles|howItems|metrics|companyInfo)\s*=/,
   );
+
+  assert.match(content, /name: "제로피\(제로소싱\)"/);
+  assert.match(content, /mapCenter: "37\.646768,126\.910328"/);
 });
 
 test("inlined About sections preserve approved structure and visual rules", async () => {
@@ -114,6 +117,12 @@ test("inlined About sections preserve approved structure and visual rules", asyn
     pageStyles,
     /\.infoRow\s*\{[\s\S]*?height:\s*52px;[\s\S]*?padding:\s*0 20px;[\s\S]*?border-bottom:\s*1px dashed var\(--color-gray-100\);/,
   );
+  assert.match(
+    pageStyles,
+    /\.mapFrameWrap\s*\{[\s\S]*?position:\s*relative;/,
+  );
+  assert.match(page, /className=\{aboutStyles\.mapBadge\}/);
+  assert.match(page, /className=\{aboutStyles\.mapBadgeName\}/);
   assert.match(
     pageStyles,
     /\.mapFrame\s*\{[\s\S]*?height:\s*400px;[\s\S]*?pointer-events:\s*none;/,

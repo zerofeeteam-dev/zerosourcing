@@ -3,6 +3,7 @@ import "./globals.css";
 import "./glass.css";
 import "../../../design-system.css";
 import "@repo/content/rich-content.css";
+import { BottomFloatingCta } from "../components/BottomFloatingCta";
 import organizationJsonLd from "./organization-json-ld.json";
 import {
   createPageMetadata,
@@ -39,6 +40,7 @@ export default function RootLayout({
           type="application/ld+json"
         />
         {children}
+        <BottomFloatingCta />
       </body>
     </html>
   );

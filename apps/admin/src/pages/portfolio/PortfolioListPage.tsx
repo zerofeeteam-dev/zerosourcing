@@ -40,6 +40,7 @@ const typeFilterOptions = [
   { label: "어플리케이션", value: "application" },
   { label: "기업 홈페이지", value: "company_homepage" },
   { label: "MVP", value: "mvp" },
+  { label: "웹서비스", value: "web_service" },
 ] as const;
 
 function classNames(
@@ -56,6 +57,7 @@ function portfolioListStatusLabel(status: PortfolioStatus): string {
 function portfolioListTypeLabel(type: PortfolioType): string {
   if (type === "company_homepage") return "기업 홈페이지";
   if (type === "mvp") return "MVP";
+  if (type === "web_service") return "웹서비스";
   return "어플리케이션";
 }
 

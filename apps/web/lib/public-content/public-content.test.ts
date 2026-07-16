@@ -421,6 +421,11 @@ describe("public row mapping", () => {
       updatedAt: "2026-07-14T12:30:45.123456+09:00",
     });
 
+    expect(mapPortfolioCard(portfolioRow({ type: "web_service" }))).toMatchObject({
+      category: "웹서비스",
+      type: "web_service",
+    });
+
     expect(mapPortfolioDetail(portfolioRow())).toMatchObject({
       assetBaseEnabled: true,
       assetScope: canonicalAssetScope,

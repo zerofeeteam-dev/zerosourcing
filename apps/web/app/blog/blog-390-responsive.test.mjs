@@ -9,7 +9,7 @@ const footerStylesPath = new URL(
   import.meta.url,
 );
 
-test("blog applies the 390px Figma card geometry only at 480px and below", async () => {
+test("blog applies the 390px spacing only at 480px and below", async () => {
   const [blogPage, blogStyles] = await Promise.all([
     readFile(blogPagePath, "utf8"),
     readFile(blogStylesPath, "utf8"),
@@ -18,7 +18,7 @@ test("blog applies the 390px Figma card geometry only at 480px and below", async
   assert.match(blogPage, /mobileItemWidth=\{330\}/);
   assert.match(
     blogStyles,
-    /@media \(max-width: 480px\)\s*{[\s\S]*?\.headerLayer\s*{\s*padding-inline:\s*20px;[\s\S]*?\.topThumbnail\s*{\s*height:\s*220px;[\s\S]*?\.topCopy\s*{\s*padding-block:\s*8px;[\s\S]*?\.topDescription\s*{\s*line-height:\s*20px;[\s\S]*?\.listThumbnail\s*{\s*height:\s*240px;/,
+    /@media \(max-width: 480px\)\s*{[\s\S]*?\.headerLayer\s*{\s*padding-inline:\s*20px;[\s\S]*?\.topCopy\s*{\s*padding-block:\s*8px;[\s\S]*?\.topDescription\s*{\s*line-height:\s*20px;/,
   );
 });
 

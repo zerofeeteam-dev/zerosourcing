@@ -254,16 +254,20 @@ test("merged home styles preserve collision ownership and visual values", async 
     styles,
     /\.scopeSection\s*\{[\s\S]*?--section-padding-y:\s*156px;[\s\S]*?--section-padding-y-tablet:\s*156px;[\s\S]*?--section-padding-y-mobile:\s*108px;/,
   );
+  assert.match(
+    styles,
+    /\.scopeSection::before\s*\{[\s\S]*?background-image:\s*url\("\/images\/s4_bg\.png"\);/,
+  );
+  assert.match(
+    styles,
+    /\.scopeSection::after\s*\{[\s\S]*?backdrop-filter:\s*blur\(15px\)\s+saturate\(140%\);/,
+  );
   assert.match(styles, /\.portfolioSection\s*\{[\s\S]*?padding:\s*104px 0;/);
   assert.match(
     styles,
     /@media \(max-width:\s*768px\)[\s\S]*?\.portfolioSection\s*\{[\s\S]*?padding:\s*72px 0;/,
   );
-  assert.match(styles, /\.insightThumbnail\s*\{[\s\S]*?height:\s*240px;/);
-  assert.match(
-    styles,
-    /@media \(max-width:\s*640px\)[\s\S]*?\.insightThumbnail\s*\{[\s\S]*?height:\s*200px;/,
-  );
+  assert.match(styles, /\.insightThumbnail\s*\{[\s\S]*?width:\s*100%;/);
   assert.match(
     styles,
     /\.track\s*\{[\s\S]*?animation:\s*partnerLogoRoll var\(--partner-logo-duration\) linear infinite;/,

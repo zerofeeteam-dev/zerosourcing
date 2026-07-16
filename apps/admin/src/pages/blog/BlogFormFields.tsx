@@ -173,7 +173,13 @@ export function BlogFormFields({
         value={form.summary}
       />
 
-      <div className={styles.contentField}>
+      <div
+        aria-describedby={fieldErrors.content ? "blog-content-error" : undefined}
+        aria-invalid={fieldErrors.content ? true : undefined}
+        className={styles.contentField}
+        role="group"
+        tabIndex={fieldErrors.content ? -1 : undefined}
+      >
         <AdminContentEditor
           disabled={isDisabled}
           documentKey={documentKey}
@@ -185,7 +191,11 @@ export function BlogFormFields({
           value={form}
         />
         {fieldErrors.content ? (
-          <p className={styles.contentError} role="alert">
+          <p
+            className={styles.contentError}
+            id="blog-content-error"
+            role="alert"
+          >
             {fieldErrors.content}
           </p>
         ) : null}

@@ -82,19 +82,17 @@ export function Header() {
                 <div className={styles.serviceNavItem} key={item.label}>
                   {navLink}
                   <div className={styles.serviceDropdown} data-node-id="14:1287">
-                    {serviceItems.map((serviceItem) => (
-                      <Link
-                        className={
-                          pathname === serviceItem.href
-                            ? styles.activeServiceDropdownItem
-                            : styles.serviceDropdownItem
-                        }
-                        href={serviceItem.href}
-                        key={serviceItem.href}
-                      >
-                        {serviceItem.label}
-                      </Link>
-                    ))}
+                    <div className={styles.serviceDropdownSurface}>
+                      {serviceItems.map((serviceItem) => (
+                        <Link
+                          className={styles.serviceDropdownItem}
+                          href={serviceItem.href}
+                          key={serviceItem.href}
+                        >
+                          {serviceItem.label}
+                        </Link>
+                      ))}
+                    </div>
                   </div>
                 </div>
               );

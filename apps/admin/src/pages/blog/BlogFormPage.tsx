@@ -40,6 +40,7 @@ import {
 } from "../content/managedContentFormFeedback";
 import { validateManagedContentImagesForPublish } from "../content/managedContentPublishValidation";
 import { useAdminThumbnailSelection } from "../content/useAdminThumbnailSelection";
+import { useAdminFormFailureNavigation } from "../content/useAdminFormFailureNavigation";
 import { useManagedContentEditorState } from "../content/useManagedContentEditorState";
 import { useManagedContentFormState } from "../content/useManagedContentFormState";
 import { BlogFormFields } from "./BlogFormFields";
@@ -92,13 +93,14 @@ export function BlogFormPage({ onNavigate, route }: BlogFormPageProps) {
   const [globalError, setGlobalError] = useState<string>();
   const [cleanupWarning, setCleanupWarning] = useState<string>();
   const [contentSchemaError, setContentSchemaError] = useState<string>();
-  const [successMessage, setSuccessMessage] = useState<string>();
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [contentPreviewContainer, setContentPreviewContainer] =
     useState<HTMLDivElement | null>(null);
 
   usePendingAssetRegistration(editorState.pendingAssetCount);
+  const { formRef, requestFailureNavigation } =
+    useAdminFormFailureNavigation();
 
   const mutationControllerRef = useRef<AbortController | null>(null);
   const operationGenerationRef = useRef<OperationGeneration | null>(null);
@@ -154,7 +156,6 @@ export function BlogFormPage({ onNavigate, route }: BlogFormPageProps) {
     setGlobalError(undefined);
     setCleanupWarning(undefined);
     setContentSchemaError(undefined);
-    setSuccessMessage(undefined);
     setDetailState("ready");
   }, [
     invalidateFormLoads,
@@ -180,7 +181,6 @@ export function BlogFormPage({ onNavigate, route }: BlogFormPageProps) {
     setCleanupWarning(undefined);
     setContentSchemaError(undefined);
     setFieldErrors({});
-    setSuccessMessage(undefined);
 
     void (async () => {
       let result: Awaited<ReturnType<typeof getBlogPostBySlug>>;
@@ -307,6 +307,7 @@ export function BlogFormPage({ onNavigate, route }: BlogFormPageProps) {
     setFieldErrors(parsed.ok ? {} : parsed.fields);
     if (!parsed.ok) {
       setGlobalError(parsed.message);
+      requestFailureNavigation();
       return;
     }
 
@@ -318,6 +319,7 @@ export function BlogFormPage({ onNavigate, route }: BlogFormPageProps) {
     if (imageIssue) {
       setFieldErrors((current) => ({ ...current, content: imageIssue }));
       setGlobalError("본문 이미지를 확인해 주세요.");
+      requestFailureNavigation();
       return;
     }
 
@@ -334,12 +336,14 @@ export function BlogFormPage({ onNavigate, route }: BlogFormPageProps) {
         thumbnail: normalizedThumbnail.error.message,
       }));
       setGlobalError("썸네일 이미지를 자동 조정하지 못했습니다.");
+      requestFailureNavigation();
       return;
     }
 
     const existingPost = editingPost;
     if (!isNewRoute && !existingPost) {
       setGlobalError("저장할 Blog 글을 먼저 불러와야 합니다.");
+      requestFailureNavigation();
       return;
     }
 
@@ -359,7 +363,6 @@ export function BlogFormPage({ onNavigate, route }: BlogFormPageProps) {
     setIsSaving(true);
     setGlobalError(undefined);
     setCleanupWarning(undefined);
-    setSuccessMessage(undefined);
 
     const outcome = await persistThumbnailChange({
       config: supabaseConfig,
@@ -409,6 +412,7 @@ export function BlogFormPage({ onNavigate, route }: BlogFormPageProps) {
       setFieldErrors((current) => ({ ...current, ...nextError.fields }));
       setGlobalError(nextError.message);
       setIsSaving(false);
+      requestFailureNavigation();
       return;
     }
 
@@ -422,6 +426,7 @@ export function BlogFormPage({ onNavigate, route }: BlogFormPageProps) {
         setContentSchemaError(error.message);
         setGlobalError(error.message);
         setIsSaving(false);
+        requestFailureNavigation();
         return;
       }
       throw error;
@@ -432,21 +437,8 @@ export function BlogFormPage({ onNavigate, route }: BlogFormPageProps) {
     setEditingPost(outcome.result.value);
     thumbnail.reset(outcome.result.value.thumbnail_public_url);
     setFieldErrors({});
-    setSuccessMessage(
-      existingPost === null
-        ? "Blog 글을 등록했습니다."
-        : "Blog 글을 저장했습니다.",
-    );
     setIsSaving(false);
-
-    if (
-      (route.id !== "blogDetail" ||
-        route.param !== outcome.result.value.slug) &&
-      operationIsCurrent(operation) &&
-      formOwner.ownerIsCurrent(owner)
-    ) {
-      onNavigate(`/blog/${outcome.result.value.slug}`);
-    }
+    onNavigate("/blog");
   };
 
   const deletePost = async () => {
@@ -503,6 +495,7 @@ export function BlogFormPage({ onNavigate, route }: BlogFormPageProps) {
     <section
       aria-labelledby="blog-form-title"
       className={styles.blogFormSection}
+      ref={formRef}
     >
       <div
         aria-busy={isSaving || isDeleting || detailState === "loading"}
@@ -520,9 +513,6 @@ export function BlogFormPage({ onNavigate, route }: BlogFormPageProps) {
               <p className={styles.cleanupWarning} role="status">
                 {cleanupWarning}
               </p>
-            ) : null}
-            {successMessage ? (
-              <BlogMessage message={successMessage} tone="success" />
             ) : null}
             {detailState === "loading" ? (
               <BlogMessage

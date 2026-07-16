@@ -385,10 +385,26 @@
   .appBuildFlow {
     grid-template-columns: 1fr;
     align-items: stretch;
+    gap: 8px;
+  }
+
+  .appBuildCard {
+    padding: 16px 20px;
   }
 
   .appBuildArrow {
-    display: none;
+    justify-self: center;
+    transform: rotate(90deg);
+  }
+
+  .appBuildStoreStack {
+    flex-direction: row;
+    gap: 8px;
+  }
+
+  .appBuildStoreStack .appBuildCard {
+    flex: 1 1 0;
+    min-width: 0;
   }
 
   .appNativeFeatureGrid {
@@ -408,11 +424,6 @@
   }
 }
 
-@media (max-width: 640px) {
-  .appBuildCard {
-    padding: 20px;
-  }
-}
 
 @media (max-width: 639px) {
   .appScopeCard {
@@ -441,5 +452,15 @@
 @media (max-width: 480px) {
   .appAdvantageCard {
     flex-direction: column;
+  }
+
+  .appBuildStoreStack {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .appBuildStoreStack .appBuildCard {
+    flex: initial;
+    min-width: 0;
   }
 }

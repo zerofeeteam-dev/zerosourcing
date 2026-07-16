@@ -3,6 +3,7 @@
 import type { CSSProperties, ReactNode } from "react";
 import { Button, type ButtonColor } from "@repo/ui/button";
 
+import { BannerEyebrowChip } from "./BannerEyebrowChip";
 import { Icon } from "./Icon";
 import { type CtaAction, emitCtaClick } from "./cta-events";
 import styles from "./BottomCtaBanner.module.css";
@@ -46,8 +47,8 @@ export function BottomCtaBanner({
       <div className={styles.content}>
         <div className={styles.copy}>
           {eyebrow ? (
-            <div className={styles.eyebrowChip}>
-              <p className={styles.eyebrow}>{eyebrow}</p>
+            <div className={styles.eyebrow}>
+              <BannerEyebrowChip>{eyebrow}</BannerEyebrowChip>
             </div>
           ) : null}
           <div className={styles.text}>

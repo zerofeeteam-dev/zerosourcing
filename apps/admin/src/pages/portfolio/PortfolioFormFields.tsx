@@ -354,7 +354,15 @@ export function PortfolioFormFields({
         />
       </div>
 
-      <div className={styles.portfolioContentField}>
+      <div
+        aria-describedby={
+          fieldErrors.content ? "portfolio-content-error" : undefined
+        }
+        aria-invalid={fieldErrors.content ? true : undefined}
+        className={styles.portfolioContentField}
+        role="group"
+        tabIndex={fieldErrors.content ? -1 : undefined}
+      >
         <AdminContentEditor
           disabled={isDisabled}
           documentKey={documentKey}
@@ -366,7 +374,11 @@ export function PortfolioFormFields({
           value={form}
         />
         {fieldErrors.content ? (
-          <p className={styles.portfolioFieldError} role="alert">
+          <p
+            className={styles.portfolioFieldError}
+            id="portfolio-content-error"
+            role="alert"
+          >
             {fieldErrors.content}
           </p>
         ) : null}

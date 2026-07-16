@@ -17,7 +17,13 @@ const metrics = [
   { label: "평균 MVP 출시 기간", value: "4주", note: "기능 규모에 따라 변동" },
 ] as const;
 
-const categories = ["전체", "MVP", "어플리케이션", "기업 홈페이지"] as const;
+const categories = [
+  "전체",
+  "MVP",
+  "어플리케이션",
+  "웹서비스",
+  "기업 홈페이지",
+] as const;
 type Category = (typeof categories)[number];
 
 type PortfolioListClientProps = {
@@ -89,7 +95,6 @@ export function PortfolioListClient({
                   sizes="(max-width: 1023px) calc(100vw - 40px), 520px"
                   url={featured.thumbnailUrl}
                 />
-                <span className={styles.logoPill}>zeroSourcing</span>
               </div>
               <div className={styles.featuredBody}>
                 <div className={styles.featuredCategory}>

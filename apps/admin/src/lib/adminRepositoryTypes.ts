@@ -29,6 +29,7 @@ export const portfolioTypes = [
   "application",
   "company_homepage",
   "mvp",
+  "web_service",
 ] as const;
 export type PortfolioType = (typeof portfolioTypes)[number];
 

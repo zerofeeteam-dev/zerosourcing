@@ -126,24 +126,9 @@
 .thumbnail {
   position: relative;
   width: 100%;
-  max-height: 320px;
-  aspect-ratio: 520 / 320;
+  aspect-ratio: 3 / 2;
   border-radius: 16px;
   background: var(--color-gray-100);
-}
-
-.logoPill {
-  composes: pretendard-bold-10-tight from global;
-  position: absolute;
-  top: 12px;
-  left: 10px;
-  height: 32px;
-  padding: 0 12px;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.7);
-  color: var(--color-gray-800);
-  display: inline-flex;
-  align-items: center;
 }
 
 .featuredBody {
@@ -295,7 +280,7 @@
 
 .cardThumbnail {
   width: 100%;
-  aspect-ratio: 346 / 212;
+  aspect-ratio: 3 / 2;
   border-radius: 16px;
   background: var(--color-gray-100);
 }
@@ -337,10 +322,6 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 32px 8px;
   }
-
-  .cardThumbnail {
-    aspect-ratio: 341 / 212;
-  }
 }
 
 @media (max-width: 1023px) {
@@ -377,20 +358,11 @@
   .featured {
     grid-template-columns: 1fr;
   }
-
-  .thumbnail {
-    aspect-ratio: 560 / 320;
-  }
-
-  .cardThumbnail {
-    aspect-ratio: auto;
-    height: 184px;
-  }
 }
 
 .featured .tagList {
   column-gap: 12px;
-  row-gap: 8px;
+  row-gap: 4px;
 }
 
 @media (max-width: 480px) {
@@ -410,11 +382,6 @@
 
   .metricDivider {
     flex: 0 0 auto;
-  }
-
-  .thumbnail {
-    aspect-ratio: auto;
-    height: 240px;
   }
 
   .featuredDescription {
@@ -451,9 +418,5 @@
 
   .card:nth-child(2n):not(:last-child) {
     margin-bottom: 24px;
-  }
-
-  .cardThumbnail {
-    height: 220px;
   }
 }

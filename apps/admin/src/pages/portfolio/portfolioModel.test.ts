@@ -171,6 +171,11 @@ test("empty-form factories allocate stable, record-specific asset scopes", () =>
   assert.equal(rebuilt.input.contentAssetScope, first.contentAssetScope);
 });
 
+test("portfolio type labels include web service", () => {
+  assert.equal(portfolioModel.portfolioTypeLabel("web_service"), "Web Service");
+  assert.equal(portfolioModel.parsePortfolioType("web_service"), "web_service");
+});
+
 test("portfolioFormFromRow preserves estimate labels as entered", () => {
   assert.equal(
     portfolioModel.portfolioFormFromRow(

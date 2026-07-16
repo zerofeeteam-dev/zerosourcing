@@ -9,7 +9,12 @@ import type {
   PortfolioType,
 } from "./types";
 
-const portfolioTypes = ["application", "company_homepage", "mvp"] as const;
+const portfolioTypes = [
+  "application",
+  "company_homepage",
+  "mvp",
+  "web_service",
+] as const;
 const blogTypes = [
   "application",
   "company_homepage",
@@ -217,6 +222,7 @@ function slugField(
 function portfolioCategory(type: PortfolioType): string {
   if (type === "company_homepage") return "기업 홈페이지";
   if (type === "application") return "어플리케이션";
+  if (type === "web_service") return "웹서비스";
   return "MVP";
 }
 

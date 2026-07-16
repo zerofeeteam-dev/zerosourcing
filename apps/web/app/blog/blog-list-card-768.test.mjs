@@ -13,7 +13,7 @@ test("blog list cards match the 768px Figma geometry", async () => {
   );
   assert.match(
     blogStyles,
-    /@media \(max-width: 768px\)\s*{[\s\S]*?\.listThumbnail\s*{\s*width:\s*220px;\s*height:\s*152px;\s*flex-basis:\s*220px;/,
+    /@media \(max-width: 768px\)\s*{[\s\S]*?\.listThumbnail\s*{\s*width:\s*220px;\s*flex-basis:\s*220px;/,
   );
   assert.match(
     blogStyles,

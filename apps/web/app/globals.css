@@ -29,3 +29,9 @@ body {
 p {
   margin: 0;
 }
+
+@media (max-width: 640px) {
+  body:has([data-bottom-floating-cta="visible"]) {
+    padding-bottom: calc(104px + env(safe-area-inset-bottom, 0px));
+  }
+}

@@ -2,11 +2,13 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-const componentPath = new URL("./VideoBanner.tsx", import.meta.url);
-const stylesPath = new URL("./VideoBanner.module.css", import.meta.url);
+const bottomCtaBannerPath = new URL("./BottomCtaBanner.tsx", import.meta.url);
+const componentPath = new URL("./BannerEyebrowChip.tsx", import.meta.url);
 const packagePath = new URL("../package.json", import.meta.url);
+const stylesPath = new URL("./BannerEyebrowChip.module.css", import.meta.url);
+const videoBannerPath = new URL("./VideoBanner.tsx", import.meta.url);
 
-test("VideoBanner eyebrow uses the liquid-glass library", async () => {
+test("BannerEyebrowChip uses the liquid-glass library", async () => {
   const [component, styles, packageSource] = await Promise.all([
     readFile(componentPath, "utf8"),
     readFile(stylesPath, "utf8"),
@@ -14,7 +16,7 @@ test("VideoBanner eyebrow uses the liquid-glass library", async () => {
   ]);
   const packageJson = JSON.parse(packageSource);
   const chip = component.match(/<LiquidGlass[\s\S]*?<\/LiquidGlass>/u)?.[0];
-  const eyebrowRule = styles.match(/\.eyebrow\s*\{([\s\S]*?)\}/u)?.[1];
+  const textRule = styles.match(/\.text\s*\{([\s\S]*?)\}/u)?.[1];
 
   assert.equal(packageJson.dependencies["simple-liquid-glass"], "4.1.0");
   assert.match(
@@ -47,10 +49,10 @@ test("VideoBanner eyebrow uses the liquid-glass library", async () => {
 
   assert.match(
     chip,
-    /<p className=\{styles\.eyebrow\}>\{eyebrow\}<\/p>/u,
+    /<p className=\{styles\.text\}>\{children\}<\/p>/u,
   );
-  assert.match(chip, /style=\{eyebrowChipStyle\}/u);
-  assert.ok(eyebrowRule, "Eyebrow text rule is missing");
+  assert.match(chip, /style=\{chipStyle\}/u);
+  assert.ok(textRule, "Eyebrow text rule is missing");
   for (const expected of [
     /width:\s*100%;/u,
     /height:\s*100%;/u,
@@ -59,7 +61,7 @@ test("VideoBanner eyebrow uses the liquid-glass library", async () => {
     /justify-content:\s*center;/u,
     /text-align:\s*center;/u,
   ]) {
-    assert.match(eyebrowRule, expected);
+    assert.match(textRule, expected);
   }
   assert.doesNotMatch(
     chip,
@@ -67,6 +69,24 @@ test("VideoBanner eyebrow uses the liquid-glass library", async () => {
   );
   assert.doesNotMatch(
     styles,
-    /\.eyebrowChip::before|backdrop-filter|background-image/u,
+    /\.chip::before|backdrop-filter|background-image/u,
+  );
+});
+
+test("hero and bottom banners share the liquid-glass eyebrow chip", async () => {
+  const [bottomCtaBanner, videoBanner] = await Promise.all([
+    readFile(bottomCtaBannerPath, "utf8"),
+    readFile(videoBannerPath, "utf8"),
+  ]);
+
+  assert.match(bottomCtaBanner, /import \{ BannerEyebrowChip \} from "\.\/BannerEyebrowChip";/u);
+  assert.match(
+    bottomCtaBanner,
+    /<BannerEyebrowChip>\{eyebrow\}<\/BannerEyebrowChip>/u,
+  );
+  assert.match(videoBanner, /import \{ BannerEyebrowChip \} from "\.\/BannerEyebrowChip";/u);
+  assert.match(
+    videoBanner,
+    /<BannerEyebrowChip>\{eyebrow\}<\/BannerEyebrowChip>/u,
   );
 });

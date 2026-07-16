@@ -13,7 +13,12 @@ const portfolioColumns = [
   "service_published",
 ];
 const blogColumns = ["slug", "landing_published", "banner_published"];
-const portfolioTypes = new Set(["application", "company_homepage", "mvp"]);
+const portfolioTypes = new Set([
+  "application",
+  "company_homepage",
+  "mvp",
+  "web_service",
+]);
 const publicSlugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/u;
 const absoluteHttpUrlPattern =
   /^([a-z][a-z0-9+.-]*):\/\/([^/?#]*)([^?#]*)(?:\?[^#]*)?(?:#.*)?$/iu;

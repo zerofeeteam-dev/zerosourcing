@@ -191,6 +191,10 @@ describe("PortfolioFormPage", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    Object.defineProperty(HTMLElement.prototype, "scrollIntoView", {
+      configurable: true,
+      value: vi.fn(),
+    });
     Object.defineProperty(URL, "createObjectURL", {
       configurable: true,
       value: vi.fn(() => "blob:portfolio-thumbnail"),
@@ -216,6 +220,40 @@ describe("PortfolioFormPage", () => {
     expect(screen.getAllByText("0개 등록됨")).toHaveLength(2);
     expect(screen.queryByText("6개 등록됨")).toBeNull();
     expect(screen.queryByText("3개 등록됨")).toBeNull();
+  });
+
+  it("scrolls to and focuses the first invalid field after validation fails", async () => {
+    const user = userEvent.setup();
+    const onNavigate = vi.fn();
+
+    render(
+      <Page
+        onNavigate={onNavigate}
+        route={{
+          id: "portfolioNew",
+          path: "/portfolio/new",
+          protected: true,
+        }}
+      />,
+    );
+
+    await user.click(
+      screen.getByRole("button", { name: "portfolio editor ready" }),
+    );
+    await user.click(screen.getByRole("button", { name: "등록하기" }));
+
+    const firstInvalidField = screen.getByRole("combobox", {
+      name: "포트폴리오 유형",
+    });
+    await waitFor(() =>
+      expect(document.activeElement).toBe(firstInvalidField),
+    );
+    expect(HTMLElement.prototype.scrollIntoView).toHaveBeenCalledWith({
+      behavior: "smooth",
+      block: "center",
+    });
+    expect(mocks.persistThumbnailChange).not.toHaveBeenCalled();
+    expect(onNavigate).not.toHaveBeenCalled();
   });
 
   it("navigates to the list only after permanently deleting the loaded Portfolio and its Storage files", async () => {
@@ -307,7 +345,7 @@ describe("PortfolioFormPage", () => {
     expect(onNavigate).not.toHaveBeenCalled();
   });
 
-  it("uses the shared editor and thumbnail transaction without remounting after save", async () => {
+  it("uses the shared editor and thumbnail transaction before navigating to the list", async () => {
     const user = userEvent.setup();
     const onNavigate = vi.fn();
     mocks.createPortfolio.mockImplementation(
@@ -391,7 +429,7 @@ describe("PortfolioFormPage", () => {
       .getAttribute("data-document-key");
     await user.click(screen.getByRole("button", { name: "등록하기" }));
     await waitFor(() =>
-      expect(onNavigate).toHaveBeenCalledWith("/portfolio/managed-portfolio"),
+      expect(onNavigate).toHaveBeenCalledWith("/portfolio"),
     );
 
     const persistenceInput = mocks.persistThumbnailChange.mock.calls[0]?.[0];
@@ -774,9 +812,7 @@ describe("PortfolioFormPage", () => {
       expect(mocks.persistThumbnailChange).toHaveBeenCalledTimes(2),
     );
     await waitFor(() => expect(mocks.updatePortfolio).toHaveBeenCalledTimes(1));
-    await waitFor(() =>
-      expect(screen.getByText("Portfolio를 저장했습니다.")).toBeTruthy(),
-    );
+    await waitFor(() => expect(onNavigate).toHaveBeenCalledWith("/portfolio"));
     expect((companyName as HTMLInputElement).value).toBe("Portfolio A edited");
 
     const staleAdapterResult = await firstPersistenceInput?.save({
@@ -805,7 +841,8 @@ describe("PortfolioFormPage", () => {
 
     expect((companyName as HTMLInputElement).value).toBe("Portfolio A edited");
     expect(mocks.updatePortfolio).toHaveBeenCalledTimes(1);
-    expect(onNavigate).not.toHaveBeenCalled();
+    expect(onNavigate).toHaveBeenCalledTimes(1);
+    expect(onNavigate).not.toHaveBeenCalledWith("/portfolio/stale-portfolio");
     expect(screen.queryByText("stale save")).toBeNull();
   });
 });

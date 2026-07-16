@@ -14,12 +14,22 @@ function firstRule(css, selector) {
   return match[1];
 }
 
+function pseudoRule(css, selector) {
+  const match = css.match(
+    new RegExp("\\." + selector + "::before\\s*\\{([\\s\\S]*?)\\n\\}", "u"),
+  );
+
+  assert.ok(match, "Missing ." + selector + "::before rule");
+  return match[1];
+}
+
 test("Header uses Figma's non-liquid-glass surface", async () => {
   const [header, styles] = await Promise.all([
     readFile(headerPath, "utf8"),
     readFile(stylesPath, "utf8"),
   ]);
   const headerRule = firstRule(styles, "header");
+  const headerSurfaceRule = pseudoRule(styles, "header");
   const leftRule = firstRule(styles, "left");
 
   assert.match(
@@ -32,12 +42,48 @@ test("Header uses Figma's non-liquid-glass surface", async () => {
   );
   assert.doesNotMatch(headerRule, /\bborder:/u);
   assert.match(headerRule, /border-radius: 40px;/u);
-  assert.match(headerRule, /background-color: rgb\(255 255 255 \/ 4%\);/u);
-  assert.match(headerRule, /-webkit-backdrop-filter: blur\(10px\);/u);
-  assert.match(headerRule, /backdrop-filter: blur\(10px\);/u);
   assert.doesNotMatch(
     headerRule,
+    /background-color:|backdrop-filter:|-webkit-backdrop-filter:/u,
+  );
+  assert.match(
+    headerSurfaceRule,
+    /background-color: rgb\(255 255 255 \/ 4%\);/u,
+  );
+  assert.match(headerSurfaceRule, /-webkit-backdrop-filter: blur\(10px\);/u);
+  assert.match(headerSurfaceRule, /backdrop-filter: blur\(10px\);/u);
+  assert.doesNotMatch(
+    headerSurfaceRule,
     /box-shadow:|color-mix|saturate|url\(|--c-glass|--glass-reflex/u,
   );
   assert.match(leftRule, /gap: 32px;/u);
+});
+
+test("Service dropdown uses Figma frosted surface", async () => {
+  const [header, styles] = await Promise.all([
+    readFile(headerPath, "utf8"),
+    readFile(stylesPath, "utf8"),
+  ]);
+  const dropdownRule = firstRule(styles, "serviceDropdown");
+  const dropdownSurfaceRule = firstRule(styles, "serviceDropdownSurface");
+
+  assert.match(
+    header,
+    /className=\{styles\.serviceDropdownSurface\}/u,
+  );
+  assert.doesNotMatch(
+    dropdownRule,
+    /background-color:|backdrop-filter:|-webkit-backdrop-filter:/u,
+  );
+  assert.match(
+    dropdownSurfaceRule,
+    /background-color: rgb\(255 255 255 \/ 10%\);/u,
+  );
+  assert.match(dropdownSurfaceRule, /-webkit-backdrop-filter: blur\(10px\);/u);
+  assert.match(dropdownSurfaceRule, /backdrop-filter: blur\(10px\);/u);
+  assert.doesNotMatch(dropdownSurfaceRule, /background:\s*#ffffff/u);
+  assert.doesNotMatch(
+    dropdownSurfaceRule,
+    /box-shadow:|color-mix|saturate|url\(|--c-glass|--glass-reflex/u,
+  );
 });

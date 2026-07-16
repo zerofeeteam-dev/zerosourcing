@@ -2,8 +2,8 @@
 
 import type { CSSProperties, ReactNode } from "react";
 import { Button, type ButtonColor } from "@repo/ui/button";
-import dynamic from "next/dynamic";
 
+import { BannerEyebrowChip } from "./BannerEyebrowChip";
 import { Icon } from "./Icon";
 import { type CtaAction, emitCtaClick } from "./cta-events";
 import styles from "./VideoBanner.module.css";
@@ -36,19 +36,10 @@ type VideoBannerProps = {
   title: ReactNode;
 };
 
-const LiquidGlass = dynamic(
-  () =>
-    import("simple-liquid-glass").then((module) => module.LiquidGlass),
-  { ssr: false },
-);
 const bannerVideoSrc = "/banner_video.mp4";
 const actionButtonStyle = {
   borderRadius: 32,
   padding: "8px 20px",
-} satisfies CSSProperties;
-const eyebrowChipStyle = {
-  height: 40,
-  width: "max-content",
 } satisfies CSSProperties;
 
 export function VideoBanner({
@@ -75,27 +66,7 @@ export function VideoBanner({
         className={`${styles.content} ${styles[align]} ${styles[`content-${actionsPosition}`]}`}
       >
         <div className={styles.copy}>
-          {eyebrow ? (
-            <LiquidGlass
-              aberrationIntensity={2}
-              autoTextColor
-              blur={3}
-              borderColor="rgb(255, 255, 255)"
-              className={styles.eyebrowChip}
-              displace={1.2}
-              dispersion={110}
-              forceTextColor
-              frost={0.25}
-              mode="custom"
-              quality="high"
-              radius={32}
-              saturation={180}
-              scale={200}
-              style={eyebrowChipStyle}
-            >
-              <p className={styles.eyebrow}>{eyebrow}</p>
-            </LiquidGlass>
-          ) : null}
+          {eyebrow ? <BannerEyebrowChip>{eyebrow}</BannerEyebrowChip> : null}
           <div className={styles.text}>
             <h1 className={styles.title}>{title}</h1>
             {description ? (

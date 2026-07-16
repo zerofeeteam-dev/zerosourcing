@@ -95,4 +95,16 @@ test("the inlined app sections preserve approved visual rules", async () => {
     styles,
     /@media \(max-width:\s*900px\)[\s\S]*?\.appNativeFeatureCard\s*\{[\s\S]*?gap:\s*8px;/,
   );
+  assert.doesNotMatch(
+    styles,
+    /@media \(max-width:\s*900px\)[\s\S]*?\.appBuildArrow\s*\{[\s\S]*?display:\s*none;/,
+  );
+  assert.match(
+    styles,
+    /@media \(max-width:\s*900px\)[\s\S]*?\.appBuildStoreStack\s*\{[\s\S]*?flex-direction:\s*row;/,
+  );
+  assert.match(
+    styles,
+    /@media \(max-width:\s*480px\)[\s\S]*?\.appBuildStoreStack\s*\{[\s\S]*?flex-direction:\s*column;/,
+  );
 });

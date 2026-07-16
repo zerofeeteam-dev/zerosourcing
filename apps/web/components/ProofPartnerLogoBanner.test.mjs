@@ -18,3 +18,12 @@ test("About uses the ProofPartnerLogoBanner compact 72px padding variant", async
   assert.match(component, /compact \? `\$\{styles\.root\} \$\{styles\.compact\}` : styles\.root/);
   assert.match(styles, /\.compact\s*{\s*padding:\s*72px 0;/);
 });
+
+test("ProofPartnerLogoBanner viewport bleeds edge-to-edge on mobile rolling mode", async () => {
+  const styles = await readFile(stylesPath, "utf8");
+
+  assert.match(
+    styles,
+    /@media \(max-width: 720px\)[\s\S]*?\.viewport\s*\{[\s\S]*?width:\s*100vw;[\s\S]*?margin-inline:\s*calc\(50% - 50vw\);/,
+  );
+});

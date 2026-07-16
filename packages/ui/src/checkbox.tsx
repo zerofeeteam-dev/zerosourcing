@@ -87,7 +87,7 @@ const actionTextStyle: CSSProperties = {
   textUnderlinePosition: "from-font",
 };
 
-function CheckIcon() {
+function CheckboxIcon({ fill }: { fill: string }) {
   return (
     <svg
       aria-hidden="true"
@@ -97,9 +97,10 @@ function CheckIcon() {
       width="24"
       xmlns="http://www.w3.org/2000/svg"
     >
+      <rect fill={fill} height="24" rx="8" width="24" />
       <path
-        d="M7 12.5L10.5 16L17 8.5"
-        stroke="currentColor"
+        d="M16 9L10.0337 15L8 12.9548"
+        stroke="white"
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="2"
@@ -136,13 +137,14 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
       onChange?.(event);
     };
 
-    const isDimmed = !disabled && !isChecked;
+    const iconFill = disabled
+      ? "var(--color-gray-200)"
+      : isChecked
+        ? "var(--color-brand-500)"
+        : "var(--color-gray-400)";
 
     return (
-      <div
-        className={className}
-        style={{ ...wrapStyle, opacity: isDimmed ? 0.4 : 1, ...style }}
-      >
+      <div className={className} style={{ ...wrapStyle, ...style }}>
         <label
           htmlFor={checkboxId}
           style={{
@@ -161,20 +163,14 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
             style={hiddenInputStyle}
             type="checkbox"
           />
-          <span
-            style={{
-              ...iconBoxStyle,
-              background: disabled ? "#d1d7e2" : "#0360ef",
-              color: "#ffffff",
-            }}
-          >
-            <CheckIcon />
+          <span style={iconBoxStyle}>
+            <CheckboxIcon fill={iconFill} />
           </span>
           {label ? (
             <span
               style={{
                 ...labelTextStyle,
-                color: disabled ? "#d1d7e2" : "#1b1f2a",
+                color: disabled ? "var(--color-gray-200)" : "var(--color-gray-800)",
               }}
             >
               {label}

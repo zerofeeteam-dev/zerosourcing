@@ -43,6 +43,7 @@ export const portfolioTypeOptions = [
   { label: "Application", value: "application" },
   { label: "Company Homepage", value: "company_homepage" },
   { label: "MVP", value: "mvp" },
+  { label: "Web Service", value: "web_service" },
 ] as const satisfies readonly AdminSelectOption[];
 
 export const statusFilterOptions = [
@@ -113,6 +114,8 @@ export function portfolioTypeLabel(type: PortfolioType): string {
       return "Company Homepage";
     case "mvp":
       return "MVP";
+    case "web_service":
+      return "Web Service";
   }
 }
 
@@ -124,6 +127,7 @@ export function parsePortfolioStatus(value: string): PortfolioStatus {
 export function parsePortfolioType(value: string): PortfolioType {
   if (value === "company_homepage") return "company_homepage";
   if (value === "mvp") return "mvp";
+  if (value === "web_service") return "web_service";
   return "application";
 }
 

@@ -67,7 +67,6 @@ test("FAQ content is managed as typed readonly route data", async () => {
 test("inlined FAQ navigation preserves sticky and click behavior", async () => {
   const page = await readFile(pagePath, "utf8");
 
-  assert.match(page, /const NAV_STICKY_TOP = 128;/);
   assert.match(page, /window\.setTimeout\(\(\) => \{[\s\S]*?\}, 140\);/);
   assert.match(
     page,
@@ -76,12 +75,11 @@ test("inlined FAQ navigation preserves sticky and click behavior", async () => {
   assert.match(page, /window\.removeEventListener\("scroll", handleScroll\);/);
   assert.match(
     page,
-    /window\.removeEventListener\("resize", readStickyMode\);/,
-  );
-  assert.match(
-    page,
     /window\.removeEventListener\("resize", readActiveSection\);/,
   );
+  assert.doesNotMatch(page, /stickyMode/);
+  assert.doesNotMatch(page, /readStickyMode/);
+  assert.doesNotMatch(page, /navPanelPinned/);
   assert.match(page, /clearIdleTimer\(\);/);
   assert.match(
     page,
@@ -121,7 +119,9 @@ test("FAQ DOM and approved visual values stay unchanged", async () => {
     styles,
     /\.layout\s*\{[\s\S]*?grid-template-columns:\s*320px minmax\(0, 1020px\);/,
   );
-  assert.match(styles, /\.navPanelPinned\s*\{[\s\S]*?top:\s*128px;/);
+  assert.match(styles, /\.navPanel\s*\{[\s\S]*?position:\s*sticky;[\s\S]*?top:\s*128px;/);
+  assert.doesNotMatch(styles, /\.navPanelPinned\b/);
+  assert.doesNotMatch(styles, /\.navPanelStopped\b/);
   assert.match(
     styles,
     /\.navItem,[\s\S]*?\.navItemActive\s*\{[\s\S]*?height:\s*52px;[\s\S]*?padding:\s*0 16px;[\s\S]*?border-radius:\s*16px;/,

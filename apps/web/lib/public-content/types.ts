@@ -3,7 +3,11 @@ import type {
   ContentOutputMode,
 } from "@repo/content/types";
 
-export type PortfolioType = "application" | "company_homepage" | "mvp";
+export type PortfolioType =
+  | "application"
+  | "company_homepage"
+  | "mvp"
+  | "web_service";
 
 export type BlogType = "application" | "company_homepage" | "insight" | "mvp";
 

@@ -10,6 +10,8 @@ import {
 
 import styles from "./CardCarousel.module.css";
 
+const itemsPerRow = 3;
+
 type CardCarouselProps = {
   /**
    * 캐러셀 모드에서 트랙을 컨테이너 밖으로 확장할 폭(px).
@@ -24,7 +26,7 @@ type CardCarouselProps = {
   className?: string;
   /** 한 줄 모드에서의 카드 간격(px). 기본 20px. */
   gap?: number;
-  /** 카드가 이 폭(px)을 유지할 수 없으면 캐러셀로 전환. 기본 330px. */
+  /** 세 카드가 각각 이 폭(px)을 유지할 수 없으면 캐러셀로 전환. 기본 330px. */
   minItemWidth?: number;
   /** 480px 이하 캐러셀 모드에서만 사용할 카드 폭(px). */
   mobileItemWidth?: number;
@@ -33,8 +35,8 @@ type CardCarouselProps = {
 };
 
 /**
- * 카드 리스트 레이아웃. 컨테이너가 모든 카드를 minItemWidth 이상으로
- * 담을 수 있으면 균등 분할 한 줄로, 부족하면 고정폭 스냅 캐러셀로 전환된다.
+ * 카드 리스트 레이아웃. 카드 수와 관계없이 세 칸을 기준으로 배치하고,
+ * 세 칸이 minItemWidth를 유지할 수 없으면 고정폭 스냅 캐러셀로 전환된다.
  * 카드 자체의 스타일은 children이 가져야 하며, 이 컴포넌트는 배치만 담당한다.
  */
 export function CardCarousel({
@@ -58,8 +60,12 @@ export function CardCarousel({
 
     const update = () => {
       const count = viewport.firstElementChild?.childElementCount ?? 0;
-      const required = count * minItemWidth + (count - 1) * gap;
-      setMode(viewport.clientWidth < required ? "carousel" : "row");
+      const required = itemsPerRow * minItemWidth + (itemsPerRow - 1) * gap;
+      setMode(
+        count > itemsPerRow || viewport.clientWidth < required
+          ? "carousel"
+          : "row",
+      );
     };
 
     update();
@@ -74,7 +80,9 @@ export function CardCarousel({
 
   return (
     <div
-      className={className ? `${styles.viewport} ${className}` : styles.viewport}
+      className={
+        className ? `${styles.viewport} ${className}` : styles.viewport
+      }
       data-mode={mode}
       data-snap-align={snapAlign}
       ref={viewportRef}

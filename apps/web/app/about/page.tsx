@@ -25,10 +25,10 @@ export const metadata = createPageMetadata({
   path: "/about",
 });
 
-const officeMapQuery = encodeURIComponent(aboutOffice.mapQuery);
+const officeMapCenter = encodeURIComponent(aboutOffice.mapCenter);
 const googleMapsEmbedKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY;
 const officeMapEmbedUrl = googleMapsEmbedKey
-  ? `https://www.google.com/maps/embed/v1/place?key=${googleMapsEmbedKey}&q=${officeMapQuery}&zoom=16&language=ko&region=kr`
+  ? `https://www.google.com/maps/embed/v1/place?key=${googleMapsEmbedKey}&q=${officeMapCenter}&zoom=16&language=ko&region=kr`
   : null;
 
 export default function AboutPage() {
@@ -203,24 +203,32 @@ export default function AboutPage() {
             ))}
           </dl>
           <div className={aboutStyles.mapCard}>
-            {officeMapEmbedUrl ? (
-              <iframe
-                allowFullScreen
-                aria-label="제로소싱 사무실 위치"
-                className={aboutStyles.mapFrame}
-                loading="lazy"
-                referrerPolicy="strict-origin-when-cross-origin"
-                src={officeMapEmbedUrl}
-                tabIndex={-1}
-              />
-            ) : (
-              <div
-                aria-label="제로소싱 사무실 위치"
-                className={`${aboutStyles.mapFrame} ${aboutStyles.mapLink}`}
-              >
-                Google Maps 연동 준비 중
+            <div className={aboutStyles.mapFrameWrap}>
+              {officeMapEmbedUrl ? (
+                <iframe
+                  allowFullScreen
+                  aria-label="제로소싱 사무실 위치"
+                  className={aboutStyles.mapFrame}
+                  loading="lazy"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  src={officeMapEmbedUrl}
+                  tabIndex={-1}
+                />
+              ) : (
+                <div
+                  aria-label="제로소싱 사무실 위치"
+                  className={`${aboutStyles.mapFrame} ${aboutStyles.mapLink}`}
+                >
+                  Google Maps 연동 준비 중
+                </div>
+              )}
+              <div aria-hidden="true" className={aboutStyles.mapBadge}>
+                <p className={aboutStyles.mapBadgeName}>{aboutOffice.name}</p>
+                <p className={aboutStyles.mapBadgeAddress}>
+                  {aboutOffice.address}
+                </p>
               </div>
-            )}
+            </div>
             <div className={aboutStyles.mapInfo}>
               <p className={aboutStyles.officeName}>{aboutOffice.name}</p>
               <p className={aboutStyles.officeAddress}>{aboutOffice.address}</p>

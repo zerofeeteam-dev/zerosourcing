@@ -92,6 +92,6 @@ export const aboutCompanyInfoRows = [
 export const aboutOffice = {
   address:
     "경기도 고양시 덕양구 동축로70, A동 9층 901호(동산동, 현대프리미어캠퍼스)",
-  mapQuery: "제로피 제로소싱 경기도 고양시 덕양구 동축로70 A동 9층 901호",
+  mapCenter: "37.646768,126.910328",
   name: "제로피(제로소싱)",
 } as const;

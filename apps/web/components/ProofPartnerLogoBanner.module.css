@@ -62,6 +62,12 @@
 }
 
 @media (max-width: 720px) {
+  /* SectionShell 등 부모 패딩과 무관하게 화면 좌우 끝까지 롤링 */
+  .viewport {
+    width: 100vw;
+    margin-inline: calc(50% - 50vw);
+  }
+
   .track {
     width: max-content;
     justify-content: flex-start;
