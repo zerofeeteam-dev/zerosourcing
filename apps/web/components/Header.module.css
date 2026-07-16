@@ -10,7 +10,7 @@
   height: 80px;
   margin: 0 auto;
   padding: 0 20px 0 40px;
-  border: 1px solid var(--color-gray-100);
+  border: 1px solid rgb(27 31 42 / 4%);
   border-radius: 40px;
 }
 
@@ -122,9 +122,9 @@
   display: flex;
   flex-direction: column;
   padding: 8px;
-  border: 1px solid var(--color-gray-100);
+  border: 1px solid rgb(27 31 42 / 4%);
   border-radius: 16px;
-  background-color: rgb(255 255 255 / 10%);
+  background-color: rgb(255 255 255 / 20%);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
 }

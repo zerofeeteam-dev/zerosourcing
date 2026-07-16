@@ -40,7 +40,7 @@ test("Header uses Figma's non-liquid-glass surface", async () => {
     header,
     /useLayoutEffect|useRef|GlassSurface|ensureLiquidGlassFilter|supportsGlassRefraction|glassFilter|liquidGlassFilter/u,
   );
-  assert.match(headerRule, /border: 1px solid var\(--color-gray-100\);/u);
+  assert.match(headerRule, /border: 1px solid rgb\(27 31 42 \/ 4%\);/u);
   assert.match(headerRule, /border-radius: 40px;/u);
   assert.doesNotMatch(
     headerRule,
@@ -77,9 +77,9 @@ test("Service dropdown uses Figma frosted surface", async () => {
   );
   assert.match(
     dropdownSurfaceRule,
-    /background-color: rgb\(255 255 255 \/ 10%\);/u,
+    /background-color: rgb\(255 255 255 \/ 20%\);/u,
   );
-  assert.match(dropdownSurfaceRule, /border: 1px solid var\(--color-gray-100\);/u);
+  assert.match(dropdownSurfaceRule, /border: 1px solid rgb\(27 31 42 \/ 4%\);/u);
   assert.match(dropdownSurfaceRule, /-webkit-backdrop-filter: blur\(10px\);/u);
   assert.match(dropdownSurfaceRule, /backdrop-filter: blur\(10px\);/u);
   assert.doesNotMatch(dropdownSurfaceRule, /background:\s*#ffffff/u);
