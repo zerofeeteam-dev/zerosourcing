@@ -38,7 +38,7 @@
 
 .thumbnail {
   width: 100%;
-  aspect-ratio: 3 / 2;
+  height: 240px;
   border-radius: 16px;
   background: var(--color-gray-100);
 }

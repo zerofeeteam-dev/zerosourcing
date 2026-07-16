@@ -4,7 +4,7 @@ import test from "node:test";
 
 const blogStylesPath = new URL("./blog.module.css", import.meta.url);
 
-test("blog list cards keep their 3:2 thumbnail frame at 768px", async () => {
+test("blog list cards match the 768px Figma geometry", async () => {
   const blogStyles = await readFile(blogStylesPath, "utf8");
 
   assert.match(
@@ -13,11 +13,7 @@ test("blog list cards keep their 3:2 thumbnail frame at 768px", async () => {
   );
   assert.match(
     blogStyles,
-    /@media \(max-width: 768px\)\s*{[\s\S]*?\.listThumbnail\s*{\s*width:\s*220px;\s*flex-basis:\s*220px;/,
-  );
-  assert.match(
-    blogStyles,
-    /\.listThumbnail\s*\{[\s\S]*?aspect-ratio:\s*3\s*\/\s*2;/,
+    /@media \(max-width: 768px\)\s*{[\s\S]*?\.listThumbnail\s*{\s*width:\s*220px;\s*height:\s*152px;\s*flex-basis:\s*220px;/,
   );
   assert.match(
     blogStyles,

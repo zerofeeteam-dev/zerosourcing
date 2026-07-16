@@ -528,7 +528,7 @@
 
 .portfolioThumbnail {
   width: 100%;
-  aspect-ratio: 3 / 2;
+  aspect-ratio: 325 / 200;
   border-radius: 16px;
   background: var(--color-gray-100);
 }
@@ -625,6 +625,11 @@
     width: 100%;
   }
 
+  .portfolioThumbnail {
+    height: 164px;
+    aspect-ratio: auto;
+  }
+
   .column {
     flex: 1 1 0;
   }
@@ -646,6 +651,10 @@
 
   .columnOffset {
     display: none;
+  }
+
+  .portfolioThumbnail {
+    height: 220px;
   }
 }
 
@@ -671,7 +680,7 @@
 
 .insightThumbnail {
   width: 100%;
-  aspect-ratio: 3 / 2;
+  height: 240px;
   border-radius: 16px;
   background: var(--color-gray-100);
 }
@@ -725,6 +734,12 @@
   composes: pretendard-medium-12 from global;
   width: 100%;
   color: var(--color-gray-600);
+}
+
+@media (max-width: 640px) {
+  .insightThumbnail {
+    height: 200px;
+  }
 }
 
 .root {

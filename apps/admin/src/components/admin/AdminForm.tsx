@@ -1,5 +1,6 @@
 import type {
   InputHTMLAttributes,
+  MouseEventHandler,
   ReactNode,
   SelectHTMLAttributes,
   TextareaHTMLAttributes,
@@ -29,6 +30,7 @@ type AdminFieldRowProps = {
   readonly errorMessage?: string;
   readonly htmlFor: string;
   readonly label: string;
+  readonly labelActivatesControl?: boolean;
   readonly labelHidden?: boolean;
   readonly layout?: "inline" | "stacked";
   readonly size?: "default" | "large";
@@ -123,6 +125,10 @@ function errorId(id: string): string {
   return `${id}-error`;
 }
 
+function labelId(id: string): string {
+  return `${id}-label`;
+}
+
 function describedBy(
   id: string,
   description: string | undefined,
@@ -158,6 +164,7 @@ export function AdminFieldRow({
   errorMessage,
   htmlFor,
   label,
+  labelActivatesControl = true,
   labelHidden = false,
   layout = "inline",
   size = "default",
@@ -176,7 +183,8 @@ export function AdminFieldRow({
             styles.label,
             size === "large" ? styles.labelLarge : undefined,
           )}
-          htmlFor={htmlFor}
+          htmlFor={labelActivatesControl ? htmlFor : undefined}
+          id={labelActivatesControl ? undefined : labelId(htmlFor)}
         >
           {label}
         </label>
@@ -364,6 +372,7 @@ export function AdminDateField({
   errorMessage,
   id,
   label,
+  onClick,
   placeholder,
   value,
   ...props
@@ -372,12 +381,23 @@ export function AdminDateField({
     typeof value === "string" && value.length > 0
       ? value.split("-").join(". ")
       : placeholder;
+  const handleClick: MouseEventHandler<HTMLInputElement> = (event) => {
+    onClick?.(event);
+    if (event.defaultPrevented || event.currentTarget.disabled) return;
+
+    try {
+      event.currentTarget.showPicker?.();
+    } catch {
+      event.currentTarget.focus();
+    }
+  };
 
   return (
     <AdminFieldRow
       errorMessage={errorMessage}
       htmlFor={id}
       label={label}
+      labelActivatesControl={false}
       layout="stacked"
       size="large"
     >
@@ -392,8 +412,10 @@ export function AdminDateField({
           {...props}
           aria-describedby={errorMessage ? errorId(id) : undefined}
           aria-invalid={errorMessage ? true : undefined}
+          aria-labelledby={labelId(id)}
           className={styles.dateInput}
           id={id}
+          onClick={handleClick}
           type="date"
           value={value}
         />

@@ -9,6 +9,7 @@ export default defineConfig({
   },
   test: {
     include: [
+      "src/components/admin/AdminForm.test.tsx",
       "src/components/content/**/*.test.ts",
       "src/components/content/**/*.test.tsx",
       "src/lib/adminValidation.test.ts",

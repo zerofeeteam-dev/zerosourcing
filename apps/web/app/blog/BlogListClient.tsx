@@ -197,6 +197,8 @@ export function BlogListClient({ featured, items, top }: BlogListClientProps) {
                 ) : null}
               </div>
             </section>
+
+            <aside className={styles.stickyColumn} aria-hidden="true" />
           </div>
         </div>
       </section>

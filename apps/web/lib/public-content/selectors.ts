@@ -49,7 +49,7 @@ export function selectBlogIndex<
   const remaining = withoutIndex(rows, featuredIndex);
   return {
     featured: featuredIndex >= 0 ? (rows[featuredIndex] ?? null) : null,
-    list: remaining,
+    list: remaining.slice(3),
     top: remaining.slice(0, 3),
   };
 }

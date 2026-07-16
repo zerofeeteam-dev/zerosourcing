@@ -402,13 +402,10 @@ function VisualTest() {
       >
         <WriteProtectedVisualBoundary>
           <BlogFormFields
-            banner={{ removed: false }}
             documentKey={visualTestConfig.documentKey}
             fieldErrors={{}}
             form={form}
             isDisabled={false}
-            onBannerChange={() => undefined}
-            onBannerRemove={() => undefined}
             onContentBusyChange={() => undefined}
             onContentChange={(value) =>
               setForm((current) => ({ ...current, ...value }))

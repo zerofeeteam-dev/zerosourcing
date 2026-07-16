@@ -259,11 +259,11 @@ test("merged home styles preserve collision ownership and visual values", async 
     styles,
     /@media \(max-width:\s*768px\)[\s\S]*?\.portfolioSection\s*\{[\s\S]*?padding:\s*72px 0;/,
   );
+  assert.match(styles, /\.insightThumbnail\s*\{[\s\S]*?height:\s*240px;/);
   assert.match(
     styles,
-    /\.insightThumbnail\s*\{[\s\S]*?aspect-ratio:\s*3\s*\/\s*2;/,
+    /@media \(max-width:\s*640px\)[\s\S]*?\.insightThumbnail\s*\{[\s\S]*?height:\s*200px;/,
   );
-  assert.doesNotMatch(styles, /\.insightThumbnail\s*\{[^}]*height:\s*\d+px;/);
   assert.match(
     styles,
     /\.track\s*\{[\s\S]*?animation:\s*partnerLogoRoll var\(--partner-logo-duration\) linear infinite;/,

@@ -22,15 +22,12 @@ import type {
 import styles from "../BlogAdminPage.module.css";
 
 type BlogFormFieldsProps = {
-  readonly banner: BlogThumbnailSelection;
   readonly contentPreviewContainer?: HTMLElement | null;
   readonly documentKey: string;
   readonly fieldErrors: BlogFieldErrors;
   readonly form: BlogFormState;
   readonly isDisabled: boolean;
   readonly onContentBusyChange: (busy: boolean) => void;
-  readonly onBannerChange: (fileList: FileList | null) => void;
-  readonly onBannerRemove: () => void;
   readonly onContentChange: (value: ManagedContentFormValue) => void;
   readonly onFieldChange: BlogFieldChange;
   readonly onPendingAssetCountChange: (count: number) => void;
@@ -45,14 +42,11 @@ const blogFormTypeOptions = [
 ] as const;
 
 export function BlogFormFields({
-  banner,
   contentPreviewContainer,
   documentKey,
   fieldErrors,
   form,
   isDisabled,
-  onBannerChange,
-  onBannerRemove,
   onContentBusyChange,
   onContentChange,
   onFieldChange,
@@ -65,10 +59,6 @@ export function BlogFormFields({
   const visibleFileName =
     thumbnail.selected?.file.name ??
     (visiblePreview ? "저장된 썸네일" : undefined);
-  const visibleBannerPreview = banner.previewUrl && !banner.removed;
-  const visibleBannerFileName =
-    banner.selected?.file.name ??
-    (visibleBannerPreview ? "저장된 배너" : undefined);
 
   return (
     <div className={styles.blogFormFields}>
@@ -167,49 +157,9 @@ export function BlogFormFields({
         />
       </div>
 
-      <div className={styles.thumbnailGroup}>
-        <AdminTextField
-          disabled={isDisabled}
-          errorMessage={fieldErrors.bannerAlt}
-          id="blog-banner-alt"
-          label="블로그 배너"
-          layout="stacked"
-          onChange={(event) =>
-            onFieldChange("bannerAlt", event.currentTarget.value)
-          }
-          placeholder="IMAGE ALT TAG를 입력해주세요."
-          size="large"
-          value={form.bannerAlt}
-        />
-        <AdminUploadControl
-          accept="image/png,image/jpeg,image/webp"
-          acceptLabel="1080 × 720 자동 맞춤 / PNG, JPEG, WEBP 등 / 최대 50MB 제한"
-          disabled={isDisabled}
-          errorMessage={fieldErrors.banner}
-          fileName={visibleBannerFileName}
-          id="blog-banner"
-          label="블로그 배너 파일"
-          labelHidden
-          onChange={(event) => onBannerChange(event.currentTarget.files)}
-          onFiles={onBannerChange}
-          onRemove={
-            visibleBannerPreview || banner.selected ? onBannerRemove : undefined
-          }
-          preview={
-            visibleBannerPreview ? (
-              <img
-                alt={form.bannerAlt || "Blog banner preview"}
-                className={styles.thumbnailPreview}
-                src={banner.previewUrl}
-              />
-            ) : undefined
-          }
-          previewFullBleed
-          variant="dropzone"
-        />
-      </div>
-
       <AdminTextareaField
+        controlClassName={styles.summaryTextarea}
+        description="블로그 목록 카드와 공유 화면에 표시되는 짧은 설명입니다."
         disabled={isDisabled}
         errorMessage={fieldErrors.summary}
         id="blog-summary"
@@ -263,14 +213,6 @@ export function BlogFormFields({
           label="랜딩 설정"
           name="blog-landing-published"
           onChange={(checked) => onFieldChange("landingPublished", checked)}
-        />
-        <AdminSettingToggleRow
-          checked={form.bannerPublished}
-          count={blogSectionCount(form.bannerSections)}
-          disabled={isDisabled}
-          label="배너 설정"
-          name="blog-banner-published"
-          onChange={(checked) => onFieldChange("bannerPublished", checked)}
         />
       </div>
     </div>

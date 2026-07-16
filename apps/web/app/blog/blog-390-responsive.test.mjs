@@ -9,7 +9,7 @@ const footerStylesPath = new URL(
   import.meta.url,
 );
 
-test("blog keeps 3:2 image frames while applying 390px card controls", async () => {
+test("blog applies the 390px Figma card geometry only at 480px and below", async () => {
   const [blogPage, blogStyles] = await Promise.all([
     readFile(blogPagePath, "utf8"),
     readFile(blogStylesPath, "utf8"),
@@ -18,11 +18,7 @@ test("blog keeps 3:2 image frames while applying 390px card controls", async () 
   assert.match(blogPage, /mobileItemWidth=\{330\}/);
   assert.match(
     blogStyles,
-    /@media \(max-width: 480px\)\s*{[\s\S]*?\.headerLayer\s*{\s*padding-inline:\s*20px;[\s\S]*?\.topCopy\s*{\s*padding-block:\s*8px;[\s\S]*?\.topDescription\s*{\s*line-height:\s*20px;/,
-  );
-  assert.doesNotMatch(
-    blogStyles,
-    /@media \(max-width: 480px\)\s*{[\s\S]*?\.(?:topThumbnail|listThumbnail)\s*{[\s\S]*?height:/,
+    /@media \(max-width: 480px\)\s*{[\s\S]*?\.headerLayer\s*{\s*padding-inline:\s*20px;[\s\S]*?\.topThumbnail\s*{\s*height:\s*220px;[\s\S]*?\.topCopy\s*{\s*padding-block:\s*8px;[\s\S]*?\.topDescription\s*{\s*line-height:\s*20px;[\s\S]*?\.listThumbnail\s*{\s*height:\s*240px;/,
   );
 });
 

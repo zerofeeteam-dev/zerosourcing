@@ -172,6 +172,11 @@
   width: 100%;
 }
 
+.summaryTextarea {
+  min-height: 80px;
+  padding: 20px;
+}
+
 .thumbnailEmpty {
   composes: pretendard-medium-14 from global;
   align-items: center;

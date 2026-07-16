@@ -23,7 +23,6 @@ describe("BlogFormFields", () => {
   it("announces the card summary error before the shared content editor", () => {
     render(
       <BlogFormFields
-        banner={{ removed: false }}
         documentKey="blog:new:test"
         fieldErrors={{
           content: "본문 이미지를 확인해 주세요.",
@@ -31,8 +30,6 @@ describe("BlogFormFields", () => {
         }}
         form={createEmptyBlogFormState()}
         isDisabled={false}
-        onBannerChange={vi.fn()}
-        onBannerRemove={vi.fn()}
         onContentBusyChange={vi.fn()}
         onContentChange={vi.fn()}
         onFieldChange={vi.fn()}
@@ -45,7 +42,12 @@ describe("BlogFormFields", () => {
 
     const summary = screen.getByRole("textbox", { name: "카드 요약" });
     expect(summary.getAttribute("aria-invalid")).toBe("true");
-    expect(summary.getAttribute("aria-describedby")).toBe("blog-summary-error");
+    expect(summary.getAttribute("aria-describedby")).toBe(
+      "blog-summary-description blog-summary-error",
+    );
+    expect(
+      document.getElementById("blog-summary-description")?.textContent,
+    ).toBe("블로그 목록 카드와 공유 화면에 표시되는 짧은 설명입니다.");
     expect(document.getElementById("blog-summary-error")?.textContent).toBe(
       "게시하려면 카드 요약을 입력해 주세요.",
     );
@@ -59,6 +61,6 @@ describe("BlogFormFields", () => {
     expect(screen.getByRole("alert").textContent).toBe(
       "본문 이미지를 확인해 주세요.",
     );
-    expect(screen.getByLabelText("블로그 배너 파일")).toBeTruthy();
+    expect(screen.queryByLabelText("블로그 배너 파일")).toBeNull();
   });
 });

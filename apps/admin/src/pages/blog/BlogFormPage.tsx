@@ -76,7 +76,6 @@ export function BlogFormPage({ onNavigate, route }: BlogFormPageProps) {
     formOwner.documentIsCurrent,
   );
   const thumbnail = useAdminThumbnailSelection();
-  const banner = useAdminThumbnailSelection();
   const acceptLoadedForm = formOwner.acceptLoaded;
   const beginFormLoad = formOwner.beginLoad;
   const invalidateFormLoads = formOwner.invalidateLoads;
@@ -84,7 +83,6 @@ export function BlogFormPage({ onNavigate, route }: BlogFormPageProps) {
   const formMatchesCurrentRoute = formOwner.matchesCurrentRoute;
   const replaceWithNewForm = formOwner.replaceWithNew;
   const resetThumbnail = thumbnail.reset;
-  const resetBanner = banner.reset;
 
   const [detailState, setDetailState] = useState<"idle" | "loading" | "ready">(
     "idle",
@@ -152,7 +150,6 @@ export function BlogFormPage({ onNavigate, route }: BlogFormPageProps) {
     if (routeChanged) replaceWithNewForm();
     setEditingPost(null);
     resetThumbnail();
-    resetBanner();
     setFieldErrors({});
     setGlobalError(undefined);
     setCleanupWarning(undefined);
@@ -165,7 +162,6 @@ export function BlogFormPage({ onNavigate, route }: BlogFormPageProps) {
     routeKey,
     replaceWithNewForm,
     resetThumbnail,
-    resetBanner,
   ]);
 
   useEffect(() => {
@@ -229,7 +225,6 @@ export function BlogFormPage({ onNavigate, route }: BlogFormPageProps) {
       }
       setEditingPost(result.value);
       resetThumbnail(result.value.thumbnail_public_url);
-      resetBanner(result.value.banner_public_url);
       setDetailState("ready");
     })();
 
@@ -241,7 +236,6 @@ export function BlogFormPage({ onNavigate, route }: BlogFormPageProps) {
     formMatchesCurrentRoute,
     detailParam,
     resetThumbnail,
-    resetBanner,
   ]);
 
   const updateForm = <Key extends keyof BlogFormState>(
@@ -291,24 +285,6 @@ export function BlogFormPage({ onNavigate, route }: BlogFormPageProps) {
   const handleThumbnailRemove = () => {
     if (!formOwner.documentIsCurrent(formOwner.documentKey)) return;
     thumbnail.remove();
-  };
-
-  const handleBannerChange = (fileList: FileList | null) => {
-    if (!formOwner.documentIsCurrent(formOwner.documentKey)) return;
-    const result = banner.select(fileList);
-    if (!result.ok) {
-      setFieldErrors((current) => ({
-        ...current,
-        banner: result.message,
-      }));
-      return;
-    }
-    setFieldErrors((current) => ({ ...current, banner: undefined }));
-  };
-
-  const handleBannerRemove = () => {
-    if (!formOwner.documentIsCurrent(formOwner.documentKey)) return;
-    banner.remove();
   };
 
   const hardDisabled =
@@ -361,22 +337,6 @@ export function BlogFormPage({ onNavigate, route }: BlogFormPageProps) {
       return;
     }
 
-    const normalizedBanner = banner.selection.selected
-      ? await normalizeAdminThumbnailFile(
-          banner.selection.selected,
-          "banner",
-          adminThumbnailImageDimensions,
-        )
-      : undefined;
-    if (normalizedBanner && !normalizedBanner.ok) {
-      setFieldErrors((current) => ({
-        ...current,
-        banner: normalizedBanner.error.message,
-      }));
-      setGlobalError("배너 이미지를 자동 조정하지 못했습니다.");
-      return;
-    }
-
     const existingPost = editingPost;
     if (!isNewRoute && !existingPost) {
       setGlobalError("저장할 Blog 글을 먼저 불러와야 합니다.");
@@ -408,7 +368,7 @@ export function BlogFormPage({ onNavigate, route }: BlogFormPageProps) {
         publicUrl: existingPost?.thumbnail_public_url ?? null,
       },
       removed: thumbnail.selection.removed,
-      save: async (nextThumbnail, nextBanner) => {
+      save: async (nextThumbnail) => {
         if (
           operationController.signal.aborted ||
           !operationIsCurrent(operation) ||
@@ -419,14 +379,8 @@ export function BlogFormPage({ onNavigate, route }: BlogFormPageProps) {
 
         const input: BlogPostCreateInput = {
           ...parsed.value,
-          bannerPath:
-            nextBanner === undefined
-              ? (existingPost?.banner_path ?? null)
-              : nextBanner.path,
-          bannerPublicUrl:
-            nextBanner === undefined
-              ? (existingPost?.banner_public_url ?? null)
-              : nextBanner.publicUrl,
+          bannerPath: existingPost?.banner_path ?? null,
+          bannerPublicUrl: existingPost?.banner_public_url ?? null,
           thumbnailPath: nextThumbnail.path,
           thumbnailPublicUrl: nextThumbnail.publicUrl,
         };
@@ -439,14 +393,6 @@ export function BlogFormPage({ onNavigate, route }: BlogFormPageProps) {
             });
       },
       selected: normalizedThumbnail?.value,
-      secondary: {
-        current: {
-          path: existingPost?.banner_path ?? null,
-          publicUrl: existingPost?.banner_public_url ?? null,
-        },
-        removed: banner.selection.removed,
-        selected: normalizedBanner?.value,
-      },
       slug: parsed.value.slug,
     });
 
@@ -485,7 +431,6 @@ export function BlogFormPage({ onNavigate, route }: BlogFormPageProps) {
     releaseOperation();
     setEditingPost(outcome.result.value);
     thumbnail.reset(outcome.result.value.thumbnail_public_url);
-    banner.reset(outcome.result.value.banner_public_url);
     setFieldErrors({});
     setSuccessMessage(
       existingPost === null
@@ -586,14 +531,11 @@ export function BlogFormPage({ onNavigate, route }: BlogFormPageProps) {
               />
             ) : null}
             <BlogFormFields
-              banner={banner.selection}
               contentPreviewContainer={contentPreviewContainer}
               documentKey={formOwner.documentKey}
               fieldErrors={fieldErrors}
               form={formOwner.form}
               isDisabled={hardDisabled}
-              onBannerChange={handleBannerChange}
-              onBannerRemove={handleBannerRemove}
               onContentBusyChange={editorState.onBusyChange}
               onContentChange={handleContentChange}
               onFieldChange={updateForm}

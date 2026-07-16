@@ -316,11 +316,6 @@ describe("BlogFormPage", () => {
       current: { path: null, publicUrl: null },
       removed: false,
       selected: undefined,
-      secondary: {
-        current: { path: null, publicUrl: null },
-        removed: false,
-        selected: undefined,
-      },
       slug: { value: "managed-blog" },
     });
     const createInput = mocks.createBlogPost.mock.calls[0]?.[1] as
@@ -382,11 +377,7 @@ describe("BlogFormPage", () => {
       "draft-blog",
     );
     const file = new File(["image"], "draft.webp", { type: "image/webp" });
-    const bannerFile = new File(["banner"], "banner.webp", {
-      type: "image/webp",
-    });
     await user.upload(screen.getByLabelText("블로그 썸네일 파일"), file);
-    await user.upload(screen.getByLabelText("블로그 배너 파일"), bannerFile);
     await user.click(screen.getByRole("button", { name: "임시저장" }));
 
     await waitFor(() => expect(screen.getByText("네트워크 오류")).toBeTruthy());
@@ -398,9 +389,6 @@ describe("BlogFormPage", () => {
     expect(
       mocks.persistThumbnailChange.mock.calls[0]?.[0]?.selected?.file,
     ).toBe(file);
-    expect(
-      mocks.persistThumbnailChange.mock.calls[0]?.[0]?.secondary?.selected?.file,
-    ).toBe(bannerFile);
   });
 
   it("restores accepted A without refetch when B is aborted and ignores B's stale completion", async () => {

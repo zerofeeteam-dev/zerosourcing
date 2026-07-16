@@ -615,6 +615,7 @@ describe("public selectors", () => {
       { bannerPublished: true, slug: "banner" },
       { bannerPublished: false, slug: "older" },
       { bannerPublished: false, slug: "oldest" },
+      { bannerPublished: false, slug: "archived" },
     ];
 
     expect(selectPortfolioIndex(portfolios)).toEqual({
@@ -623,7 +624,7 @@ describe("public selectors", () => {
     });
     expect(selectBlogIndex(blogs)).toEqual({
       featured: blogs[1],
-      list: [blogs[0], blogs[2], blogs[3]],
+      list: [blogs[4]],
       top: [blogs[0], blogs[2], blogs[3]],
     });
     expect(
