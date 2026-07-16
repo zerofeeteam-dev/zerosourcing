@@ -109,7 +109,8 @@
 .tagList {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  column-gap: 12px;
+  row-gap: 8px;
 }
 
 .managedContent {
