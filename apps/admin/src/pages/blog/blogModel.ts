@@ -38,6 +38,7 @@ const emptyDocument = {
 
 export function createEmptyBlogFormState(): BlogFormState {
   return {
+    bannerAlt: "",
     bannerPublished: false,
     bannerSections: "[]",
     content: "",
@@ -199,6 +200,8 @@ function parseJsonField(
 function errorFieldFromName(field: string): keyof BlogFieldErrors | undefined {
   switch (field) {
     case "bannerSections":
+    case "banner":
+    case "bannerAlt":
     case "content":
     case "contentAssetBaseEnabled":
     case "contentAssetScope":
@@ -228,6 +231,7 @@ export function blogFormFromRow(row: BlogPostRow): BlogFormState {
 
   return {
     ...managedContent,
+    bannerAlt: row.banner_alt,
     bannerPublished: row.banner_published,
     bannerSections: jsonText(row.banner_sections),
     landingPublished: row.landing_published,
@@ -328,6 +332,7 @@ export function validateBlogForm(form: BlogFormState): BlogValidationResult {
 
   const value: BlogParsedInput = {
     ...managedContent,
+    bannerAlt: form.bannerAlt.trim(),
     bannerPublished: form.bannerPublished,
     bannerSections: bannerSectionsResult.value,
     landingPublished: form.landingPublished,

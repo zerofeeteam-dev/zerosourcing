@@ -15,7 +15,10 @@ import { removeThumbnail } from "./thumbnailStorage";
 export type PortfolioStorageCleanupIssue = {
   readonly failure: AdminFailure;
   readonly path: string;
-  readonly stage: "remove_content_assets" | "remove_thumbnail";
+  readonly stage:
+    | "remove_banner"
+    | "remove_content_assets"
+    | "remove_thumbnail";
 };
 
 export type PortfolioDeletionOutcome = {
@@ -47,10 +50,13 @@ export async function deletePortfolioWithStorageCleanup(
 
   const portfolio = result.value;
   const cleanupIssues: PortfolioStorageCleanupIssue[] = [];
-  const [contentAssets, thumbnail] = await Promise.all([
+  const [contentAssets, thumbnail, banner] = await Promise.all([
     removeContentAssetScope(config, contentAssetInput(portfolio)),
     portfolio.thumbnail_path
       ? removeThumbnail(config, portfolio.thumbnail_path)
+      : Promise.resolve(null),
+    portfolio.banner_path
+      ? removeThumbnail(config, portfolio.banner_path)
       : Promise.resolve(null),
   ]);
 
@@ -66,6 +72,13 @@ export async function deletePortfolioWithStorageCleanup(
       failure: thumbnail.error,
       path: portfolio.thumbnail_path ?? "",
       stage: "remove_thumbnail",
+    });
+  }
+  if (banner && !banner.ok) {
+    cleanupIssues.push({
+      failure: banner.error,
+      path: portfolio.banner_path ?? "",
+      stage: "remove_banner",
     });
   }
 

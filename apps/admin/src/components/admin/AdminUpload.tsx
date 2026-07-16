@@ -1,4 +1,9 @@
-import { useState, type DragEvent, type InputHTMLAttributes, type ReactNode } from "react";
+import {
+  useState,
+  type DragEvent,
+  type InputHTMLAttributes,
+  type ReactNode,
+} from "react";
 import { AdminButton } from "./AdminButton";
 import { AdminFolderUpIcon, AdminTrashIcon, AdminUploadIcon } from "./icons";
 import styles from "./AdminUpload.module.css";
@@ -74,7 +79,10 @@ export function AdminUploadControl({
   if (variant === "dropzone") {
     return (
       <div className={styles.fieldDropzone}>
-        <label className={labelHidden ? styles.labelHidden : styles.label} htmlFor={id}>
+        <label
+          className={labelHidden ? styles.labelHidden : styles.label}
+          htmlFor={id}
+        >
           {label}
         </label>
         <div className={styles.controlColumn}>
@@ -116,7 +124,12 @@ export function AdminUploadControl({
               )}
             </label>
             {fileName && onRemove ? (
-              <button aria-label={`${label} 삭제`} className={styles.previewRemove} onClick={onRemove} type="button">
+              <button
+                aria-label={`${label} 삭제`}
+                className={styles.previewRemove}
+                onClick={onRemove}
+                type="button"
+              >
                 <AdminTrashIcon size={16} />
               </button>
             ) : null}
@@ -165,7 +178,11 @@ export function AdminUploadControl({
         {preview ? <div className={styles.preview}>{preview}</div> : null}
         {fileName && onRemove ? (
           <div className={styles.removeRow}>
-            <AdminButton icon={<AdminTrashIcon size={16} />} onClick={onRemove} variant="danger">
+            <AdminButton
+              icon={<AdminTrashIcon size={16} />}
+              onClick={onRemove}
+              variant="danger"
+            >
               삭제
             </AdminButton>
           </div>

@@ -3,6 +3,9 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 const stylesPath = new URL("./ServiceCard.module.css", import.meta.url);
+const componentPath = new URL("./ServiceCard.tsx", import.meta.url);
+const glassStylesPath = new URL("../app/glass.css", import.meta.url);
+const layoutPath = new URL("../app/layout.tsx", import.meta.url);
 
 test("primary service badge uses the blue resting state", async () => {
   const styles = await readFile(stylesPath, "utf8");
@@ -17,29 +20,33 @@ test("primary service badge uses the blue resting state", async () => {
   );
 });
 
-test("service icon wrapper uses the requested glass surface", async () => {
-  const styles = await readFile(stylesPath, "utf8");
-  const iconFrame = styles.match(/\.iconFrame\s*\{([\s\S]*?)\}/u)?.[1];
-  const highlight = styles.match(
-    /\.iconFrame::before\s*\{([\s\S]*?)\}/u,
+test("shared glass utility follows the consumer's dimensions and radius", async () => {
+  const glassStyles = await readFile(glassStylesPath, "utf8");
+  const surface = glassStyles.match(
+    /:where\(\.glass-surface\)\s*\{([\s\S]*?)\}/u,
+  )?.[1];
+  const highlight = glassStyles.match(
+    /:where\(\.glass-surface\)::before\s*\{([\s\S]*?)\}/u,
   )?.[1];
 
-  assert.ok(iconFrame, "Icon frame rule is missing");
+  assert.ok(surface, "Shared glass surface rule is missing");
   for (const expected of [
     /position:\s*relative;/u,
     /display:\s*grid;/u,
     /place-items:\s*center;/u,
-    /color:\s*var\(--color-gray-800\);/u,
     /isolation:\s*isolate;/u,
     /background:\s*rgba\(255,\s*255,\s*255,\s*0\.1\);/u,
     /backdrop-filter:\s*blur\(10px\)\s+saturate\(140%\);/u,
     /-webkit-backdrop-filter:\s*blur\(10px\)\s+saturate\(140%\);/u,
   ]) {
-    assert.match(iconFrame, expected);
+    assert.match(surface, expected);
   }
-  assert.doesNotMatch(iconFrame, /box-shadow:/u);
+  assert.doesNotMatch(
+    surface,
+    /(?:^|\n)\s*(?:width|height|min-width|min-height|max-width|max-height|aspect-ratio|padding|color|box-shadow|border-radius|transition|cursor):/u,
+  );
 
-  assert.ok(highlight, "Icon frame highlight is missing");
+  assert.ok(highlight, "Shared glass highlight is missing");
   for (const expected of [
     /content:\s*"";/u,
     /position:\s*absolute;/u,

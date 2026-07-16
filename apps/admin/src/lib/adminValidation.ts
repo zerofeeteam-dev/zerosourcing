@@ -32,7 +32,10 @@ export function parseRequiredAdminString(
   return adminOk({ value: trimmed });
 }
 
-export function parseAdminSlug(value: string, field: string): AdminResult<AdminSlug, AdminValidationIssue> {
+export function parseAdminSlug(
+  value: string,
+  field: string,
+): AdminResult<AdminSlug, AdminValidationIssue> {
   const trimmed = value.trim();
 
   if (trimmed.length === 0) {
@@ -65,7 +68,11 @@ function parseThumbnailMimeType(
       return adminOk(mimeType);
     default:
       return adminErr(
-        validationIssue("invalid_thumbnail_type", field, "썸네일은 PNG, JPEG, WEBP 파일만 업로드할 수 있습니다."),
+        validationIssue(
+          "invalid_thumbnail_type",
+          field,
+          "썸네일은 PNG, JPEG, WEBP 파일만 업로드할 수 있습니다.",
+        ),
       );
   }
 }
@@ -81,7 +88,13 @@ export function parseAdminThumbnailFile(
   }
 
   if (file.size > maxThumbnailSizeBytes) {
-    return adminErr(validationIssue("thumbnail_too_large", field, "썸네일은 50MB 이하만 업로드할 수 있습니다."));
+    return adminErr(
+      validationIssue(
+        "thumbnail_too_large",
+        field,
+        "썸네일은 50MB 이하만 업로드할 수 있습니다.",
+      ),
+    );
   }
 
   return adminOk({
@@ -92,3 +105,37 @@ export function parseAdminThumbnailFile(
 }
 
 export const adminThumbnailMaxSizeBytes = maxThumbnailSizeBytes;
+
+export async function validateAdminImageDimensions(
+  file: File,
+  field: string,
+  dimensions: { readonly height: number; readonly width: number },
+): Promise<AdminResult<null, AdminValidationIssue>> {
+  if (typeof createImageBitmap !== "function") return adminOk(null);
+
+  let image: ImageBitmap;
+  try {
+    image = await createImageBitmap(file);
+  } catch {
+    return adminErr(
+      validationIssue(
+        "invalid_thumbnail_type",
+        field,
+        "이미지 크기를 확인할 수 없습니다.",
+      ),
+    );
+  }
+
+  const matches =
+    image.width === dimensions.width && image.height === dimensions.height;
+  image.close();
+  if (matches) return adminOk(null);
+
+  return adminErr(
+    validationIssue(
+      "invalid_thumbnail_type",
+      field,
+      `이미지는 ${dimensions.width} × ${dimensions.height}px만 업로드할 수 있습니다.`,
+    ),
+  );
+}

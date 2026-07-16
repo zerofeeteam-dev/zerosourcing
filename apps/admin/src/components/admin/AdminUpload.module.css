@@ -115,7 +115,9 @@
   height: 240px;
   overflow: hidden;
   position: relative;
-  transition: border-color 120ms ease, background-color 120ms ease;
+  transition:
+    border-color 120ms ease,
+    background-color 120ms ease;
 }
 
 .figmaDropzoneActive {

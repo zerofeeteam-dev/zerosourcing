@@ -42,7 +42,7 @@ export function ServiceCard({
           {title || iconName ? (
             <div className={styles.titleGroup}>
               {iconName ? (
-                <span className={styles.iconFrame}>
+                <span className={`${styles.iconFrame} glass-surface`}>
                   <Icon name={iconName} size={20} />
                 </span>
               ) : null}

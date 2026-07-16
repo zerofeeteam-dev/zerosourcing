@@ -75,6 +75,9 @@ function rowFromInput(
   overrides: Partial<PortfolioRow> = {},
 ): PortfolioRow {
   return {
+    banner_alt: input.bannerAlt,
+    banner_path: input.bannerPath,
+    banner_public_url: input.bannerPublicUrl,
     company_name: input.companyName,
     content: input.content,
     content_asset_base_enabled: input.contentAssetBaseEnabled,
@@ -122,6 +125,9 @@ function loadedPortfolioRow({
 }): PortfolioRow {
   const title = `Portfolio ${slug}`;
   return {
+    banner_alt: `${title} banner`,
+    banner_path: `${slug}/banner.webp`,
+    banner_public_url: `https://images.example.com/${slug}-banner.webp`,
     company_name: title,
     content: `<p>${title}</p>`,
     content_asset_base_enabled: false,
@@ -312,16 +318,28 @@ describe("PortfolioFormPage", () => {
     );
     mocks.persistThumbnailChange.mockImplementation(
       async (input: {
-        readonly save: (thumbnail: {
-          readonly path: string | null;
-          readonly publicUrl: string | null;
-        }) => Promise<unknown>;
+        readonly save: (
+          thumbnail: {
+            readonly path: string | null;
+            readonly publicUrl: string | null;
+          },
+          banner?: {
+            readonly path: string | null;
+            readonly publicUrl: string | null;
+          },
+        ) => Promise<unknown>;
       }) => ({
         cleanupIssues: [],
-        result: await input.save({
-          path: "managed-portfolio/00000000-0000-4000-8000-000000000602.webp",
-          publicUrl: "https://project.supabase.co/storage/thumbnail.webp",
-        }),
+        result: await input.save(
+          {
+            path: "managed-portfolio/00000000-0000-4000-8000-000000000602.webp",
+            publicUrl: "https://project.supabase.co/storage/thumbnail.webp",
+          },
+          {
+            path: "managed-portfolio/00000000-0000-4000-8000-000000000603.webp",
+            publicUrl: "https://project.supabase.co/storage/banner.webp",
+          },
+        ),
       }),
     );
 
@@ -356,9 +374,16 @@ describe("PortfolioFormPage", () => {
     const thumbnailFile = new File(["image"], "portfolio.webp", {
       type: "image/webp",
     });
+    const bannerFile = new File(["banner"], "portfolio-banner.webp", {
+      type: "image/webp",
+    });
     await user.upload(
       screen.getByLabelText("포트폴리오 썸네일 파일"),
       thumbnailFile,
+    );
+    await user.upload(
+      screen.getByLabelText("포트폴리오 배너 파일"),
+      bannerFile,
     );
 
     const initialDocumentKey = screen
@@ -376,6 +401,7 @@ describe("PortfolioFormPage", () => {
       slug: { value: "managed-portfolio" },
     });
     expect(persistenceInput.selected.file).toBe(thumbnailFile);
+    expect(persistenceInput.secondary.selected.file).toBe(bannerFile);
     const createInput = mocks.createPortfolio.mock.calls[0]?.[1] as
       | PortfolioCreateInput
       | undefined;
@@ -385,6 +411,8 @@ describe("PortfolioFormPage", () => {
       thumbnailPath:
         "managed-portfolio/00000000-0000-4000-8000-000000000602.webp",
       thumbnailPublicUrl: "https://project.supabase.co/storage/thumbnail.webp",
+      bannerPath: "managed-portfolio/00000000-0000-4000-8000-000000000603.webp",
+      bannerPublicUrl: "https://project.supabase.co/storage/banner.webp",
     });
     expect(
       screen.getByTestId("portfolio-editor").getAttribute("data-document-key"),

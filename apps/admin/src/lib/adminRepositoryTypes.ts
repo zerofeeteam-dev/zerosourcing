@@ -25,7 +25,11 @@ export type AdminJson =
 export const portfolioStatuses = ["draft", "published"] as const;
 export type PortfolioStatus = (typeof portfolioStatuses)[number];
 
-export const portfolioTypes = ["application", "company_homepage", "mvp"] as const;
+export const portfolioTypes = [
+  "application",
+  "company_homepage",
+  "mvp",
+] as const;
 export type PortfolioType = (typeof portfolioTypes)[number];
 
 export const contentModes = contentOutputModes;
@@ -66,6 +70,9 @@ export type ManagedContentInput = ManagedContentInputBase &
   );
 
 export type PortfolioRow = ManagedContentRow & {
+  readonly banner_alt: string;
+  readonly banner_path: string | null;
+  readonly banner_public_url: string | null;
   readonly id: string;
   readonly status: PortfolioStatus;
   readonly type: PortfolioType;
@@ -91,6 +98,9 @@ export type PortfolioRow = ManagedContentRow & {
 };
 
 export type PortfolioCreateInput = ManagedContentInput & {
+  readonly bannerAlt: string;
+  readonly bannerPath: string | null;
+  readonly bannerPublicUrl: string | null;
   readonly status: PortfolioStatus;
   readonly type: PortfolioType;
   readonly slug: AdminSlug;
@@ -116,10 +126,17 @@ export type PortfolioUpdateInput = Partial<PortfolioCreateInput>;
 export const blogPostStatuses = ["draft", "published"] as const;
 export type BlogPostStatus = (typeof blogPostStatuses)[number];
 
-export const blogPostTypes = ["insight", "mvp", "application", "company_homepage"] as const;
+export const blogPostTypes = [
+  "insight",
+  "mvp",
+  "application",
+  "company_homepage",
+] as const;
 export type BlogPostType = (typeof blogPostTypes)[number];
 
 export type BlogPostRow = ManagedContentRow & {
+  readonly banner_alt: string;
+  readonly banner_path: string | null;
   readonly id: string;
   readonly status: BlogPostStatus;
   readonly type: BlogPostType;
@@ -133,6 +150,7 @@ export type BlogPostRow = ManagedContentRow & {
   readonly seo_description: string;
   readonly landing_published: boolean;
   readonly banner_published: boolean;
+  readonly banner_public_url: string | null;
   readonly landing_sections: AdminJson;
   readonly banner_sections: AdminJson;
   readonly created_at: string;
@@ -141,6 +159,8 @@ export type BlogPostRow = ManagedContentRow & {
 };
 
 export type BlogPostCreateInput = ManagedContentInput & {
+  readonly bannerAlt: string;
+  readonly bannerPath: string | null;
   readonly status: BlogPostStatus;
   readonly type: BlogPostType;
   readonly slug: AdminSlug;
@@ -153,6 +173,7 @@ export type BlogPostCreateInput = ManagedContentInput & {
   readonly seoDescription: string;
   readonly landingPublished: boolean;
   readonly bannerPublished: boolean;
+  readonly bannerPublicUrl: string | null;
   readonly landingSections: AdminJson;
   readonly bannerSections: AdminJson;
 };

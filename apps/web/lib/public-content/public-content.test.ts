@@ -48,6 +48,8 @@ function portfolioRow(
   overrides: Readonly<Record<string, unknown>> = {},
 ): Readonly<Record<string, unknown>> {
   return {
+    banner_alt: "포트폴리오 배너 이미지",
+    banner_public_url: "https://cdn.example.com/portfolio-banner.png",
     content: "<p>Portfolio</p>",
     content_asset_base_enabled: true,
     content_asset_scope: assetScope,
@@ -75,7 +77,9 @@ function blogRow(
   overrides: Readonly<Record<string, unknown>> = {},
 ): Readonly<Record<string, unknown>> {
   return {
+    banner_alt: "블로그 배너 이미지",
     banner_published: true,
+    banner_public_url: "https://cdn.example.com/blog-banner.png",
     content: "<p>Blog</p>",
     content_asset_base_enabled: false,
     content_asset_scope: assetScope,
@@ -420,6 +424,8 @@ describe("public row mapping", () => {
     expect(mapPortfolioDetail(portfolioRow())).toMatchObject({
       assetBaseEnabled: true,
       assetScope: canonicalAssetScope,
+      bannerAlt: "포트폴리오 배너 이미지",
+      bannerUrl: "https://cdn.example.com/portfolio-banner.png",
       content: "<p>Portfolio</p>",
       contentAuthoringMode: "raw_html",
       contentMode: "html",
@@ -430,6 +436,8 @@ describe("public row mapping", () => {
       assetBaseEnabled: false,
       assetScope: canonicalAssetScope,
       author: "제로소싱",
+      bannerAlt: "블로그 배너 이미지",
+      bannerUrl: "https://cdn.example.com/blog-banner.png",
       category: "인사이트",
       contentAuthoringMode: "wysiwyg",
       date: "2026. 07. 12",
@@ -469,6 +477,7 @@ describe("public row mapping", () => {
       portfolioRow({ content_authoring_mode: "html" }),
       portfolioRow({ content_mode: "markdown" }),
       portfolioRow({ content_asset_base_enabled: 1 }),
+      portfolioRow({ banner_public_url: false }),
     ];
     for (const row of invalidPortfolioDetails) {
       expect(() => mapPortfolioDetail(row)).toThrow(PublicContentMappingError);
@@ -509,7 +518,7 @@ describe("public query contracts", () => {
         deleted_at: "is.null",
         order: "published_at.desc,created_at.desc,slug.asc",
         select:
-          "slug,title,type,summary,published_date,thumbnail_public_url,thumbnail_alt,landing_published,banner_published,published_at,updated_at",
+          "slug,title,type,summary,published_date,thumbnail_public_url,thumbnail_alt,banner_public_url,banner_alt,landing_published,banner_published,published_at,updated_at",
         status: "eq.published",
       },
     });
@@ -550,7 +559,7 @@ describe("public query contracts", () => {
         deleted_at: "is.null",
         limit: "1",
         select:
-          "slug,title,type,product_description,estimate_label,development_period,core_features,work_scopes,thumbnail_public_url,thumbnail_alt,landing_published,service_published,updated_at,content_mode,content_authoring_mode,content,content_asset_scope,content_asset_base_enabled,seo_description",
+          "slug,title,type,product_description,estimate_label,development_period,core_features,work_scopes,thumbnail_public_url,thumbnail_alt,landing_published,service_published,updated_at,banner_public_url,banner_alt,content_mode,content_authoring_mode,content,content_asset_scope,content_asset_base_enabled,seo_description",
         slug: "eq.meetit-plus",
         status: "eq.published",
       },
@@ -561,7 +570,7 @@ describe("public query contracts", () => {
         deleted_at: "is.null",
         limit: "1",
         select:
-          "slug,title,type,summary,published_date,thumbnail_public_url,thumbnail_alt,landing_published,banner_published,published_at,updated_at,content_mode,content_authoring_mode,content,content_asset_scope,content_asset_base_enabled,seo_description",
+          "slug,title,type,summary,published_date,thumbnail_public_url,thumbnail_alt,banner_public_url,banner_alt,landing_published,banner_published,published_at,updated_at,content_mode,content_authoring_mode,content,content_asset_scope,content_asset_base_enabled,seo_description",
         slug: "eq.published-blog",
         status: "eq.published",
       },

@@ -15,6 +15,7 @@ import type {
   PortfolioStatus,
 } from "../../lib/adminRepositoryTypes";
 import { adminErr } from "../../lib/adminTypes";
+import { validateAdminImageDimensions } from "../../lib/adminValidation";
 import { ManagedContentSchemaError } from "../../lib/managedContent";
 import {
   createOperationGeneration,
@@ -74,6 +75,7 @@ export function PortfolioFormPage({
     formOwner.documentIsCurrent,
   );
   const thumbnail = useAdminThumbnailSelection();
+  const banner = useAdminThumbnailSelection();
   const acceptLoadedForm = formOwner.acceptLoaded;
   const beginFormLoad = formOwner.beginLoad;
   const invalidateFormLoads = formOwner.invalidateLoads;
@@ -81,6 +83,7 @@ export function PortfolioFormPage({
   const formMatchesCurrentRoute = formOwner.matchesCurrentRoute;
   const replaceWithNewForm = formOwner.replaceWithNew;
   const resetThumbnail = thumbnail.reset;
+  const resetBanner = banner.reset;
 
   const [editingPortfolio, setEditingPortfolio] = useState<PortfolioRow | null>(
     null,
@@ -146,6 +149,7 @@ export function PortfolioFormPage({
     if (routeChanged) replaceWithNewForm();
     setEditingPortfolio(null);
     resetThumbnail();
+    resetBanner();
     setFieldErrors({});
     setGlobalError(undefined);
     setCleanupWarning(undefined);
@@ -158,6 +162,7 @@ export function PortfolioFormPage({
     routeKey,
     replaceWithNewForm,
     resetThumbnail,
+    resetBanner,
   ]);
 
   useEffect(() => {
@@ -216,6 +221,7 @@ export function PortfolioFormPage({
       if (!acceptLoadedForm(load, result.value, loadedForm)) return;
       setEditingPortfolio(result.value);
       resetThumbnail(result.value.thumbnail_public_url);
+      resetBanner(result.value.banner_public_url);
     })();
 
     return () => controller.abort();
@@ -226,6 +232,7 @@ export function PortfolioFormPage({
     formMatchesCurrentRoute,
     detailParam,
     resetThumbnail,
+    resetBanner,
   ]);
 
   const handleFormChange = (nextForm: PortfolioFormState) => {
@@ -270,6 +277,21 @@ export function PortfolioFormPage({
     thumbnail.remove();
   };
 
+  const handleBannerChange = (fileList: FileList | null) => {
+    if (!formOwner.documentIsCurrent(formOwner.documentKey)) return;
+    const result = banner.select(fileList);
+    if (!result.ok) {
+      setFieldErrors((current) => ({ ...current, banner: result.message }));
+      return;
+    }
+    setFieldErrors((current) => ({ ...current, banner: undefined }));
+  };
+
+  const handleBannerRemove = () => {
+    if (!formOwner.documentIsCurrent(formOwner.documentKey)) return;
+    banner.remove();
+  };
+
   const hardDisabled =
     isLoading ||
     isPending ||
@@ -308,6 +330,40 @@ export function PortfolioFormPage({
       return;
     }
 
+    const thumbnailFile = thumbnail.selection.selected?.file;
+    if (thumbnailFile) {
+      const dimensions = await validateAdminImageDimensions(
+        thumbnailFile,
+        "thumbnail",
+        { height: 800, width: 1080 },
+      );
+      if (!dimensions.ok) {
+        setFieldErrors((current) => ({
+          ...current,
+          thumbnail: dimensions.error.message,
+        }));
+        setGlobalError("썸네일 이미지 비율을 확인해 주세요.");
+        return;
+      }
+    }
+
+    const bannerFile = banner.selection.selected?.file;
+    if (bannerFile) {
+      const dimensions = await validateAdminImageDimensions(
+        bannerFile,
+        "banner",
+        { height: 800, width: 1080 },
+      );
+      if (!dimensions.ok) {
+        setFieldErrors((current) => ({
+          ...current,
+          banner: dimensions.error.message,
+        }));
+        setGlobalError("배너 이미지 비율을 확인해 주세요.");
+        return;
+      }
+    }
+
     const existingPortfolio = editingPortfolio;
     if (isEditMode && !existingPortfolio) {
       setGlobalError("저장할 Portfolio를 먼저 불러와야 합니다.");
@@ -338,7 +394,7 @@ export function PortfolioFormPage({
         publicUrl: existingPortfolio?.thumbnail_public_url ?? null,
       },
       removed: thumbnail.selection.removed,
-      save: async (nextThumbnail) => {
+      save: async (nextThumbnail, nextBanner) => {
         if (
           operationController.signal.aborted ||
           !operationIsCurrent(operation) ||
@@ -349,6 +405,14 @@ export function PortfolioFormPage({
 
         const input: PortfolioCreateInput = {
           ...candidate,
+          bannerPath:
+            nextBanner === undefined
+              ? (existingPortfolio?.banner_path ?? null)
+              : nextBanner.path,
+          bannerPublicUrl:
+            nextBanner === undefined
+              ? (existingPortfolio?.banner_public_url ?? null)
+              : nextBanner.publicUrl,
           thumbnailPath: nextThumbnail.path,
           thumbnailPublicUrl: nextThumbnail.publicUrl,
         };
@@ -361,6 +425,14 @@ export function PortfolioFormPage({
             });
       },
       selected: thumbnail.selection.selected,
+      secondary: {
+        current: {
+          path: existingPortfolio?.banner_path ?? null,
+          publicUrl: existingPortfolio?.banner_public_url ?? null,
+        },
+        removed: banner.selection.removed,
+        selected: banner.selection.selected,
+      },
       slug: candidate.slug,
     });
 
@@ -405,6 +477,7 @@ export function PortfolioFormPage({
     setIsPending(false);
     setEditingPortfolio(outcome.result.value);
     thumbnail.reset(outcome.result.value.thumbnail_public_url);
+    banner.reset(outcome.result.value.banner_public_url);
     setFieldErrors({});
     setSuccessMessage(
       existingPortfolio
@@ -499,11 +572,14 @@ export function PortfolioFormPage({
               </p>
             ) : null}
             <PortfolioFormFields
+              banner={banner.selection}
               contentPreviewContainer={contentPreviewContainer}
               documentKey={formOwner.documentKey}
               fieldErrors={fieldErrors}
               form={formOwner.form}
               isDisabled={hardDisabled}
+              onBannerChange={handleBannerChange}
+              onBannerRemove={handleBannerRemove}
               onContentBusyChange={editorState.onBusyChange}
               onContentChange={handleContentChange}
               onFormChange={handleFormChange}

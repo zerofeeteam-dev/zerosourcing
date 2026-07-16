@@ -7,10 +7,11 @@ const rawSource =
   "<!DOCTYPE html>\n<html><body>  <p>원문</p>\n</body></html>\n";
 const contentAssetScope = "00000000-0000-4000-8000-000000000002";
 
-function portfolioRow(
-  overrides: Partial<PortfolioRow> = {},
-): PortfolioRow {
+function portfolioRow(overrides: Partial<PortfolioRow> = {}): PortfolioRow {
   return {
+    banner_alt: "원문 배너",
+    banner_path: "portfolio/raw-test/banner.webp",
+    banner_public_url: "https://cdn.example.com/banner.webp",
     company_name: "원문 테스트",
     content: rawSource,
     content_asset_base_enabled: false,
@@ -172,13 +173,15 @@ test("empty-form factories allocate stable, record-specific asset scopes", () =>
 
 test("portfolioFormFromRow preserves estimate labels as entered", () => {
   assert.equal(
-    portfolioModel.portfolioFormFromRow(portfolioRow({ estimate_label: "298만 원" }))
-      .estimateLabel,
+    portfolioModel.portfolioFormFromRow(
+      portfolioRow({ estimate_label: "298만 원" }),
+    ).estimateLabel,
     "298만 원",
   );
   assert.equal(
-    portfolioModel.portfolioFormFromRow(portfolioRow({ estimate_label: "1200000" }))
-      .estimateLabel,
+    portfolioModel.portfolioFormFromRow(
+      portfolioRow({ estimate_label: "1200000" }),
+    ).estimateLabel,
     "1200000",
   );
 });
@@ -189,7 +192,9 @@ test("row mapping fails closed for unsupported schemas and malformed documents",
       portfolioModel.portfolioFormFromRow(
         portfolioRow({ content_schema_version: 2 }),
       ),
-    { message: "이 글은 현재 에디터보다 새로운 형식이어서 수정할 수 없습니다." },
+    {
+      message: "이 글은 현재 에디터보다 새로운 형식이어서 수정할 수 없습니다.",
+    },
   );
 
   assert.throws(
@@ -200,7 +205,9 @@ test("row mapping fails closed for unsupported schemas and malformed documents",
           content_json: {} as PortfolioRow["content_json"],
         }),
       ),
-    { message: "이 글은 현재 에디터보다 새로운 형식이어서 수정할 수 없습니다." },
+    {
+      message: "이 글은 현재 에디터보다 새로운 형식이어서 수정할 수 없습니다.",
+    },
   );
 
   assert.doesNotThrow(() =>

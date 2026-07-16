@@ -9,7 +9,10 @@ const contentAssetScope = "00000000-0000-4000-8000-000000000012";
 
 function blogPostRow(overrides: Partial<BlogPostRow> = {}): BlogPostRow {
   return {
+    banner_alt: "대표 배너",
+    banner_path: "raw-blog-test/banner.webp",
     banner_published: false,
+    banner_public_url: "https://cdn.example.com/blog-banner.webp",
     banner_sections: [],
     content: rawSource,
     content_asset_base_enabled: true,
@@ -50,7 +53,8 @@ test("new blog form starts with an unselected type", () => {
   });
 
   assert.equal(result.ok, false);
-  if (!result.ok) assert.equal(result.fields.type, "블로그 유형을 선택해주세요.");
+  if (!result.ok)
+    assert.equal(result.fields.type, "블로그 유형을 선택해주세요.");
 });
 
 test("blog form derives the requested save status without mutating the current form", () => {
@@ -170,7 +174,10 @@ test("Blog drafts may be empty but publishing requires content and summary", () 
     type: "insight" as const,
   };
 
-  assert.equal(blogModel.validateBlogForm({ ...base, status: "draft" }).ok, true);
+  assert.equal(
+    blogModel.validateBlogForm({ ...base, status: "draft" }).ok,
+    true,
+  );
 
   const published = blogModel.validateBlogForm({
     ...base,
@@ -198,9 +205,10 @@ test("Blog empty-form factories allocate record-specific asset scopes", () => {
 
 test("Blog row mapping fails closed for unsupported editor schemas", () => {
   assert.throws(
-    () =>
-      blogModel.blogFormFromRow(blogPostRow({ content_schema_version: 2 })),
-    { message: "이 글은 현재 에디터보다 새로운 형식이어서 수정할 수 없습니다." },
+    () => blogModel.blogFormFromRow(blogPostRow({ content_schema_version: 2 })),
+    {
+      message: "이 글은 현재 에디터보다 새로운 형식이어서 수정할 수 없습니다.",
+    },
   );
 
   assert.throws(
@@ -211,6 +219,8 @@ test("Blog row mapping fails closed for unsupported editor schemas", () => {
           content_json: [] as unknown as BlogPostRow["content_json"],
         }),
       ),
-    { message: "이 글은 현재 에디터보다 새로운 형식이어서 수정할 수 없습니다." },
+    {
+      message: "이 글은 현재 에디터보다 새로운 형식이어서 수정할 수 없습니다.",
+    },
   );
 });

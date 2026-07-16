@@ -51,11 +51,15 @@ test("featured Blog fallback removes the overlay and keeps text accessible", asy
 
   assert.match(
     client,
-    /featured\.thumbnailUrl\s*\?\s*""\s*:\s*styles\.featuredCardFallback/u,
+    /featuredImageUrl\s*\?\s*""\s*:\s*styles\.featuredCardFallback/u,
   );
   assert.match(
     client,
-    /featured\.thumbnailUrl\s*\?\s*\(\s*<span aria-hidden="true" className=\{styles\.featuredOverlay\} \/>\s*\)\s*:\s*null/u,
+    /featured\?\.bannerUrl\s*\?\?\s*featured\?\.thumbnailUrl\s*\?\?\s*null/u,
+  );
+  assert.match(
+    client,
+    /featuredImageUrl\s*\?\s*\(\s*<span aria-hidden="true" className=\{styles\.featuredOverlay\} \/>\s*\)\s*:\s*null/u,
   );
   assert.match(
     styles,

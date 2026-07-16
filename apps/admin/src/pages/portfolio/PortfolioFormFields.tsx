@@ -13,12 +13,15 @@ import type { PortfolioFormErrors, PortfolioFormState } from "./portfolioTypes";
 import styles from "../PortfolioAdminPage.module.css";
 
 type PortfolioFormFieldsProps = {
+  readonly banner: AdminThumbnailSelection;
   readonly contentPreviewContainer: HTMLElement | null;
   readonly documentKey: string;
   readonly fieldErrors: PortfolioFormErrors;
   readonly form: PortfolioFormState;
   readonly isDisabled: boolean;
   readonly onContentBusyChange: (busy: boolean) => void;
+  readonly onBannerChange: (fileList: FileList | null) => void;
+  readonly onBannerRemove: () => void;
   readonly onContentChange: (value: ManagedContentFormValue) => void;
   readonly onFormChange: (form: PortfolioFormState) => void;
   readonly onPendingAssetCountChange: (count: number) => void;
@@ -67,11 +70,14 @@ function sectionCount(value: string): number {
 }
 
 export function PortfolioFormFields({
+  banner,
   contentPreviewContainer,
   documentKey,
   fieldErrors,
   form,
   isDisabled,
+  onBannerChange,
+  onBannerRemove,
   onContentBusyChange,
   onContentChange,
   onFormChange,
@@ -84,6 +90,10 @@ export function PortfolioFormFields({
   const visibleFileName =
     thumbnail.selected?.file.name ??
     (visiblePreview ? "저장된 썸네일" : undefined);
+  const visibleBannerPreview = banner.previewUrl && !banner.removed;
+  const visibleBannerFileName =
+    banner.selected?.file.name ??
+    (visibleBannerPreview ? "저장된 배너" : undefined);
 
   return (
     <div className={styles.portfolioFields}>
@@ -266,7 +276,7 @@ export function PortfolioFormFields({
         </PortfolioField>
         <AdminUploadControl
           accept="image/png,image/jpeg,image/webp"
-          acceptLabel="PNG, JPEG, WEBP 등 / 최대 50MB 제한"
+          acceptLabel="1080 × 800 비율 / PNG, JPEG, WEBP 등 / 최대 50MB 제한"
           disabled={isDisabled}
           errorMessage={fieldErrors.thumbnail}
           fileName={visibleFileName}
@@ -284,6 +294,58 @@ export function PortfolioFormFields({
                 alt={form.thumbnailAlt || "Portfolio thumbnail preview"}
                 className={styles.portfolioThumbnailPreview}
                 src={thumbnail.previewUrl}
+              />
+            ) : undefined
+          }
+          previewFullBleed
+          variant="dropzone"
+        />
+      </div>
+
+      <div className={styles.portfolioThumbnailGroup}>
+        <PortfolioField
+          errorMessage={fieldErrors.bannerAlt}
+          htmlFor="portfolio-banner-alt"
+          label="포트폴리오 배너"
+        >
+          <input
+            aria-describedby={
+              fieldErrors.bannerAlt ? "portfolio-banner-alt-error" : undefined
+            }
+            aria-invalid={fieldErrors.bannerAlt ? true : undefined}
+            className={styles.portfolioControl}
+            disabled={isDisabled}
+            id="portfolio-banner-alt"
+            onChange={(event) =>
+              onFormChange({
+                ...form,
+                bannerAlt: event.currentTarget.value,
+              })
+            }
+            placeholder="IMAGE ALT TAG를 입력해주세요."
+            value={form.bannerAlt}
+          />
+        </PortfolioField>
+        <AdminUploadControl
+          accept="image/png,image/jpeg,image/webp"
+          acceptLabel="1080 × 800 비율 / PNG, JPEG, WEBP 등 / 최대 50MB 제한"
+          disabled={isDisabled}
+          errorMessage={fieldErrors.banner}
+          fileName={visibleBannerFileName}
+          id="portfolio-banner"
+          label="포트폴리오 배너 파일"
+          labelHidden
+          onChange={(event) => onBannerChange(event.currentTarget.files)}
+          onFiles={onBannerChange}
+          onRemove={
+            visibleBannerPreview || banner.selected ? onBannerRemove : undefined
+          }
+          preview={
+            visibleBannerPreview ? (
+              <img
+                alt={form.bannerAlt || "Portfolio banner preview"}
+                className={styles.portfolioThumbnailPreview}
+                src={banner.previewUrl}
               />
             ) : undefined
           }

@@ -57,6 +57,7 @@ export const typeFilterOptions = [
 
 export function createEmptyPortfolioFormState(): PortfolioFormState {
   return {
+    bannerAlt: "",
     companyName: "",
     content: "",
     contentAssetBaseEnabled: false,
@@ -140,6 +141,7 @@ export function portfolioFormFromRow(row: PortfolioRow): PortfolioFormState {
 
   return {
     ...managedContent,
+    bannerAlt: row.banner_alt,
     companyName: row.company_name,
     coreFeatures: row.core_features.length > 0 ? row.core_features : [""],
     developmentPeriod: row.development_period,
@@ -250,6 +252,9 @@ export function buildPortfolioInput(
     errors,
     input: {
       ...managedContent,
+      bannerAlt: form.bannerAlt.trim(),
+      bannerPath: null,
+      bannerPublicUrl: null,
       companyName: companyName.value.value,
       coreFeatures: compactItems(form.coreFeatures),
       developmentPeriod: form.developmentPeriod.trim(),

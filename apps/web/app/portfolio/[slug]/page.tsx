@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Footer } from "../../../components/Footer";
 import { Header } from "../../../components/Header";
 import { ManagedContent } from "../../../components/ManagedContent";
+import { ManagedThumbnail } from "../../../components/ManagedThumbnail";
 import { getPublishedPortfolio } from "../../../lib/public-content/queries";
 import { createPageMetadata } from "../../site-metadata";
 import pageStyles from "../../page.module.css";
@@ -94,6 +95,13 @@ export default async function PortfolioDetailPage({
               </div>
             </div>
           </div>
+
+          <ManagedThumbnail
+            alt={portfolio.bannerAlt}
+            className={styles.bannerFrame!}
+            sizes="(max-width: 1120px) calc(100vw - 40px), 1080px"
+            url={portfolio.bannerUrl}
+          />
 
           <div className={styles.managedContent}>
             <ManagedContent

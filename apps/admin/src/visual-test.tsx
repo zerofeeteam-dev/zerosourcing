@@ -2,7 +2,12 @@ import {
   SUPPORTED_CONTENT_SCHEMA_VERSION,
   type TiptapDocument,
 } from "@repo/content/types";
-import { useEffect, useState, type ReactNode, type SyntheticEvent } from "react";
+import {
+  useEffect,
+  useState,
+  type ReactNode,
+  type SyntheticEvent,
+} from "react";
 import { createRoot } from "react-dom/client";
 import "@repo/content/rich-content.css";
 import "../../../design-system.css";
@@ -70,6 +75,7 @@ const rawAssetScope = "00000000-0000-4000-8000-000000000101";
 const wysiwygAssetScope = "00000000-0000-4000-8000-000000000102";
 
 const defaultVisualForm: BlogFormState = {
+  bannerAlt: "",
   bannerPublished: true,
   bannerSections: '[{"id":1},{"id":2}]',
   content: "",
@@ -396,10 +402,13 @@ function VisualTest() {
       >
         <WriteProtectedVisualBoundary>
           <BlogFormFields
+            banner={{ removed: false }}
             documentKey={visualTestConfig.documentKey}
             fieldErrors={{}}
             form={form}
             isDisabled={false}
+            onBannerChange={() => undefined}
+            onBannerRemove={() => undefined}
             onContentBusyChange={() => undefined}
             onContentChange={(value) =>
               setForm((current) => ({ ...current, ...value }))

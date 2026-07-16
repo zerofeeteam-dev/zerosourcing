@@ -259,6 +259,8 @@ export function mapPortfolioDetail(value: unknown): PortfolioDetail {
     ...mapPortfolioCard(row),
     assetBaseEnabled: booleanField(row, "content_asset_base_enabled"),
     assetScope: assetScopeField(row, "content_asset_scope"),
+    bannerAlt: stringField(row, "banner_alt"),
+    bannerUrl: nullableStringField(row, "banner_public_url"),
     content: stringField(row, "content"),
     contentAuthoringMode: enumField(
       row,
@@ -277,7 +279,9 @@ export function mapBlogCard(value: unknown): BlogCard {
   const date =
     nullableDateField(row, "published_date") ?? publishedAt.slice(0, 10);
   return {
+    bannerAlt: stringField(row, "banner_alt"),
     bannerPublished: booleanField(row, "banner_published"),
+    bannerUrl: nullableStringField(row, "banner_public_url"),
     category: blogCategory(type),
     date: displayDate(date),
     landingPublished: booleanField(row, "landing_published"),

@@ -23,6 +23,7 @@ describe("BlogFormFields", () => {
   it("announces the card summary error before the shared content editor", () => {
     render(
       <BlogFormFields
+        banner={{ removed: false }}
         documentKey="blog:new:test"
         fieldErrors={{
           content: "본문 이미지를 확인해 주세요.",
@@ -30,6 +31,8 @@ describe("BlogFormFields", () => {
         }}
         form={createEmptyBlogFormState()}
         isDisabled={false}
+        onBannerChange={vi.fn()}
+        onBannerRemove={vi.fn()}
         onContentBusyChange={vi.fn()}
         onContentChange={vi.fn()}
         onFieldChange={vi.fn()}
@@ -56,5 +59,6 @@ describe("BlogFormFields", () => {
     expect(screen.getByRole("alert").textContent).toBe(
       "본문 이미지를 확인해 주세요.",
     );
+    expect(screen.getByLabelText("블로그 배너 파일")).toBeTruthy();
   });
 });

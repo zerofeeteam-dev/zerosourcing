@@ -105,6 +105,8 @@ export function BlogListClient({ featured, items, top }: BlogListClientProps) {
   }, [items, query]);
   const hasRecords = featured !== null || items.length > 0;
   const hasSearchQuery = query.trim().length > 0;
+  const featuredImageUrl =
+    featured?.bannerUrl ?? featured?.thumbnailUrl ?? null;
 
   return (
     <main className={styles.page}>
@@ -134,17 +136,17 @@ export function BlogListClient({ featured, items, top }: BlogListClientProps) {
             <Link
               aria-label={`${featured.title} 글 보기`}
               className={`${styles.featuredCard} ${
-                featured.thumbnailUrl ? "" : styles.featuredCardFallback
+                featuredImageUrl ? "" : styles.featuredCardFallback
               }`}
               href={`/blog/${featured.slug}`}
             >
               <ManagedThumbnail
-                alt=""
+                alt={featured.bannerAlt || featured.thumbnailAlt}
                 className={styles.featuredThumbnail!}
                 sizes="(max-width: 1080px) calc(100vw - 40px), 1080px"
-                url={featured.thumbnailUrl}
+                url={featuredImageUrl}
               />
-              {featured.thumbnailUrl ? (
+              {featuredImageUrl ? (
                 <span aria-hidden="true" className={styles.featuredOverlay} />
               ) : null}
               <div className={styles.featuredCopy}>

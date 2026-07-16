@@ -26,10 +26,11 @@ export type PortfolioFieldKey =
   | "title"
   | "type";
 export type PortfolioFormErrors = Partial<
-  Record<keyof PortfolioFormState | "thumbnail", string>
+  Record<keyof PortfolioFormState | "banner" | "thumbnail", string>
 >;
 
 export type PortfolioFormState = ManagedContentFormValue & {
+  readonly bannerAlt: string;
   readonly companyName: string;
   readonly coreFeatures: readonly string[];
   readonly developmentPeriod: string;

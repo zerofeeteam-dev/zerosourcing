@@ -117,6 +117,13 @@
   overflow: hidden;
 }
 
+.bannerFrame {
+  width: 100%;
+  aspect-ratio: 9 / 4;
+  border-radius: 16px;
+  background: var(--color-gray-100);
+}
+
 .ctaBanner {
   width: 100%;
   border-radius: 16px;

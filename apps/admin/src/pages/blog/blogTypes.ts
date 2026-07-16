@@ -21,6 +21,7 @@ export type StatusFilter = BlogPostStatus | "all";
 export type TypeFilter = BlogPostType | "all";
 
 export type BlogFormState = ManagedContentFormValue & {
+  readonly bannerAlt: string;
   readonly bannerPublished: boolean;
   readonly bannerSections: string;
   readonly landingPublished: boolean;
@@ -36,7 +37,7 @@ export type BlogFormState = ManagedContentFormValue & {
 };
 
 export type BlogFieldErrors = Partial<
-  Record<keyof BlogFormState | "thumbnail", string>
+  Record<keyof BlogFormState | "banner" | "thumbnail", string>
 >;
 export type BlogFieldChange = <Key extends keyof BlogFormState>(
   key: Key,
@@ -49,7 +50,7 @@ type DistributiveOmit<TValue, TKey extends PropertyKey> = TValue extends unknown
 
 export type BlogParsedInput = DistributiveOmit<
   BlogPostCreateInput,
-  "thumbnailPath" | "thumbnailPublicUrl"
+  "bannerPath" | "bannerPublicUrl" | "thumbnailPath" | "thumbnailPublicUrl"
 >;
 
 export type BlogValidationResult =

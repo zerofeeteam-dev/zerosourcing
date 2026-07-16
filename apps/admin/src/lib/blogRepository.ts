@@ -1,5 +1,10 @@
 import { PostgrestError } from "@supabase/supabase-js";
-import { duplicateSlugFailure, permissionDeniedFailure, saveFailure, supabaseDisabledFailure } from "./adminErrors";
+import {
+  duplicateSlugFailure,
+  permissionDeniedFailure,
+  saveFailure,
+  supabaseDisabledFailure,
+} from "./adminErrors";
 import type {
   AdminRepositoryOptions,
   AdminRepositoryResult,
@@ -11,7 +16,7 @@ import { adminErr, adminOk } from "./adminTypes";
 import type { SupabaseConfig } from "./supabase";
 
 const blogPostColumns =
-  "id,status,type,slug,title,summary,published_date,thumbnail_path,thumbnail_public_url,thumbnail_alt,content_mode,content_authoring_mode,content_json,content_schema_version,content_source_backup,content_asset_scope,content_asset_base_enabled,content,seo_description,landing_published,banner_published,landing_sections,banner_sections,published_at,created_at,updated_at,deleted_at";
+  "id,status,type,slug,title,summary,published_date,thumbnail_path,thumbnail_public_url,thumbnail_alt,banner_path,banner_public_url,banner_alt,content_mode,content_authoring_mode,content_json,content_schema_version,content_source_backup,content_asset_scope,content_asset_base_enabled,content,seo_description,landing_published,banner_published,landing_sections,banner_sections,published_at,created_at,updated_at,deleted_at";
 
 type BlogPostInsert = {
   readonly status: BlogPostCreateInput["status"];
@@ -23,6 +28,9 @@ type BlogPostInsert = {
   readonly thumbnail_path: string | null;
   readonly thumbnail_public_url: string | null;
   readonly thumbnail_alt: string;
+  readonly banner_path: string | null;
+  readonly banner_public_url: string | null;
+  readonly banner_alt: string;
   readonly content: string;
   readonly content_asset_base_enabled: boolean;
   readonly content_asset_scope: string;
@@ -50,6 +58,9 @@ type BlogPostUpdateDraft = {
   thumbnail_path?: string | null;
   thumbnail_public_url?: string | null;
   thumbnail_alt?: string;
+  banner_path?: string | null;
+  banner_public_url?: string | null;
+  banner_alt?: string;
   content?: string;
   content_asset_base_enabled?: boolean;
   content_asset_scope?: string;
@@ -76,6 +87,9 @@ function blogPostInsertFromInput(input: BlogPostCreateInput): BlogPostInsert {
     thumbnail_path: input.thumbnailPath,
     thumbnail_public_url: input.thumbnailPublicUrl,
     thumbnail_alt: input.thumbnailAlt,
+    banner_path: input.bannerPath,
+    banner_public_url: input.bannerPublicUrl,
+    banner_alt: input.bannerAlt,
     content: input.content,
     content_asset_base_enabled: input.contentAssetBaseEnabled,
     content_asset_scope: input.contentAssetScope,
@@ -100,10 +114,18 @@ function blogPostUpdateFromInput(input: BlogPostUpdateInput): BlogPostUpdate {
   if (input.slug !== undefined) update.slug = input.slug.value;
   if (input.title !== undefined) update.title = input.title;
   if (input.summary !== undefined) update.summary = input.summary;
-  if (input.publishedDate !== undefined) update.published_date = input.publishedDate;
-  if (input.thumbnailPath !== undefined) update.thumbnail_path = input.thumbnailPath;
-  if (input.thumbnailPublicUrl !== undefined) update.thumbnail_public_url = input.thumbnailPublicUrl;
-  if (input.thumbnailAlt !== undefined) update.thumbnail_alt = input.thumbnailAlt;
+  if (input.publishedDate !== undefined)
+    update.published_date = input.publishedDate;
+  if (input.thumbnailPath !== undefined)
+    update.thumbnail_path = input.thumbnailPath;
+  if (input.thumbnailPublicUrl !== undefined)
+    update.thumbnail_public_url = input.thumbnailPublicUrl;
+  if (input.thumbnailAlt !== undefined)
+    update.thumbnail_alt = input.thumbnailAlt;
+  if (input.bannerPath !== undefined) update.banner_path = input.bannerPath;
+  if (input.bannerPublicUrl !== undefined)
+    update.banner_public_url = input.bannerPublicUrl;
+  if (input.bannerAlt !== undefined) update.banner_alt = input.bannerAlt;
   if (input.content !== undefined) update.content = input.content;
   if (input.contentAssetBaseEnabled !== undefined)
     update.content_asset_base_enabled = input.contentAssetBaseEnabled;
@@ -117,21 +139,33 @@ function blogPostUpdateFromInput(input: BlogPostUpdateInput): BlogPostUpdate {
     update.content_schema_version = input.contentSchemaVersion;
   if (input.contentSourceBackup !== undefined)
     update.content_source_backup = input.contentSourceBackup;
-  if (input.seoDescription !== undefined) update.seo_description = input.seoDescription;
-  if (input.landingPublished !== undefined) update.landing_published = input.landingPublished;
-  if (input.bannerPublished !== undefined) update.banner_published = input.bannerPublished;
-  if (input.landingSections !== undefined) update.landing_sections = input.landingSections;
-  if (input.bannerSections !== undefined) update.banner_sections = input.bannerSections;
+  if (input.seoDescription !== undefined)
+    update.seo_description = input.seoDescription;
+  if (input.landingPublished !== undefined)
+    update.landing_published = input.landingPublished;
+  if (input.bannerPublished !== undefined)
+    update.banner_published = input.bannerPublished;
+  if (input.landingSections !== undefined)
+    update.landing_sections = input.landingSections;
+  if (input.bannerSections !== undefined)
+    update.banner_sections = input.bannerSections;
 
   return update;
 }
 
-function mapBlogPostError(error: PostgrestError, input?: BlogPostCreateInput | BlogPostUpdateInput) {
+function mapBlogPostError(
+  error: PostgrestError,
+  input?: BlogPostCreateInput | BlogPostUpdateInput,
+) {
   if (error.code === "23505" && input?.slug !== undefined) {
     return duplicateSlugFailure(input.slug);
   }
 
-  if (error.code === "42501" || error.code === "PGRST301" || error.code === "PGRST302") {
+  if (
+    error.code === "42501" ||
+    error.code === "PGRST301" ||
+    error.code === "PGRST302"
+  ) {
     return permissionDeniedFailure();
   }
 
@@ -142,7 +176,8 @@ export async function listBlogPosts(
   config: SupabaseConfig,
   options: AdminRepositoryOptions = {},
 ): Promise<AdminRepositoryResult<readonly BlogPostRow[]>> {
-  if (config.kind === "disabled") return adminErr(supabaseDisabledFailure(config));
+  if (config.kind === "disabled")
+    return adminErr(supabaseDisabledFailure(config));
 
   let query = config.client
     .from("blog_posts")
@@ -152,7 +187,10 @@ export async function listBlogPosts(
 
   if (options.signal !== undefined) query = query.abortSignal(options.signal);
 
-  const { data, error } = await query.overrideTypes<BlogPostRow[], { merge: false }>();
+  const { data, error } = await query.overrideTypes<
+    BlogPostRow[],
+    { merge: false }
+  >();
   if (error) return adminErr(mapBlogPostError(error));
 
   return adminOk(data);
@@ -163,7 +201,8 @@ export async function getBlogPostBySlug(
   slug: string,
   options: AdminRepositoryOptions = {},
 ): Promise<AdminRepositoryResult<BlogPostRow | null>> {
-  if (config.kind === "disabled") return adminErr(supabaseDisabledFailure(config));
+  if (config.kind === "disabled")
+    return adminErr(supabaseDisabledFailure(config));
 
   let query = config.client
     .from("blog_posts")
@@ -173,7 +212,9 @@ export async function getBlogPostBySlug(
 
   if (options.signal !== undefined) query = query.abortSignal(options.signal);
 
-  const { data, error } = await query.maybeSingle().overrideTypes<BlogPostRow | null, { merge: false }>();
+  const { data, error } = await query
+    .maybeSingle()
+    .overrideTypes<BlogPostRow | null, { merge: false }>();
   if (error) return adminErr(mapBlogPostError(error));
 
   return adminOk(data);
@@ -184,7 +225,8 @@ export async function createBlogPost(
   input: BlogPostCreateInput,
   options: AdminRepositoryOptions = {},
 ): Promise<AdminRepositoryResult<BlogPostRow>> {
-  if (config.kind === "disabled") return adminErr(supabaseDisabledFailure(config));
+  if (config.kind === "disabled")
+    return adminErr(supabaseDisabledFailure(config));
 
   let query = config.client
     .from("blog_posts")
@@ -193,7 +235,9 @@ export async function createBlogPost(
 
   if (options.signal !== undefined) query = query.abortSignal(options.signal);
 
-  const { data, error } = await query.single().overrideTypes<BlogPostRow | null, { merge: false }>();
+  const { data, error } = await query
+    .single()
+    .overrideTypes<BlogPostRow | null, { merge: false }>();
   if (error) return adminErr(mapBlogPostError(error, input));
 
   return data === null ? adminErr(saveFailure()) : adminOk(data);
@@ -205,7 +249,8 @@ export async function updateBlogPost(
   input: BlogPostUpdateInput,
   options: AdminRepositoryOptions = {},
 ): Promise<AdminRepositoryResult<BlogPostRow>> {
-  if (config.kind === "disabled") return adminErr(supabaseDisabledFailure(config));
+  if (config.kind === "disabled")
+    return adminErr(supabaseDisabledFailure(config));
 
   let query = config.client
     .from("blog_posts")
@@ -216,7 +261,9 @@ export async function updateBlogPost(
 
   if (options.signal !== undefined) query = query.abortSignal(options.signal);
 
-  const { data, error } = await query.single().overrideTypes<BlogPostRow | null, { merge: false }>();
+  const { data, error } = await query
+    .single()
+    .overrideTypes<BlogPostRow | null, { merge: false }>();
   if (error) return adminErr(mapBlogPostError(error, input));
 
   return data === null ? adminErr(saveFailure()) : adminOk(data);
@@ -227,7 +274,8 @@ export async function deleteBlogPost(
   id: string,
   options: AdminRepositoryOptions = {},
 ): Promise<AdminRepositoryResult<BlogPostRow>> {
-  if (config.kind === "disabled") return adminErr(supabaseDisabledFailure(config));
+  if (config.kind === "disabled")
+    return adminErr(supabaseDisabledFailure(config));
 
   let query = config.client
     .from("blog_posts")
@@ -238,7 +286,9 @@ export async function deleteBlogPost(
 
   if (options.signal !== undefined) query = query.abortSignal(options.signal);
 
-  const { data, error } = await query.single().overrideTypes<BlogPostRow | null, { merge: false }>();
+  const { data, error } = await query
+    .single()
+    .overrideTypes<BlogPostRow | null, { merge: false }>();
   if (error) return adminErr(mapBlogPostError(error));
 
   return data === null ? adminErr(saveFailure()) : adminOk(data);

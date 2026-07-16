@@ -1,7 +1,10 @@
 import { CONTENT_STORAGE_BUCKET } from "@repo/content/asset-url";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { saveFailure, type AdminFailure } from "./adminErrors";
-import { persistThumbnailChange } from "./thumbnailPersistence";
+import {
+  persistThumbnailChange,
+  type ThumbnailReference,
+} from "./thumbnailPersistence";
 import { adminErr, adminOk } from "./adminTypes";
 import type { AdminSlug, AdminThumbnailFile } from "./adminTypes";
 import type { SupabaseConfig } from "./supabase";
@@ -52,6 +55,46 @@ afterEach(() => {
 });
 
 describe("persistThumbnailChange edge contracts", () => {
+  it("uploads and saves a secondary image in the same row write", async () => {
+    vi.spyOn(globalThis.crypto, "randomUUID")
+      .mockReturnValueOnce(fixedUuid)
+      .mockReturnValueOnce(oldUuid);
+    const fake = fakeStorage();
+    const thumbnailPath = `${slug.value}/${fixedUuid}.webp`;
+    const bannerPath = `${slug.value}/${oldUuid}.webp`;
+    const save = vi.fn(
+      async (next: ThumbnailReference, secondaryNext?: ThumbnailReference) => {
+        expect(next.path).toBe(thumbnailPath);
+        expect(secondaryNext?.path).toBe(bannerPath);
+        return adminOk("saved");
+      },
+    );
+
+    const outcome = await persistThumbnailChange({
+      config: fake.config,
+      current: { path: null, publicUrl: null },
+      removed: false,
+      save,
+      secondary: {
+        current: { path: null, publicUrl: null },
+        removed: false,
+        selected: thumbnail(),
+      },
+      selected: thumbnail(),
+      slug,
+    });
+
+    expect(outcome.result).toEqual({ ok: true, value: "saved" });
+    expect(outcome.cleanupIssues).toEqual([]);
+    expect(save).toHaveBeenCalledTimes(1);
+    expect(fake.events).toEqual([
+      `upload:${thumbnailPath}`,
+      `public-url:${thumbnailPath}`,
+      `upload:${bannerPath}`,
+      `public-url:${bannerPath}`,
+    ]);
+  });
+
   it("lets an explicit selection win over a stale removed flag", async () => {
     vi.spyOn(globalThis.crypto, "randomUUID").mockReturnValue(fixedUuid);
     const fake = fakeStorage();

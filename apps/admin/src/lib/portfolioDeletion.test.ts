@@ -29,8 +29,14 @@ vi.mock("./thumbnailStorage", () => ({
 const config = { kind: "enabled" } as SupabaseConfig;
 const assetScope = "00000000-0000-4000-8000-000000000701";
 
-function deletedPortfolio(thumbnailPath: string | null): PortfolioRow {
+function deletedPortfolio(
+  thumbnailPath: string | null,
+  bannerPath: string | null = null,
+): PortfolioRow {
   return {
+    banner_alt: "",
+    banner_path: bannerPath,
+    banner_public_url: null,
     company_name: "삭제할 포트폴리오",
     content: "<p>본문</p>",
     content_asset_base_enabled: false,
@@ -115,6 +121,24 @@ describe("deletePortfolioWithStorageCleanup", () => {
       cleanupIssues: [],
       result: { ok: true, value: portfolio },
     });
+  });
+
+  it("removes the deleted Portfolio's banner image", async () => {
+    const portfolio = deletedPortfolio(null, "delete-target/banner.webp");
+    mocks.deletePortfolio.mockResolvedValue({ ok: true, value: portfolio });
+    mocks.removeContentAssetScope.mockResolvedValue({ ok: true, value: [] });
+    mocks.removeThumbnail.mockResolvedValue({ ok: true, value: null });
+
+    const outcome = await deletePortfolioWithStorageCleanup(
+      config,
+      portfolio.id,
+    );
+
+    expect(mocks.removeThumbnail).toHaveBeenCalledWith(
+      config,
+      portfolio.banner_path,
+    );
+    expect(outcome.cleanupIssues).toEqual([]);
   });
 
   it("does not call thumbnail cleanup when the deleted Portfolio has no thumbnail", async () => {

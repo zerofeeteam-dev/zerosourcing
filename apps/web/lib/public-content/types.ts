@@ -27,6 +27,8 @@ export type PortfolioCard = {
 export type PortfolioDetail = PortfolioCard & {
   readonly assetBaseEnabled: boolean;
   readonly assetScope: string;
+  readonly bannerAlt: string;
+  readonly bannerUrl: string | null;
   readonly content: string;
   readonly contentAuthoringMode: ContentAuthoringMode;
   readonly contentMode: ContentOutputMode;
@@ -34,7 +36,9 @@ export type PortfolioDetail = PortfolioCard & {
 };
 
 export type BlogCard = {
+  readonly bannerAlt: string;
   readonly bannerPublished: boolean;
+  readonly bannerUrl: string | null;
   readonly category: string;
   readonly date: string;
   readonly landingPublished: boolean;

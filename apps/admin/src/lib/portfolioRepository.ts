@@ -1,5 +1,10 @@
 import { PostgrestError } from "@supabase/supabase-js";
-import { duplicateSlugFailure, permissionDeniedFailure, saveFailure, supabaseDisabledFailure } from "./adminErrors";
+import {
+  duplicateSlugFailure,
+  permissionDeniedFailure,
+  saveFailure,
+  supabaseDisabledFailure,
+} from "./adminErrors";
 import type {
   AdminRepositoryOptions,
   AdminRepositoryResult,
@@ -11,7 +16,7 @@ import { adminErr, adminOk } from "./adminTypes";
 import type { SupabaseConfig } from "./supabase";
 
 const portfolioColumns =
-  "id,status,type,slug,title,company_name,product_description,estimate_label,development_period,core_features,work_scopes,content_mode,content_authoring_mode,content_json,content_schema_version,content_source_backup,content_asset_scope,content_asset_base_enabled,content,seo_description,thumbnail_path,thumbnail_public_url,thumbnail_alt,landing_published,service_published,landing_sections,service_sections,published_at,created_at,updated_at,deleted_at";
+  "id,status,type,slug,title,company_name,product_description,estimate_label,development_period,core_features,work_scopes,content_mode,content_authoring_mode,content_json,content_schema_version,content_source_backup,content_asset_scope,content_asset_base_enabled,content,seo_description,thumbnail_path,thumbnail_public_url,thumbnail_alt,banner_path,banner_public_url,banner_alt,landing_published,service_published,landing_sections,service_sections,published_at,created_at,updated_at,deleted_at";
 
 type PortfolioInsert = {
   readonly status: PortfolioCreateInput["status"];
@@ -36,6 +41,9 @@ type PortfolioInsert = {
   readonly thumbnail_alt: string;
   readonly thumbnail_path: string | null;
   readonly thumbnail_public_url: string | null;
+  readonly banner_path: string | null;
+  readonly banner_public_url: string | null;
+  readonly banner_alt: string;
   readonly landing_published: boolean;
   readonly service_published: boolean;
   readonly landing_sections: PortfolioCreateInput["landingSections"];
@@ -67,13 +75,18 @@ type PortfolioUpdateDraft = {
   thumbnail_alt?: string;
   thumbnail_path?: string | null;
   thumbnail_public_url?: string | null;
+  banner_path?: string | null;
+  banner_public_url?: string | null;
+  banner_alt?: string;
   landing_published?: boolean;
   service_published?: boolean;
   landing_sections?: PortfolioInsert["landing_sections"];
   service_sections?: PortfolioInsert["service_sections"];
 };
 
-function portfolioInsertFromInput(input: PortfolioCreateInput): PortfolioInsert {
+function portfolioInsertFromInput(
+  input: PortfolioCreateInput,
+): PortfolioInsert {
   return {
     status: input.status,
     type: input.type,
@@ -97,6 +110,9 @@ function portfolioInsertFromInput(input: PortfolioCreateInput): PortfolioInsert 
     thumbnail_alt: input.thumbnailAlt,
     thumbnail_path: input.thumbnailPath,
     thumbnail_public_url: input.thumbnailPublicUrl,
+    banner_path: input.bannerPath,
+    banner_public_url: input.bannerPublicUrl,
+    banner_alt: input.bannerAlt,
     landing_published: input.landingPublished,
     service_published: input.servicePublished,
     landing_sections: input.landingSections,
@@ -104,7 +120,9 @@ function portfolioInsertFromInput(input: PortfolioCreateInput): PortfolioInsert 
   };
 }
 
-function portfolioUpdateFromInput(input: PortfolioUpdateInput): PortfolioUpdate {
+function portfolioUpdateFromInput(
+  input: PortfolioUpdateInput,
+): PortfolioUpdate {
   const update: PortfolioUpdateDraft = {};
 
   if (input.status !== undefined) update.status = input.status;
@@ -112,10 +130,14 @@ function portfolioUpdateFromInput(input: PortfolioUpdateInput): PortfolioUpdate 
   if (input.slug !== undefined) update.slug = input.slug.value;
   if (input.title !== undefined) update.title = input.title;
   if (input.companyName !== undefined) update.company_name = input.companyName;
-  if (input.productDescription !== undefined) update.product_description = input.productDescription;
-  if (input.estimateLabel !== undefined) update.estimate_label = input.estimateLabel;
-  if (input.developmentPeriod !== undefined) update.development_period = input.developmentPeriod;
-  if (input.coreFeatures !== undefined) update.core_features = input.coreFeatures;
+  if (input.productDescription !== undefined)
+    update.product_description = input.productDescription;
+  if (input.estimateLabel !== undefined)
+    update.estimate_label = input.estimateLabel;
+  if (input.developmentPeriod !== undefined)
+    update.development_period = input.developmentPeriod;
+  if (input.coreFeatures !== undefined)
+    update.core_features = input.coreFeatures;
   if (input.workScopes !== undefined) update.work_scopes = input.workScopes;
   if (input.content !== undefined) update.content = input.content;
   if (input.contentAssetBaseEnabled !== undefined)
@@ -130,25 +152,43 @@ function portfolioUpdateFromInput(input: PortfolioUpdateInput): PortfolioUpdate 
     update.content_schema_version = input.contentSchemaVersion;
   if (input.contentSourceBackup !== undefined)
     update.content_source_backup = input.contentSourceBackup;
-  if (input.seoDescription !== undefined) update.seo_description = input.seoDescription;
-  if (input.thumbnailAlt !== undefined) update.thumbnail_alt = input.thumbnailAlt;
-  if (input.thumbnailPath !== undefined) update.thumbnail_path = input.thumbnailPath;
+  if (input.seoDescription !== undefined)
+    update.seo_description = input.seoDescription;
+  if (input.thumbnailAlt !== undefined)
+    update.thumbnail_alt = input.thumbnailAlt;
+  if (input.thumbnailPath !== undefined)
+    update.thumbnail_path = input.thumbnailPath;
   if (input.thumbnailPublicUrl !== undefined)
     update.thumbnail_public_url = input.thumbnailPublicUrl;
-  if (input.landingPublished !== undefined) update.landing_published = input.landingPublished;
-  if (input.servicePublished !== undefined) update.service_published = input.servicePublished;
-  if (input.landingSections !== undefined) update.landing_sections = input.landingSections;
-  if (input.serviceSections !== undefined) update.service_sections = input.serviceSections;
+  if (input.bannerPath !== undefined) update.banner_path = input.bannerPath;
+  if (input.bannerPublicUrl !== undefined)
+    update.banner_public_url = input.bannerPublicUrl;
+  if (input.bannerAlt !== undefined) update.banner_alt = input.bannerAlt;
+  if (input.landingPublished !== undefined)
+    update.landing_published = input.landingPublished;
+  if (input.servicePublished !== undefined)
+    update.service_published = input.servicePublished;
+  if (input.landingSections !== undefined)
+    update.landing_sections = input.landingSections;
+  if (input.serviceSections !== undefined)
+    update.service_sections = input.serviceSections;
 
   return update;
 }
 
-function mapPortfolioError(error: PostgrestError, input?: PortfolioCreateInput | PortfolioUpdateInput) {
+function mapPortfolioError(
+  error: PostgrestError,
+  input?: PortfolioCreateInput | PortfolioUpdateInput,
+) {
   if (error.code === "23505" && input?.slug !== undefined) {
     return duplicateSlugFailure(input.slug);
   }
 
-  if (error.code === "42501" || error.code === "PGRST301" || error.code === "PGRST302") {
+  if (
+    error.code === "42501" ||
+    error.code === "PGRST301" ||
+    error.code === "PGRST302"
+  ) {
     return permissionDeniedFailure();
   }
 
@@ -159,7 +199,8 @@ export async function listPortfolios(
   config: SupabaseConfig,
   options: AdminRepositoryOptions = {},
 ): Promise<AdminRepositoryResult<readonly PortfolioRow[]>> {
-  if (config.kind === "disabled") return adminErr(supabaseDisabledFailure(config));
+  if (config.kind === "disabled")
+    return adminErr(supabaseDisabledFailure(config));
 
   let query = config.client
     .from("portfolios")
@@ -169,7 +210,10 @@ export async function listPortfolios(
 
   if (options.signal !== undefined) query = query.abortSignal(options.signal);
 
-  const { data, error } = await query.overrideTypes<PortfolioRow[], { merge: false }>();
+  const { data, error } = await query.overrideTypes<
+    PortfolioRow[],
+    { merge: false }
+  >();
   if (error) return adminErr(mapPortfolioError(error));
 
   return adminOk(data);
@@ -180,7 +224,8 @@ export async function getPortfolioBySlug(
   slug: string,
   options: AdminRepositoryOptions = {},
 ): Promise<AdminRepositoryResult<PortfolioRow | null>> {
-  if (config.kind === "disabled") return adminErr(supabaseDisabledFailure(config));
+  if (config.kind === "disabled")
+    return adminErr(supabaseDisabledFailure(config));
 
   let query = config.client
     .from("portfolios")
@@ -190,7 +235,9 @@ export async function getPortfolioBySlug(
 
   if (options.signal !== undefined) query = query.abortSignal(options.signal);
 
-  const { data, error } = await query.maybeSingle().overrideTypes<PortfolioRow | null, { merge: false }>();
+  const { data, error } = await query
+    .maybeSingle()
+    .overrideTypes<PortfolioRow | null, { merge: false }>();
   if (error) return adminErr(mapPortfolioError(error));
 
   return adminOk(data);
@@ -201,7 +248,8 @@ export async function createPortfolio(
   input: PortfolioCreateInput,
   options: AdminRepositoryOptions = {},
 ): Promise<AdminRepositoryResult<PortfolioRow>> {
-  if (config.kind === "disabled") return adminErr(supabaseDisabledFailure(config));
+  if (config.kind === "disabled")
+    return adminErr(supabaseDisabledFailure(config));
 
   let query = config.client
     .from("portfolios")
@@ -210,7 +258,9 @@ export async function createPortfolio(
 
   if (options.signal !== undefined) query = query.abortSignal(options.signal);
 
-  const { data, error } = await query.single().overrideTypes<PortfolioRow | null, { merge: false }>();
+  const { data, error } = await query
+    .single()
+    .overrideTypes<PortfolioRow | null, { merge: false }>();
   if (error) return adminErr(mapPortfolioError(error, input));
 
   return data === null ? adminErr(saveFailure()) : adminOk(data);
@@ -222,7 +272,8 @@ export async function updatePortfolio(
   input: PortfolioUpdateInput,
   options: AdminRepositoryOptions = {},
 ): Promise<AdminRepositoryResult<PortfolioRow>> {
-  if (config.kind === "disabled") return adminErr(supabaseDisabledFailure(config));
+  if (config.kind === "disabled")
+    return adminErr(supabaseDisabledFailure(config));
 
   let query = config.client
     .from("portfolios")
@@ -233,7 +284,9 @@ export async function updatePortfolio(
 
   if (options.signal !== undefined) query = query.abortSignal(options.signal);
 
-  const { data, error } = await query.single().overrideTypes<PortfolioRow | null, { merge: false }>();
+  const { data, error } = await query
+    .single()
+    .overrideTypes<PortfolioRow | null, { merge: false }>();
   if (error) return adminErr(mapPortfolioError(error, input));
 
   return data === null ? adminErr(saveFailure()) : adminOk(data);
@@ -244,7 +297,8 @@ export async function deletePortfolio(
   id: string,
   options: AdminRepositoryOptions = {},
 ): Promise<AdminRepositoryResult<PortfolioRow>> {
-  if (config.kind === "disabled") return adminErr(supabaseDisabledFailure(config));
+  if (config.kind === "disabled")
+    return adminErr(supabaseDisabledFailure(config));
 
   let query = config.client
     .from("portfolios")
@@ -255,7 +309,9 @@ export async function deletePortfolio(
 
   if (options.signal !== undefined) query = query.abortSignal(options.signal);
 
-  const { data, error } = await query.single().overrideTypes<PortfolioRow | null, { merge: false }>();
+  const { data, error } = await query
+    .single()
+    .overrideTypes<PortfolioRow | null, { merge: false }>();
   if (error) return adminErr(mapPortfolioError(error));
 
   return data === null ? adminErr(saveFailure()) : adminOk(data);
