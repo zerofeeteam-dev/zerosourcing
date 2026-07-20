@@ -195,10 +195,10 @@ function PortfolioCard({ item }: { readonly item: PortfolioCardModel }) {
           <h2 className={styles.cardTitle}>{item.title}</h2>
           <p className={styles.cardDescription}>{item.description}</p>
         </div>
-        <p className={styles.duration}>
-          <Icon name="calendar-02" size={16} />
-          <span>{item.duration}</span>
-        </p>
+        <div className={styles.cardMeta}>
+          <span className={styles.metaTag}>소요기간 {item.duration}</span>
+          <span className={styles.metaTag}>{item.estimate}</span>
+        </div>
       </div>
     </Link>
   );

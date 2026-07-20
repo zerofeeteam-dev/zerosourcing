@@ -99,6 +99,11 @@ test("the inlined company homepage sections preserve approved visual rules", asy
   );
   assert.match(
     styles,
+    /\.iconFrame\s*\{[\s\S]*?background:\s*#ffffff;[\s\S]*?color:\s*var\(--color-gray-800\);/u,
+  );
+  assert.doesNotMatch(styles, /\.iconFrame[\s\S]*?:hover/u);
+  assert.match(
+    styles,
     /\.companySeoGeoCardDescription\s*\{[\s\S]*?width:\s*400px;[\s\S]*?\}/,
   );
   assert.match(

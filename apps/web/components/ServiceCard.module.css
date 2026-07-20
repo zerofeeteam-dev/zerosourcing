@@ -68,16 +68,19 @@
 }
 
 .iconFrame {
+  display: grid;
+  place-items: center;
   width: 40px;
   height: 40px;
   border-radius: 16px;
+  background: #ffffff;
   color: var(--color-gray-800);
   transition: color 220ms ease-in-out;
 }
 
 .card:hover .iconFrame,
 .card:focus-within .iconFrame {
-  color: #f8faff;
+  color: var(--color-brand-500);
 }
 
 .title {

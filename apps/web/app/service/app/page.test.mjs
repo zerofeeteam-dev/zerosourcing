@@ -93,6 +93,11 @@ test("the inlined app sections preserve approved visual rules", async () => {
   );
   assert.match(
     styles,
+    /\.appNativeFeatureIconFrame\s*\{[\s\S]*?background:\s*#ffffff;[\s\S]*?color:\s*var\(--color-gray-800\);/u,
+  );
+  assert.doesNotMatch(styles, /\.appNativeFeatureIconFrame[\s\S]*?:hover/u);
+  assert.match(
+    styles,
     /@media \(max-width:\s*900px\)[\s\S]*?\.appNativeFeatureCard\s*\{[\s\S]*?gap:\s*8px;/,
   );
   assert.doesNotMatch(

@@ -180,7 +180,7 @@ export default function FaqPage() {
                   key={category.id}
                 >
                   <header className={styles.categoryHeader}>
-                    <span className={`${styles.categoryIcon} glass-surface`}>
+                    <span className={styles.categoryIcon}>
                       <Icon name={category.icon} size={16} />
                     </span>
                     <div className={styles.categoryText}>

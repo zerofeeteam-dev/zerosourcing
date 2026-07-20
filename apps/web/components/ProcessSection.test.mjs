@@ -3,7 +3,21 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 const processSectionPath = new URL("./ProcessSection.tsx", import.meta.url);
+const processSectionStylesPath = new URL(
+  "./ProcessSection.module.css",
+  import.meta.url,
+);
 const iconPath = new URL("./Icon.tsx", import.meta.url);
+
+test("process step icon frames use a fixed white surface without hover styling", async () => {
+  const styles = await readFile(processSectionStylesPath, "utf8");
+
+  assert.match(
+    styles,
+    /\.stepIconFrame\s*\{[\s\S]*?background:\s*#ffffff;[\s\S]*?color:\s*var\(--color-gray-800\);/u,
+  );
+  assert.doesNotMatch(styles, /\.stepIconFrame[\s\S]*?:hover/u);
+});
 
 test("MVP process section uses the approved four-week messaging", async () => {
   const processSection = await readFile(processSectionPath, "utf8");

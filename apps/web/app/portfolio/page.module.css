@@ -237,7 +237,7 @@
 }
 
 .filter {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--color-gray-50);
   color: #000000;
 }
 
@@ -309,12 +309,24 @@
   color: var(--color-gray-600);
 }
 
-.duration {
+.cardMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.metaTag {
   composes: pretendard-medium-12 from global;
   display: flex;
+  height: 32px;
+  padding: 0 12px;
+  justify-content: center;
   align-items: center;
-  gap: 4px;
+  gap: 10px;
+  border-radius: 20px;
+  background: var(--color-gray-50);
   color: var(--color-gray-600);
+  white-space: nowrap;
 }
 
 @media (max-width: 1080px) {
