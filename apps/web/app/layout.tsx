@@ -14,6 +14,12 @@ import {
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+  verification: {
+    other: {
+      "naver-site-verification":
+        "1354aa7def5f9d3e6c769cc5e78353b63a60a7b5",
+    },
+  },
   ...createPageMetadata({
     title: HOME_TITLE,
     description: HOME_DESCRIPTION,
