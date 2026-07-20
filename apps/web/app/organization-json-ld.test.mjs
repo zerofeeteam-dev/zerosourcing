@@ -9,12 +9,12 @@ test("organization JSON-LD is valid and matches public company facts", async () 
 
   assert.equal(jsonLd["@context"], "https://schema.org");
   assert.equal(jsonLd["@type"], "Organization");
-  assert.equal(jsonLd["@id"], "https://zerosourcing.kr/#organization");
+  assert.equal(jsonLd["@id"], "https://www.zerosourcing.kr/#organization");
   assert.equal(jsonLd.name, "제로소싱");
   assert.equal(jsonLd.legalName, "제로피");
   assert.deepEqual(jsonLd.alternateName, ["zeroSourcing", "제로소싱"]);
-  assert.equal(jsonLd.url, "https://zerosourcing.kr");
-  assert.equal(jsonLd.image, "https://zerosourcing.kr/og.png");
+  assert.equal(jsonLd.url, "https://www.zerosourcing.kr");
+  assert.equal(jsonLd.image, "https://www.zerosourcing.kr/og.png");
   assert.equal(jsonLd.logo, undefined);
   assert.equal(jsonLd.email, "contact@zerofee.kr");
   assert.equal(jsonLd.telephone, "+82-10-3242-8118");
@@ -74,9 +74,9 @@ test("organization JSON-LD is valid and matches public company facts", async () 
   assert.deepEqual(
     offers.slice(0, 3).map(({ itemOffered }) => itemOffered.url),
     [
-      "https://zerosourcing.kr/service/mvp",
-      "https://zerosourcing.kr/service/app",
-      "https://zerosourcing.kr/service/company-homepage",
+      "https://www.zerosourcing.kr/service/mvp",
+      "https://www.zerosourcing.kr/service/app",
+      "https://www.zerosourcing.kr/service/company-homepage",
     ],
   );
   assert.equal(offers[3].itemOffered.url, undefined);

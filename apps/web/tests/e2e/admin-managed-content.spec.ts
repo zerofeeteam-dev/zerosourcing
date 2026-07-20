@@ -562,7 +562,7 @@ async function expectRawPortfolioPublished(
   );
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
     "href",
-    `https://zerosourcing.kr/portfolio/${PORTFOLIO_SLUG}`,
+    `https://www.zerosourcing.kr/portfolio/${PORTFOLIO_SLUG}`,
   );
 
   const frameElement = page.locator(`iframe[title="${PORTFOLIO_TITLE}"]`);
@@ -620,7 +620,7 @@ async function expectRawPortfolioPublished(
 
   const sitemap = await sitemapText(request);
   expect(sitemap).toContain(
-    `https://zerosourcing.kr/portfolio/${PORTFOLIO_SLUG}`,
+    `https://www.zerosourcing.kr/portfolio/${PORTFOLIO_SLUG}`,
   );
 }
 
@@ -637,7 +637,7 @@ async function expectWysiwygBlogPublished(
   );
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
     "href",
-    `https://zerosourcing.kr/blog/${BLOG_SLUG}`,
+    `https://www.zerosourcing.kr/blog/${BLOG_SLUG}`,
   );
 
   const content = page.locator(".rich-content");
@@ -680,7 +680,7 @@ async function expectWysiwygBlogPublished(
   await gotoFresh(page, "/");
   await expect(publicLink(page, `/blog/${BLOG_SLUG}`)).toBeVisible();
   expect(await sitemapText(request)).toContain(
-    `https://zerosourcing.kr/blog/${BLOG_SLUG}`,
+    `https://www.zerosourcing.kr/blog/${BLOG_SLUG}`,
   );
 }
 

@@ -1,12 +1,12 @@
 {
   "@context": "https://schema.org",
   "@type": "Organization",
-  "@id": "https://zerosourcing.kr/#organization",
+  "@id": "https://www.zerosourcing.kr/#organization",
   "name": "제로소싱",
   "legalName": "제로피",
   "alternateName": ["zeroSourcing", "제로소싱"],
-  "url": "https://zerosourcing.kr",
-  "image": "https://zerosourcing.kr/og.png",
+  "url": "https://www.zerosourcing.kr",
+  "image": "https://www.zerosourcing.kr/og.png",
   "email": "contact@zerofee.kr",
   "telephone": "+82-10-3242-8118",
   "description": "MVP 개발 외주 전문 기업. 과한 스펙도 긴 일정도 없이 핵심 기능만 담아 평균 4주 만에 출시·검증하는 개발 파트너. MVP 개발, 하이브리드 앱 개발, 기업 홈페이지 제작, 인터넷 강의 홈페이지 제작, 온라인 쇼핑몰 제작을 제공하며, 기능 항목별 정찰가로 견적이 투명하고 버그를 영구 보장한다.",
@@ -72,7 +72,7 @@
           "name": "MVP 개발",
           "description": "검증에 필요한 핵심 기능만 담아 평균 4주 만에 출시하는 MVP 개발 외주 서비스. 정부지원사업 자금으로 개발비 집행이 가능하다.",
           "serviceType": "MVP 개발",
-          "url": "https://zerosourcing.kr/service/mvp"
+          "url": "https://www.zerosourcing.kr/service/mvp"
         }
       },
       {
@@ -82,7 +82,7 @@
           "name": "하이브리드 앱 개발",
           "description": "웹뷰 하이브리드 방식으로 한 번 개발해 iOS·안드로이드에 동시 출시하고, 구글·애플 스토어 등록까지 대행하는 앱 개발 서비스",
           "serviceType": "앱 개발",
-          "url": "https://zerosourcing.kr/service/app"
+          "url": "https://www.zerosourcing.kr/service/app"
         }
       },
       {
@@ -92,7 +92,7 @@
           "name": "기업 홈페이지 제작",
           "description": "반응형과 검색엔진·생성형 AI 검색 최적화(SEO·GEO), 도메인·서버·보안까지 포함하는 기업 홈페이지 제작 서비스",
           "serviceType": "홈페이지 제작",
-          "url": "https://zerosourcing.kr/service/company-homepage"
+          "url": "https://www.zerosourcing.kr/service/company-homepage"
         }
       },
       {

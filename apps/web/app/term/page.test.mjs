@@ -49,7 +49,7 @@ test("the terms route renders the complete source policy with the shared chrome"
 test("the terms route is linked from the footer and exposed in the sitemap", async () => {
   const [footer, sitemap] = await Promise.all([
     readOrEmpty("../../components/Footer.tsx"),
-    readOrEmpty("../sitemap.ts"),
+    readOrEmpty("../sitemap.xml/route.ts"),
   ]);
 
   assert.match(footer, /import Link from "next\/link";/);

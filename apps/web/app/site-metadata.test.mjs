@@ -93,9 +93,9 @@ const staticMetadataExpectations = [
 test("the shared metadata helper owns the canonical domain and social image", async () => {
   const source = await readOrEmpty("./site-metadata.ts");
 
-  assert.match(source, /export const SITE_URL = "https:\/\/zerosourcing\.kr";/);
+  assert.match(source, /export const SITE_URL = "https:\/\/www\.zerosourcing\.kr";/);
   assert.match(source, /export function createPageMetadata/);
-  assert.match(source, /url: "https:\/\/zerosourcing\.kr\/og\.png"/);
+  assert.match(source, /url: `\$\{SITE_URL\}\/og\.png`/);
   assert.match(source, /width: 1200/);
   assert.match(source, /height: 800/);
   assert.match(source, /card: "summary_large_image"/);
@@ -170,17 +170,17 @@ test("blog and portfolio details derive metadata from their route data", async (
 test("robots and sitemap expose the canonical public routes", async () => {
   const [robots, sitemap] = await Promise.all([
     readOrEmpty("./robots.ts"),
-    readOrEmpty("./sitemap.ts"),
+    readOrEmpty("./sitemap.xml/route.ts"),
   ]);
 
   assert.match(robots, /sitemap: `\$\{SITE_URL\}\/sitemap\.xml`/);
   assert.match(robots, /host: SITE_URL/);
   assert.match(sitemap, /export const dynamic = "force-dynamic";/);
-  assert.match(sitemap, /export default async function sitemap/);
+  assert.match(sitemap, /export async function GET/);
   assert.match(sitemap, /getPublishedBlogPosts/);
   assert.match(sitemap, /getPublishedPortfolios/);
-  assert.match(sitemap, /lastModified: post\.updatedAt/);
-  assert.match(sitemap, /lastModified: portfolio\.updatedAt/);
+  assert.match(sitemap, /post\.updatedAt/);
+  assert.match(sitemap, /portfolio\.updatedAt/);
   assert.doesNotMatch(sitemap, /blog-posts|portfolio-items/);
 
   for (const path of staticMetadataExpectations.map((item) => item.path)) {
