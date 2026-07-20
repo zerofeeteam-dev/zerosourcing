@@ -168,13 +168,18 @@ test("blog and portfolio details derive metadata from their route data", async (
 });
 
 test("robots and sitemap expose the canonical public routes", async () => {
-  const [robots, sitemap] = await Promise.all([
+  const [robots, sitemap, nextConfig] = await Promise.all([
     readOrEmpty("./robots.ts"),
-    readOrEmpty("./sitemap.xml/route.ts"),
+    readOrEmpty("./api/sitemap/route.ts"),
+    readOrEmpty("../next.config.js"),
   ]);
 
   assert.match(robots, /sitemap: `\$\{SITE_URL\}\/sitemap\.xml`/);
   assert.match(robots, /host: SITE_URL/);
+  assert.match(
+    nextConfig,
+    /source: "\/sitemap\.xml", destination: "\/api\/sitemap"/,
+  );
   assert.match(sitemap, /export const dynamic = "force-dynamic";/);
   assert.match(sitemap, /export async function GET/);
   assert.match(sitemap, /getPublishedBlogPosts/);

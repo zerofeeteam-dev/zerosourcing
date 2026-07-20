@@ -1,8 +1,8 @@
 import {
   getPublishedBlogPosts,
   getPublishedPortfolios,
-} from "../../lib/public-content/queries";
-import { SITE_URL } from "../site-metadata";
+} from "../../../lib/public-content/queries";
+import { SITE_URL } from "../../site-metadata";
 
 const staticPaths = [
   "/",

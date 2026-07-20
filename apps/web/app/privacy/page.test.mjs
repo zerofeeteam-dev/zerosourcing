@@ -41,7 +41,7 @@ test("the privacy route renders the complete source policy with the shared chrom
 test("the privacy route is linked from the footer and exposed in the sitemap", async () => {
   const [footer, sitemap] = await Promise.all([
     readOrEmpty("../../components/Footer.tsx"),
-    readOrEmpty("../sitemap.xml/route.ts"),
+    readOrEmpty("../api/sitemap/route.ts"),
   ]);
 
   assert.match(footer, /href="\/privacy"/);
