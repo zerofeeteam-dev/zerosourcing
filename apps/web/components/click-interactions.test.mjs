@@ -7,26 +7,23 @@ const ctaEventsPath = new URL("./cta-events.ts", import.meta.url);
 const headerPath = new URL("./Header.tsx", import.meta.url);
 const serviceCardPath = new URL("./ServiceCard.tsx", import.meta.url);
 
-test("Header Service entries use native links", async () => {
+test("Header desktop Service trigger opens the dropdown without navigating", async () => {
   const header = await readFile(headerPath, "utf8");
 
   assert.match(
     header,
-    /const navLink = \(\s*<Link[\s\S]*?aria-haspopup=\{isServiceItem \? "menu" : undefined\}[\s\S]*?href=\{item\.href\}/,
+    /if \(!isServiceItem\) \{[\s\S]*?<Link[\s\S]*?href=\{item\.href\}/,
   );
   assert.match(
     header,
-    /\{isServiceItem \? \(\s*<Icon[\s\S]*?name="chevron-down"[\s\S]*?\/>\s*\) : null\}/,
+    /<button[\s\S]*?className=\{isActive \? styles\.activeNavLink : styles\.navLink\}[\s\S]*?type="button"[\s\S]*?name="chevron-down"[\s\S]*?<\/button>/,
   );
+  assert.doesNotMatch(header, /<button[^>]*\bhref=/);
   assert.match(
     header,
     /<div className=\{styles\.mobileMenuGroup\} key=\{item\.label\}>\s*<Link[\s\S]*?href=\{item\.href\}[\s\S]*?onClick=\{closeMobileMenu\}[\s\S]*?>\s*\{item\.label\}\s*<\/Link>\s*\{item\.label === "Service"/,
   );
-  assert.doesNotMatch(header, /const navLink = \(\s*isServiceItem \?/);
-  assert.doesNotMatch(
-    header,
-    /\{item\.label === "Service" \? \(\s*<Link/,
-  );
+  assert.doesNotMatch(header, /aria-haspopup/);
 });
 
 test("ServiceCard actions emit typed CTA events for all four cards", async () => {

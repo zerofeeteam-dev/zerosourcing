@@ -57,30 +57,32 @@ export function Header() {
                 : item.href === "/blog"
                   ? pathname.startsWith("/blog")
                   : item.href !== "/" && pathname === item.href;
-              const navLink = (
-                <Link
-                  aria-haspopup={isServiceItem ? "menu" : undefined}
-                  className={isActive ? styles.activeNavLink : styles.navLink}
-                  href={item.href}
-                >
-                  {item.label}
-                  {isServiceItem ? (
+              if (!isServiceItem) {
+                return (
+                  <span key={item.label}>
+                    <Link
+                      className={isActive ? styles.activeNavLink : styles.navLink}
+                      href={item.href}
+                    >
+                      {item.label}
+                    </Link>
+                  </span>
+                );
+              }
+
+              return (
+                <div className={styles.serviceNavItem} key={item.label}>
+                  <button
+                    className={isActive ? styles.activeNavLink : styles.navLink}
+                    type="button"
+                  >
+                    {item.label}
                     <Icon
                       className={styles.chevron}
                       name="chevron-down"
                       size={20}
                     />
-                  ) : null}
-                </Link>
-              );
-
-              if (!isServiceItem) {
-                return <span key={item.label}>{navLink}</span>;
-              }
-
-              return (
-                <div className={styles.serviceNavItem} key={item.label}>
-                  {navLink}
+                  </button>
                   <div className={styles.serviceDropdown} data-node-id="14:1287">
                     <div className={styles.serviceDropdownSurface}>
                       {serviceItems.map((serviceItem) => (
