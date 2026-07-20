@@ -58,6 +58,7 @@ function portfolioRow(
     core_features: ["검색", "예약"],
     development_period: "3주",
     estimate_label: "298만 원",
+    featured_published: false,
     landing_published: true,
     product_description: "설명",
     seo_description: "검색 설명",
@@ -410,6 +411,7 @@ describe("public row mapping", () => {
       duration: "3주",
       estimate: "298만 원",
       features: ["검색", "예약"],
+      featuredPublished: false,
       landingPublished: true,
       scope: ["기획", "개발"],
       servicePublished: true,
@@ -513,7 +515,7 @@ describe("public query contracts", () => {
         deleted_at: "is.null",
         order: "published_at.desc,created_at.desc,slug.asc",
         select:
-          "slug,title,type,product_description,estimate_label,development_period,core_features,work_scopes,thumbnail_public_url,thumbnail_alt,landing_published,service_published,updated_at",
+          "slug,title,type,product_description,estimate_label,development_period,core_features,work_scopes,thumbnail_public_url,thumbnail_alt,featured_published,landing_published,service_published,updated_at",
         status: "eq.published",
       },
     });
@@ -564,7 +566,7 @@ describe("public query contracts", () => {
         deleted_at: "is.null",
         limit: "1",
         select:
-          "slug,title,type,product_description,estimate_label,development_period,core_features,work_scopes,thumbnail_public_url,thumbnail_alt,landing_published,service_published,updated_at,banner_public_url,banner_alt,content_mode,content_authoring_mode,content,content_asset_scope,content_asset_base_enabled,seo_description",
+          "slug,title,type,product_description,estimate_label,development_period,core_features,work_scopes,thumbnail_public_url,thumbnail_alt,featured_published,landing_published,service_published,updated_at,banner_public_url,banner_alt,content_mode,content_authoring_mode,content,content_asset_scope,content_asset_base_enabled,seo_description",
         slug: "eq.meetit-plus",
         status: "eq.published",
       },
@@ -611,9 +613,9 @@ describe("public selectors", () => {
 
   it("keeps the featured portfolio in the latest-first index list", () => {
     const portfolios = [
-      { landingPublished: false, slug: "newest" },
-      { landingPublished: true, slug: "landing" },
-      { landingPublished: false, slug: "older" },
+      { featuredPublished: false, slug: "newest" },
+      { featuredPublished: true, slug: "featured" },
+      { featuredPublished: false, slug: "older" },
     ];
     const blogs = [
       { bannerPublished: false, slug: "newest" },
@@ -633,9 +635,8 @@ describe("public selectors", () => {
       top: [blogs[0], blogs[2], blogs[3]],
     });
     expect(
-      selectPortfolioIndex([{ landingPublished: false, slug: "fallback" }])
-        .featured?.slug,
-    ).toBe("fallback");
+      selectPortfolioIndex([{ featuredPublished: false, slug: "none" }]).featured,
+    ).toBeNull();
     expect(selectBlogIndex([])).toEqual({ featured: null, list: [], top: [] });
   });
 

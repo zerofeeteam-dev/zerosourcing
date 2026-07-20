@@ -74,6 +74,20 @@ const staticMetadataExpectations = [
     description:
       "제로소싱에 MVP·앱·홈페이지 개발을 문의하세요. 아이디어만 있어도 괜찮습니다. 남겨주시면 영업일 기준 하루 안에 연락드리고, 상담과 견적은 무료입니다. 기능별 정찰가로 투명하게 안내합니다.",
   },
+  {
+    file: "./term/page.tsx",
+    path: "/term",
+    title: "제로소싱 | 이용약관",
+    description:
+      "제로피가 제공하는 디지털 콘텐츠 거래 및 구독 플랫폼 서비스의 이용약관입니다.",
+  },
+  {
+    file: "./privacy/page.tsx",
+    path: "/privacy",
+    title: "제로소싱 | 개인정보처리방침",
+    description:
+      "제로피가 수집·이용하는 개인정보의 항목, 처리 목적, 보유 기간 및 이용자 권리를 안내합니다.",
+  },
 ];
 
 test("the shared metadata helper owns the canonical domain and social image", async () => {

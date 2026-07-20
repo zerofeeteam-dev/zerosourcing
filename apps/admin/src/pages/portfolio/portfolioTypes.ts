@@ -35,6 +35,7 @@ export type PortfolioFormState = ManagedContentFormValue & {
   readonly coreFeatures: readonly string[];
   readonly developmentPeriod: string;
   readonly estimateLabel: string;
+  readonly featuredPublished: boolean;
   readonly landingPublished: boolean;
   readonly landingSections: string;
   readonly productDescription: string;

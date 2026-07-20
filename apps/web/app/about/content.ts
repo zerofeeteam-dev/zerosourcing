@@ -85,7 +85,7 @@ export const aboutCompanyInfoRows = [
     "경기도 고양시 덕양구 동축로70, A동 9층 901호(동산동, 현대프리미어캠퍼스)",
   ],
   ["이메일", "contact@zerofee.kr"],
-  ["전화", "02-1234-5678"],
+  ["전화", "010-3242-8118"],
   ["고객 문의", "카카오톡 채널 @zerosourcing"],
 ] as const;
 

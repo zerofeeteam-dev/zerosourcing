@@ -9,6 +9,7 @@ const manifestUrl = new URL(
 const portfolioColumns = [
   "slug",
   "type",
+  "featured_published",
   "landing_published",
   "service_published",
 ];
@@ -200,6 +201,7 @@ function assertUniqueSlugs(rows, ErrorType) {
 function parseManifestPortfolio(value) {
   if (
     !hasExactKeys(value, [
+      "featuredPublished",
       "landingPublished",
       "servicePublished",
       "slug",
@@ -207,6 +209,7 @@ function parseManifestPortfolio(value) {
     ]) ||
     !isSafePublicSlug(value.slug) ||
     !portfolioTypes.has(value.type) ||
+    typeof value.featuredPublished !== "boolean" ||
     typeof value.landingPublished !== "boolean" ||
     typeof value.servicePublished !== "boolean"
   ) {
@@ -249,6 +252,7 @@ export function validateCutoverManifest(value) {
   );
   const preservesFixtureExposure =
     portfolios.length === 9 &&
+    portfolios.filter((row) => row.featuredPublished).length === 1 &&
     portfolios.filter((row) => row.landingPublished).length === 6 &&
     portfolios.filter((row) => row.servicePublished).length === 3 &&
     blogPosts.length === 6 &&
@@ -272,6 +276,7 @@ function parsePortfolioResponse(value) {
       !hasExactKeys(row, portfolioColumns) ||
       !isSafePublicSlug(row.slug) ||
       !portfolioTypes.has(row.type) ||
+      typeof row.featured_published !== "boolean" ||
       typeof row.landing_published !== "boolean" ||
       typeof row.service_published !== "boolean"
     ) {
@@ -279,6 +284,7 @@ function parsePortfolioResponse(value) {
     }
 
     return {
+      featuredPublished: row.featured_published,
       landingPublished: row.landing_published,
       servicePublished: row.service_published,
       slug: row.slug,
@@ -350,6 +356,7 @@ export function compareCutoverInventory(manifest, responses) {
   const actualBlogPosts = parseBlogResponse(responses.blogPosts);
   const issues = [
     ...compareRows("portfolio", expected.portfolios, actualPortfolios, [
+      "featuredPublished",
       "landingPublished",
       "servicePublished",
       "type",

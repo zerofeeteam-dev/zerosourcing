@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 import styles from "./Footer.module.css";
 
@@ -25,8 +26,15 @@ export function Footer() {
         <span aria-hidden="true" className={styles.divider} />
 
         <div className={styles.policyGroup}>
-          <p>이용약관</p>
-          <p className={styles.bold}>개인정보처리방침</p>
+          <Link className={styles.policyLink} href="/term">
+            이용약관
+          </Link>
+          <Link
+            className={`${styles.policyLink} ${styles.bold}`}
+            href="/privacy"
+          >
+            개인정보처리방침
+          </Link>
           <div className={styles.customerGroup}>
             {customerLines.map((line) => (
               <p key={line}>{line}</p>

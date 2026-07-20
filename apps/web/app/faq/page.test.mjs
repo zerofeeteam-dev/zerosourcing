@@ -119,7 +119,7 @@ test("FAQ DOM and approved visual values stay unchanged", async () => {
     styles,
     /\.layout\s*\{[\s\S]*?grid-template-columns:\s*320px minmax\(0, 1020px\);/,
   );
-  assert.match(styles, /\.navPanel\s*\{[\s\S]*?position:\s*sticky;[\s\S]*?top:\s*128px;/);
+  assert.match(styles, /\.sidebar\s*\{[\s\S]*?position:\s*sticky;[\s\S]*?top:\s*128px;/);
   assert.doesNotMatch(styles, /\.navPanelPinned\b/);
   assert.doesNotMatch(styles, /\.navPanelStopped\b/);
   assert.match(

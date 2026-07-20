@@ -4,29 +4,7 @@
   display: flex;
   justify-content: center;
   overflow: hidden;
-  background-color: #edf6ff;
-  background-image:
-    radial-gradient(
-      circle at 18% 24%,
-      rgba(116, 181, 255, 0.34) 0 7%,
-      transparent 7.5%
-    ),
-    radial-gradient(
-      circle at 77% 18%,
-      rgba(68, 143, 232, 0.24) 0 18%,
-      transparent 18.5%
-    ),
-    radial-gradient(
-      ellipse at 38% 88%,
-      rgba(43, 144, 236, 0.5) 0 22%,
-      transparent 22.5%
-    ),
-    radial-gradient(
-      ellipse at 88% 78%,
-      rgba(75, 158, 241, 0.45) 0 24%,
-      transparent 24.5%
-    ),
-    linear-gradient(135deg, #f8fbff 0%, #e3f2ff 100%);
+  background: #edf6ff url("/banner-poster.webp") center / cover no-repeat;
 }
 
 .video {

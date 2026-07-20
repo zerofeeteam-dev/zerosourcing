@@ -1,0 +1,16 @@
+.link {
+  color: var(--color-brand-500);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.link:hover,
+.link:focus-visible {
+  color: var(--color-gray-800);
+}
+
+.link:focus-visible {
+  border-radius: 2px;
+  outline: 2px solid var(--color-brand-500);
+  outline-offset: 3px;
+}

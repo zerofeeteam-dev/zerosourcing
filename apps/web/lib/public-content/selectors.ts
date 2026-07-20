@@ -18,16 +18,14 @@ function withoutIndex<T>(rows: readonly T[], index: number): readonly T[] {
 }
 
 export function selectPortfolioIndex<
-  T extends { readonly landingPublished: boolean },
+  T extends { readonly featuredPublished: boolean },
 >(
   rows: readonly T[],
 ): {
   readonly featured: T | null;
   readonly list: readonly T[];
 } {
-  const landingIndex = rows.findIndex((row) => row.landingPublished);
-  const featuredIndex =
-    landingIndex >= 0 ? landingIndex : rows.length > 0 ? 0 : -1;
+  const featuredIndex = rows.findIndex((row) => row.featuredPublished);
   return {
     featured: featuredIndex >= 0 ? (rows[featuredIndex] ?? null) : null,
     list: rows,

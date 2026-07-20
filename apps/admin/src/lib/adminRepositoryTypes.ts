@@ -90,6 +90,7 @@ export type PortfolioRow = ManagedContentRow & {
   readonly thumbnail_path: string | null;
   readonly thumbnail_public_url: string | null;
   readonly landing_published: boolean;
+  readonly featured_published: boolean;
   readonly service_published: boolean;
   readonly landing_sections: AdminJson;
   readonly service_sections: AdminJson;
@@ -117,6 +118,7 @@ export type PortfolioCreateInput = ManagedContentInput & {
   readonly thumbnailPath: string | null;
   readonly thumbnailPublicUrl: string | null;
   readonly landingPublished: boolean;
+  readonly featuredPublished: boolean;
   readonly servicePublished: boolean;
   readonly landingSections: AdminJson;
   readonly serviceSections: AdminJson;

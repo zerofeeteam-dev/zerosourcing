@@ -10,18 +10,21 @@ const mobileVideoPath = new URL(
 );
 const posterPath = new URL("../public/banner-poster.webp", import.meta.url);
 
-test("hero video waits for user interaction before loading", async () => {
-  const component = await readFile(componentPath, "utf8");
+const stylesPath = new URL("./VideoBanner.module.css", import.meta.url);
 
-  assert.match(component, /useState\(false\)/u);
-  assert.match(
-    component,
-    /\["keydown", "pointermove", "scroll", "touchstart"\]/u,
-  );
-  assert.match(component, /\{shouldPlayVideo \? \([\s\S]*?<video/u);
-  assert.match(component, /preload="metadata"/u);
+test("hero video loads immediately over the matching poster", async () => {
+  const [component, styles] = await Promise.all([
+    readFile(componentPath, "utf8"),
+    readFile(stylesPath, "utf8"),
+  ]);
+
+  assert.match(component, /<video[\s\S]*?autoPlay/u);
+  assert.match(component, /poster=\{bannerPosterSrc\}/u);
+  assert.match(component, /preload="auto"/u);
   assert.match(component, /banner_video_mobile\.mp4/u);
-  assert.match(component, /prefers-reduced-motion: reduce/u);
+  assert.match(styles, /url\("\/banner-poster\.webp"\)/u);
+  assert.doesNotMatch(component, /shouldPlayVideo|pointermove/u);
+  assert.doesNotMatch(styles, /radial-gradient/u);
 });
 
 test("hero media stays within the initial-load performance budget", async () => {
@@ -31,7 +34,7 @@ test("hero media stays within the initial-load performance budget", async () => 
     stat(posterPath),
   ]);
 
-  assert.ok(desktopVideo.size <= 5_000_000);
+  assert.ok(desktopVideo.size <= 2_500_000);
   assert.ok(mobileVideo.size <= 750_000);
   assert.ok(poster.size <= 25_000);
 });

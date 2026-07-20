@@ -21,7 +21,7 @@ const publicFilters = {
 const publicOrder = "published_at.desc,created_at.desc,slug.asc";
 
 const portfolioCardSelect =
-  "slug,title,type,product_description,estimate_label,development_period,core_features,work_scopes,thumbnail_public_url,thumbnail_alt,landing_published,service_published,updated_at";
+  "slug,title,type,product_description,estimate_label,development_period,core_features,work_scopes,thumbnail_public_url,thumbnail_alt,featured_published,landing_published,service_published,updated_at";
 const portfolioDetailSelect = `${portfolioCardSelect},banner_public_url,banner_alt,content_mode,content_authoring_mode,content,content_asset_scope,content_asset_base_enabled,seo_description`;
 const blogCardSelect =
   "slug,title,type,summary,published_date,thumbnail_public_url,thumbnail_alt,banner_public_url,banner_alt,landing_published,banner_published,published_at,updated_at";

@@ -17,7 +17,38 @@ test("organization JSON-LD is valid and matches public company facts", async () 
   assert.equal(jsonLd.image, "https://zerosourcing.kr/og.png");
   assert.equal(jsonLd.logo, undefined);
   assert.equal(jsonLd.email, "contact@zerofee.kr");
+  assert.equal(jsonLd.telephone, "+82-10-3242-8118");
   assert.equal(jsonLd.contactPoint.email, jsonLd.email);
+  assert.equal(jsonLd.contactPoint.telephone, jsonLd.telephone);
+  assert.equal(jsonLd.contactPoint.contactType, "sales");
+  assert.equal(jsonLd.contactPoint.areaServed, "KR");
+  assert.equal(jsonLd.contactPoint.availableLanguage, "Korean");
+  assert.deepEqual(jsonLd.contactPoint.hoursAvailable, [
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: [
+        "https://schema.org/Monday",
+        "https://schema.org/Tuesday",
+        "https://schema.org/Wednesday",
+        "https://schema.org/Thursday",
+        "https://schema.org/Friday",
+      ],
+      opens: "09:00",
+      closes: "12:00",
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: [
+        "https://schema.org/Monday",
+        "https://schema.org/Tuesday",
+        "https://schema.org/Wednesday",
+        "https://schema.org/Thursday",
+        "https://schema.org/Friday",
+      ],
+      opens: "13:30",
+      closes: "18:00",
+    },
+  ]);
   assert.equal(
     jsonLd.address.streetAddress,
     "덕양구 동축로70, A동 9층 901호(동산동, 현대프리미어캠퍼스)",

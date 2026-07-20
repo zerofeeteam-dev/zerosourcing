@@ -94,6 +94,7 @@ function rowFromInput(
     estimate_label: input.estimateLabel,
     id: "00000000-0000-4000-8000-000000000601",
     landing_published: input.landingPublished,
+    featured_published: input.featuredPublished,
     landing_sections: input.landingSections,
     product_description: input.productDescription,
     published_at:
@@ -152,6 +153,7 @@ function loadedPortfolioRow({
     estimate_label: "",
     id,
     landing_published: false,
+    featured_published: false,
     landing_sections: {},
     product_description: "",
     published_at: null,

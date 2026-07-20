@@ -1,0 +1,163 @@
+.page {
+  position: relative;
+  width: 100%;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.headerLayer {
+  position: fixed;
+  top: 20px;
+  left: 0;
+  z-index: 1000;
+  width: 100%;
+  padding: 0 40px;
+}
+
+.content {
+  width: 100%;
+  padding: 180px 20px 104px;
+  display: flex;
+  justify-content: center;
+}
+
+.document {
+  width: min(100%, 960px);
+  display: flex;
+  flex-direction: column;
+  gap: 72px;
+}
+
+.documentHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.title {
+  composes: pretendard-bold-32 from global;
+  margin: 0;
+  color: var(--color-gray-800);
+}
+
+.chapterList {
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
+}
+
+.chapter,
+.supplement {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.chapterTitle {
+  composes: pretendard-bold-24 from global;
+  margin: 0;
+  color: var(--color-gray-800);
+}
+
+.articleList {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.article {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.articleTitle {
+  composes: pretendard-bold-18 from global;
+  margin: 0;
+  color: var(--color-gray-800);
+}
+
+.blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.paragraph,
+.listItem,
+.subitem {
+  composes: pretendard-medium-16 from global;
+  color: var(--color-gray-600);
+}
+
+.orderedList,
+.unorderedList {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.orderedList {
+  padding-left: 24px;
+}
+
+.unorderedList {
+  padding: 8px 0 0 20px;
+  list-style-type: disc;
+}
+
+.listItem {
+  padding-left: 4px;
+}
+
+.subitem {
+  padding-left: 2px;
+}
+
+@media (max-width: 768px) {
+  .headerLayer {
+    top: 12px;
+    padding: 0 16px;
+  }
+
+  .content {
+    padding: 132px 20px 80px;
+  }
+
+  .document {
+    gap: 56px;
+  }
+
+  .title {
+    font-size: 28px;
+    line-height: 36px;
+  }
+
+  .chapterList {
+    gap: 52px;
+  }
+
+  .chapter,
+  .supplement {
+    gap: 24px;
+  }
+
+  .chapterTitle {
+    font-size: 20px;
+    line-height: 30px;
+  }
+
+  .articleList {
+    gap: 32px;
+  }
+
+  .paragraph,
+  .listItem,
+  .subitem {
+    font-size: 14px;
+    line-height: 24px;
+  }
+}

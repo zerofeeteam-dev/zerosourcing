@@ -3,54 +3,63 @@
     {
       "slug": "classit",
       "type": "company_homepage",
+      "featuredPublished": false,
       "landingPublished": true,
       "servicePublished": false
     },
     {
       "slug": "todomall",
       "type": "mvp",
+      "featuredPublished": false,
       "landingPublished": true,
       "servicePublished": true
     },
     {
       "slug": "gongsa-morakmorak",
       "type": "mvp",
+      "featuredPublished": false,
       "landingPublished": true,
       "servicePublished": true
     },
     {
       "slug": "meetit-plus",
       "type": "mvp",
+      "featuredPublished": true,
       "landingPublished": true,
       "servicePublished": true
     },
     {
       "slug": "jangryedam",
       "type": "company_homepage",
+      "featuredPublished": false,
       "landingPublished": true,
       "servicePublished": false
     },
     {
       "slug": "lipang",
       "type": "application",
+      "featuredPublished": false,
       "landingPublished": true,
       "servicePublished": false
     },
     {
       "slug": "opus-house",
       "type": "company_homepage",
+      "featuredPublished": false,
       "landingPublished": false,
       "servicePublished": false
     },
     {
       "slug": "my-plan-it",
       "type": "mvp",
+      "featuredPublished": false,
       "landingPublished": false,
       "servicePublished": false
     },
     {
       "slug": "relive-deal",
       "type": "application",
+      "featuredPublished": false,
       "landingPublished": false,
       "servicePublished": false
     }

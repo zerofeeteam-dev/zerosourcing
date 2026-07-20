@@ -415,6 +415,7 @@ export function PortfolioFormFields({
               form.serviceSections,
               form.servicePublished,
             ],
+            ["featured", "상단 고정", null, form.featuredPublished],
           ] as const
         ).map(([key, label, sections, published]) => (
           <label className={styles.portfolioSettingsToggle} key={key}>
@@ -428,7 +429,9 @@ export function PortfolioFormFields({
                   ...form,
                   ...(key === "landing"
                     ? { landingPublished: event.currentTarget.checked }
-                    : { servicePublished: event.currentTarget.checked }),
+                    : key === "service"
+                      ? { servicePublished: event.currentTarget.checked }
+                      : { featuredPublished: event.currentTarget.checked }),
                 })
               }
               type="checkbox"
@@ -446,9 +449,11 @@ export function PortfolioFormFields({
                 </span>
                 <span>{label}</span>
               </span>
-              <span className={styles.portfolioSettingsCount}>
-                {sectionCount(sections).toString()}개 등록됨
-              </span>
+              {sections !== null ? (
+                <span className={styles.portfolioSettingsCount}>
+                  {sectionCount(sections).toString()}개 등록됨
+                </span>
+              ) : null}
             </span>
           </label>
         ))}

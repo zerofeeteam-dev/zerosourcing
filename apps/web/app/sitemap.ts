@@ -16,6 +16,8 @@ const staticPaths = [
   "/portfolio",
   "/faq",
   "/contact",
+  "/term",
+  "/privacy",
 ] as const;
 
 export const dynamic = "force-dynamic";

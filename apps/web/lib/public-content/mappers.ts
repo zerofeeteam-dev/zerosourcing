@@ -247,6 +247,7 @@ export function mapPortfolioCard(value: unknown): PortfolioCard {
     duration: stringField(row, "development_period"),
     estimate: stringField(row, "estimate_label"),
     features: stringArrayField(row, "core_features"),
+    featuredPublished: booleanField(row, "featured_published"),
     landingPublished: booleanField(row, "landing_published"),
     scope: stringArrayField(row, "work_scopes"),
     servicePublished: booleanField(row, "service_published"),

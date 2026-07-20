@@ -29,6 +29,7 @@ function responsesFromManifest(value = manifest) {
       slug: row.slug,
     })),
     portfolios: value.portfolios.map((row) => ({
+      featured_published: row.featuredPublished,
       landing_published: row.landingPublished,
       service_published: row.servicePublished,
       slug: row.slug,
@@ -50,54 +51,63 @@ test("locks the complete pre-cutover fixture inventory and exposure flags", () =
       {
         slug: "classit",
         type: "company_homepage",
+        featuredPublished: false,
         landingPublished: true,
         servicePublished: false,
       },
       {
         slug: "todomall",
         type: "mvp",
+        featuredPublished: false,
         landingPublished: true,
         servicePublished: true,
       },
       {
         slug: "gongsa-morakmorak",
         type: "mvp",
+        featuredPublished: false,
         landingPublished: true,
         servicePublished: true,
       },
       {
         slug: "meetit-plus",
         type: "mvp",
+        featuredPublished: true,
         landingPublished: true,
         servicePublished: true,
       },
       {
         slug: "jangryedam",
         type: "company_homepage",
+        featuredPublished: false,
         landingPublished: true,
         servicePublished: false,
       },
       {
         slug: "lipang",
         type: "application",
+        featuredPublished: false,
         landingPublished: true,
         servicePublished: false,
       },
       {
         slug: "opus-house",
         type: "company_homepage",
+        featuredPublished: false,
         landingPublished: false,
         servicePublished: false,
       },
       {
         slug: "my-plan-it",
         type: "mvp",
+        featuredPublished: false,
         landingPublished: false,
         servicePublished: false,
       },
       {
         slug: "relive-deal",
         type: "application",
+        featuredPublished: false,
         landingPublished: false,
         servicePublished: false,
       },
@@ -273,6 +283,7 @@ test("rejects malformed manifests and PostgREST responses", () => {
       portfolios: [
         {
           content: "must-not-be-read",
+          featured_published: false,
           landing_published: false,
           service_published: false,
           slug: "unexpected-content",
@@ -325,7 +336,7 @@ test("queries only required public columns with published nondeleted filters", a
   );
   const expectedSelects = {
     blog_posts: "slug,landing_published,banner_published",
-    portfolios: "slug,type,landing_published,service_published",
+    portfolios: "slug,type,featured_published,landing_published,service_published",
   };
 
   for (const [table, select] of Object.entries(expectedSelects)) {

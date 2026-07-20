@@ -53,6 +53,7 @@ function deletedPortfolio(
     estimate_label: "",
     id: "00000000-0000-4000-8000-000000000702",
     landing_published: false,
+    featured_published: false,
     landing_sections: {},
     product_description: "",
     published_at: null,

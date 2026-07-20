@@ -27,7 +27,7 @@ import type {
 } from "./portfolioTypes";
 import styles from "../PortfolioAdminPage.module.css";
 
-const portfolioTableWidth = 1400;
+const portfolioTableWidth = 1520;
 
 const statusFilterOptions = [
   { label: "전체", value: "all" },
@@ -163,6 +163,17 @@ export function PortfolioListPage({
       key: "landing",
       render: (row) =>
         row.landing_published ? (
+          <span className={styles.landingPublished}>게시됨</span>
+        ) : (
+          <span className={styles.mutedDash}>-</span>
+        ),
+      width: 120,
+    },
+    {
+      header: "상단 고정",
+      key: "featured",
+      render: (row) =>
+        row.featured_published ? (
           <span className={styles.landingPublished}>게시됨</span>
         ) : (
           <span className={styles.mutedDash}>-</span>

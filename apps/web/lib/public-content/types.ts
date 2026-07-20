@@ -17,6 +17,7 @@ export type PortfolioCard = {
   readonly duration: string;
   readonly estimate: string;
   readonly features: readonly string[];
+  readonly featuredPublished: boolean;
   readonly landingPublished: boolean;
   readonly scope: readonly string[];
   readonly servicePublished: boolean;

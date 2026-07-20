@@ -598,6 +598,7 @@ select results_eq(
       ('deleted_at'),
       ('development_period'),
       ('estimate_label'),
+      ('featured_published'),
       ('landing_published'),
       ('product_description'),
       ('published_at'),

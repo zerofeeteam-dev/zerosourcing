@@ -16,7 +16,7 @@ import { adminErr, adminOk } from "./adminTypes";
 import type { SupabaseConfig } from "./supabase";
 
 const portfolioColumns =
-  "id,status,type,slug,title,company_name,product_description,estimate_label,development_period,core_features,work_scopes,content_mode,content_authoring_mode,content_json,content_schema_version,content_source_backup,content_asset_scope,content_asset_base_enabled,content,seo_description,thumbnail_path,thumbnail_public_url,thumbnail_alt,banner_path,banner_public_url,banner_alt,landing_published,service_published,landing_sections,service_sections,published_at,created_at,updated_at,deleted_at";
+  "id,status,type,slug,title,company_name,product_description,estimate_label,development_period,core_features,work_scopes,content_mode,content_authoring_mode,content_json,content_schema_version,content_source_backup,content_asset_scope,content_asset_base_enabled,content,seo_description,thumbnail_path,thumbnail_public_url,thumbnail_alt,banner_path,banner_public_url,banner_alt,landing_published,featured_published,service_published,landing_sections,service_sections,published_at,created_at,updated_at,deleted_at";
 
 type PortfolioInsert = {
   readonly status: PortfolioCreateInput["status"];
@@ -45,6 +45,7 @@ type PortfolioInsert = {
   readonly banner_public_url: string | null;
   readonly banner_alt: string;
   readonly landing_published: boolean;
+  readonly featured_published: boolean;
   readonly service_published: boolean;
   readonly landing_sections: PortfolioCreateInput["landingSections"];
   readonly service_sections: PortfolioCreateInput["serviceSections"];
@@ -79,6 +80,7 @@ type PortfolioUpdateDraft = {
   banner_public_url?: string | null;
   banner_alt?: string;
   landing_published?: boolean;
+  featured_published?: boolean;
   service_published?: boolean;
   landing_sections?: PortfolioInsert["landing_sections"];
   service_sections?: PortfolioInsert["service_sections"];
@@ -114,6 +116,7 @@ function portfolioInsertFromInput(
     banner_public_url: input.bannerPublicUrl,
     banner_alt: input.bannerAlt,
     landing_published: input.landingPublished,
+    featured_published: input.featuredPublished,
     service_published: input.servicePublished,
     landing_sections: input.landingSections,
     service_sections: input.serviceSections,
@@ -166,6 +169,8 @@ function portfolioUpdateFromInput(
   if (input.bannerAlt !== undefined) update.banner_alt = input.bannerAlt;
   if (input.landingPublished !== undefined)
     update.landing_published = input.landingPublished;
+  if (input.featuredPublished !== undefined)
+    update.featured_published = input.featuredPublished;
   if (input.servicePublished !== undefined)
     update.service_published = input.servicePublished;
   if (input.landingSections !== undefined)
@@ -193,6 +198,29 @@ function mapPortfolioError(
   }
 
   return saveFailure();
+}
+
+async function clearPortfolioFeaturedExcept(
+  config: SupabaseConfig,
+  id: string,
+  options: AdminRepositoryOptions = {},
+): Promise<AdminRepositoryResult<void>> {
+  if (config.kind === "disabled")
+    return adminErr(supabaseDisabledFailure(config));
+
+  let query = config.client
+    .from("portfolios")
+    .update({ featured_published: false })
+    .eq("featured_published", true)
+    .neq("id", id)
+    .is("deleted_at", null);
+
+  if (options.signal !== undefined) query = query.abortSignal(options.signal);
+
+  const { error } = await query;
+  if (error) return adminErr(mapPortfolioError(error));
+
+  return adminOk(undefined);
 }
 
 export async function listPortfolios(
@@ -263,7 +291,17 @@ export async function createPortfolio(
     .overrideTypes<PortfolioRow | null, { merge: false }>();
   if (error) return adminErr(mapPortfolioError(error, input));
 
-  return data === null ? adminErr(saveFailure()) : adminOk(data);
+  if (data === null) return adminErr(saveFailure());
+  if (input.featuredPublished) {
+    const clearResult = await clearPortfolioFeaturedExcept(
+      config,
+      data.id,
+      options,
+    );
+    if (!clearResult.ok) return adminErr(clearResult.error);
+  }
+
+  return adminOk(data);
 }
 
 export async function updatePortfolio(
@@ -289,7 +327,17 @@ export async function updatePortfolio(
     .overrideTypes<PortfolioRow | null, { merge: false }>();
   if (error) return adminErr(mapPortfolioError(error, input));
 
-  return data === null ? adminErr(saveFailure()) : adminOk(data);
+  if (data === null) return adminErr(saveFailure());
+  if (input.featuredPublished) {
+    const clearResult = await clearPortfolioFeaturedExcept(
+      config,
+      data.id,
+      options,
+    );
+    if (!clearResult.ok) return adminErr(clearResult.error);
+  }
+
+  return adminOk(data);
 }
 
 export async function deletePortfolio(
