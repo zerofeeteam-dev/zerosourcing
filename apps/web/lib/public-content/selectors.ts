@@ -12,11 +12,6 @@ export function selectHomeBlogPosts<
   return rows.filter((row) => row.landingPublished).slice(0, 3);
 }
 
-function withoutIndex<T>(rows: readonly T[], index: number): readonly T[] {
-  if (index < 0) return rows;
-  return [...rows.slice(0, index), ...rows.slice(index + 1)];
-}
-
 export function selectPortfolioIndex<
   T extends { readonly featuredPublished: boolean },
 >(
@@ -44,11 +39,11 @@ export function selectBlogIndex<
   const bannerIndex = rows.findIndex((row) => row.bannerPublished);
   const featuredIndex =
     bannerIndex >= 0 ? bannerIndex : rows.length > 0 ? 0 : -1;
-  const remaining = withoutIndex(rows, featuredIndex);
-  const top = remaining.slice(0, 3);
+  const featured = featuredIndex >= 0 ? (rows[featuredIndex] ?? null) : null;
+  const top = rows.slice(0, 3);
   return {
-    featured: featuredIndex >= 0 ? (rows[featuredIndex] ?? null) : null,
-    list: rows.filter((row) => !top.includes(row)),
+    featured,
+    list: rows.filter((row) => !top.includes(row) || row === featured),
     top,
   };
 }

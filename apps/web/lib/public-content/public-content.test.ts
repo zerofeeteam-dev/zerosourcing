@@ -631,12 +631,18 @@ describe("public selectors", () => {
     });
     expect(selectBlogIndex(blogs)).toEqual({
       featured: blogs[1],
-      list: [blogs[1], blogs[4]],
-      top: [blogs[0], blogs[2], blogs[3]],
+      list: [blogs[1], blogs[3], blogs[4]],
+      top: [blogs[0], blogs[1], blogs[2]],
     });
     expect(
       selectPortfolioIndex([{ featuredPublished: false, slug: "none" }]).featured,
     ).toBeNull();
+    const onlyBlog = { bannerPublished: true, slug: "only" };
+    expect(selectBlogIndex([onlyBlog])).toEqual({
+      featured: onlyBlog,
+      list: [onlyBlog],
+      top: [onlyBlog],
+    });
     expect(selectBlogIndex([])).toEqual({ featured: null, list: [], top: [] });
   });
 
