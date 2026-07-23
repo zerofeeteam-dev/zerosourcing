@@ -77,7 +77,7 @@ test("ServiceCard actions emit typed CTA events for all four cards", async () =>
     ["service-mvp", "/service/mvp"],
     ["service-app", "/service/app"],
     ["service-company-homepage", "/service/company-homepage"],
-    ["quick", "/contact"],
+    ["quick", "https://pf.kakao.com/_EgdlX"],
   ]) {
     assert.match(ctaEvents, new RegExp(`"?${action}"?: "${href}"`));
   }

@@ -9,7 +9,7 @@ export type CtaAction =
 const ctaHrefs = {
   cases: "/portfolio",
   outsource: "/contact",
-  quick: "/contact",
+  quick: "https://pf.kakao.com/_EgdlX",
   "service-app": "/service/app",
   "service-company-homepage": "/service/company-homepage",
   "service-mvp": "/service/mvp",
