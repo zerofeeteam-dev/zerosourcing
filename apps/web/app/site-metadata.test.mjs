@@ -95,7 +95,7 @@ test("the shared metadata helper owns the canonical domain and social image", as
 
   assert.match(source, /export const SITE_URL = "https:\/\/www\.zerosourcing\.kr";/);
   assert.match(source, /export function createPageMetadata/);
-  assert.match(source, /url: `\$\{SITE_URL\}\/og\.png`/);
+  assert.match(source, /url: `\$\{SITE_URL\}\/og_kakao\.png`/);
   assert.match(source, /width: 1200/);
   assert.match(source, /height: 800/);
   assert.match(source, /card: "summary_large_image"/);

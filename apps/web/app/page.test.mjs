@@ -5,7 +5,7 @@ import test from "node:test";
 const componentsUrl = new URL("../components/", import.meta.url);
 const contentPath = new URL("./content.ts", import.meta.url);
 const faqSectionPath = new URL("../components/FaqSection.tsx", import.meta.url);
-const ogImagePath = new URL("../public/og.png", import.meta.url);
+const ogImagePath = new URL("../public/og_kakao.png", import.meta.url);
 const pagePath = new URL("./page.tsx", import.meta.url);
 const pageStylesPath = new URL("./page.module.css", import.meta.url);
 const partnerLogosPath = new URL(

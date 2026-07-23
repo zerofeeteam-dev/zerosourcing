@@ -18,7 +18,7 @@ export function createPageMetadata({
 }: PageMetadataInput): Metadata {
   const url = new URL(path, `${SITE_URL}/`).toString();
   const socialImage = {
-    url: `${SITE_URL}/og.png`,
+    url: `${SITE_URL}/og_kakao.png`,
     width: 1200,
     height: 800,
     alt: title,

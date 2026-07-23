@@ -36,8 +36,7 @@ type VideoBannerProps = {
   title: ReactNode;
 };
 
-const bannerVideoSrc = "/banner_video.mp4";
-const bannerVideoMobileSrc = "/banner_video_mobile.mp4";
+const bannerVideoSrc = "/banner_video_origin.mp4";
 const bannerPosterSrc = "/banner-poster.webp";
 const actionButtonStyle = {
   borderRadius: 32,
@@ -71,11 +70,6 @@ export function VideoBanner({
         poster={bannerPosterSrc}
         preload="auto"
       >
-        <source
-          media="(max-width: 768px)"
-          src={bannerVideoMobileSrc}
-          type="video/mp4"
-        />
         <source src={bannerVideoSrc} type="video/mp4" />
       </video>
       <div
