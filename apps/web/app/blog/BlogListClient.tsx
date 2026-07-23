@@ -12,6 +12,8 @@ import { ManagedThumbnail } from "../../components/ManagedThumbnail";
 import type { BlogCard } from "../../lib/public-content/types";
 import styles from "./blog.module.css";
 
+const BLOG_SIDEBAR_ENABLED = false;
+
 type BlogListClientProps = {
   readonly featured: BlogCard | null;
   readonly items: readonly BlogCard[];
@@ -198,7 +200,9 @@ export function BlogListClient({ featured, items, top }: BlogListClientProps) {
               </div>
             </section>
 
-            <aside className={styles.stickyColumn} aria-hidden="true" />
+            {BLOG_SIDEBAR_ENABLED ? (
+              <aside className={styles.stickyColumn} aria-hidden="true" />
+            ) : null}
           </div>
         </div>
       </section>
