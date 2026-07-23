@@ -69,6 +69,11 @@ test("featured Blog fallback removes the overlay and keeps text accessible", asy
     styles,
     /\.featuredCardFallback \.featuredDescription\s*\{[^}]*color:\s*var\(--color-gray-600\);/u,
   );
+  assert.match(
+    styles,
+    /\.featuredOverlay\s*\{[^}]*z-index:\s*1;[^}]*rgba\(0, 0, 0, 0\.36\)[^}]*rgba\(0, 0, 0, 0\.72\)/u,
+  );
+  assert.match(styles, /\.featuredCopy\s*\{[^}]*z-index:\s*2;/u);
 
   const background = tokenHex(designSystem, "--color-gray-50");
   const title = tokenHex(designSystem, "--color-gray-800");

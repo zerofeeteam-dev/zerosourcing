@@ -45,10 +45,11 @@ export function selectBlogIndex<
   const featuredIndex =
     bannerIndex >= 0 ? bannerIndex : rows.length > 0 ? 0 : -1;
   const remaining = withoutIndex(rows, featuredIndex);
+  const top = remaining.slice(0, 3);
   return {
     featured: featuredIndex >= 0 ? (rows[featuredIndex] ?? null) : null,
-    list: remaining.slice(3),
-    top: remaining.slice(0, 3),
+    list: rows.filter((row) => !top.includes(row)),
+    top,
   };
 }
 
