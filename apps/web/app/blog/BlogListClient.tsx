@@ -179,7 +179,12 @@ export function BlogListClient({ featured, items, top }: BlogListClientProps) {
           ) : null}
 
           <div className={styles.contentGrid}>
-            <section className={styles.listColumn} aria-label="블로그 글 목록">
+            <section
+              className={`${styles.listColumn} ${
+                BLOG_SIDEBAR_ENABLED ? "" : styles.listColumnFull
+              }`}
+              aria-label="블로그 글 목록"
+            >
               <SearchInput
                 aria-label="블로그 검색"
                 onValueChange={setQuery}

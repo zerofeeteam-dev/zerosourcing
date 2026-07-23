@@ -17,7 +17,15 @@ test("blog list keeps the empty sidebar behind a disabled feature flag", async (
     /BLOG_SIDEBAR_ENABLED \? \([\s\S]*?<aside className=\{styles\.stickyColumn\} aria-hidden="true" \/>[\s\S]*?\) : null/u,
   );
   assert.match(
+    client,
+    /BLOG_SIDEBAR_ENABLED \? "" : styles\.listColumnFull/u,
+  );
+  assert.match(
     styles,
     /\.stickyColumn\s*\{[\s\S]*?position:\s*sticky;[\s\S]*?top:\s*120px;[\s\S]*?height:\s*360px;/u,
+  );
+  assert.match(
+    styles,
+    /\.listColumnFull\s*\{[^}]*width:\s*100%;[^}]*flex-basis:\s*100%;/u,
   );
 });

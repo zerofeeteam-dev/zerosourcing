@@ -284,6 +284,11 @@
   gap: 20px;
 }
 
+.listColumnFull {
+  width: 100%;
+  flex-basis: 100%;
+}
+
 .postList {
   display: flex;
   flex-direction: column;
