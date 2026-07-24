@@ -36,7 +36,6 @@ export function BottomFloatingCta() {
       data-node-id="28:2584"
     >
       <div className={styles.surface}>
-        <p className={styles.label}>지금 바로 시작하세요</p>
         <Button
           className={styles.button}
           color="yellow"

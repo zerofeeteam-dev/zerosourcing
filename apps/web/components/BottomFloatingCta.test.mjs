@@ -16,7 +16,7 @@ test("BottomFloatingCta matches the Figma floating quick inquiry pattern", async
   ]);
 
   assert.match(component, /data-node-id="28:2584"/u);
-  assert.match(component, /지금 바로 시작하세요/u);
+  assert.doesNotMatch(component, /지금 바로 시작하세요/u);
   assert.match(component, /간편 문의하기/u);
   assert.match(component, /emitCtaClick\("quick"\)/u);
   assert.match(component, /name="message-typing"/u);
@@ -32,7 +32,6 @@ test("BottomFloatingCta matches the Figma floating quick inquiry pattern", async
   );
   assert.match(styles, /\.root[\s\S]*?background: linear-gradient/u);
   assert.match(styles, /\.surface[\s\S]*?width: 100%;/u);
-  assert.match(styles, /\.surface[\s\S]*?gap: 4px;/u);
   assert.match(
     styles,
     /\.button[\s\S]*?width: 100%;[\s\S]*?max-width: 350px;[\s\S]*?box-shadow: 22\.5px 22\.5px 30px 0 rgb\(0 0 0 \/ 10%\);/u,
@@ -42,8 +41,7 @@ test("BottomFloatingCta matches the Figma floating quick inquiry pattern", async
     /@media \(max-width: 640px\)[\s\S]*?\.surface[\s\S]*?padding-inline: 20px;/u,
   );
   assert.doesNotMatch(styles, /margin-inline:/u);
-  assert.match(styles, /\.label[\s\S]*?z-index: 1;/u);
-  assert.match(styles, /\.label[\s\S]*?border-radius: 999px;/u);
+  assert.doesNotMatch(styles, /\.label\s*\{/u);
   assert.match(layout, /BottomFloatingCta/u);
   assert.match(
     globals,
