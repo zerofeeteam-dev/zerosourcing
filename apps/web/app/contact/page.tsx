@@ -13,6 +13,7 @@ import { Radio } from "@repo/ui/radio";
 import { Footer } from "../../components/Footer";
 import { Header } from "../../components/Header";
 import { Icon } from "../../components/Icon";
+import { trackMetaLead } from "../../lib/meta-pixel";
 import pageStyles from "../page.module.css";
 import styles from "./page.module.css";
 
@@ -118,6 +119,7 @@ export default function ContactPage() {
 
       if (!response.ok) throw new Error("Failed to submit contact form");
 
+      trackMetaLead();
       setSubmitStatus("success");
     } catch {
       setSubmitStatus("error");

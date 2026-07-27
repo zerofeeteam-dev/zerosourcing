@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import "./globals.css";
 import "./glass.css";
 import "../../../design-system.css";
 import "@repo/content/rich-content.css";
 import { BottomFloatingCta } from "../components/BottomFloatingCta";
+import { MetaPixel } from "../components/MetaPixel";
 import organizationJsonLd from "./organization-json-ld.json";
 import {
   createPageMetadata,
@@ -47,6 +49,9 @@ export default function RootLayout({
         />
         {children}
         <BottomFloatingCta />
+        <Suspense fallback={null}>
+          <MetaPixel />
+        </Suspense>
       </body>
     </html>
   );
