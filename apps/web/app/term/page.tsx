@@ -1,17 +1,13 @@
 import { Footer } from "../../components/Footer";
 import { Header } from "../../components/Header";
 import { createPageMetadata } from "../site-metadata";
-import {
-  termsChapters,
-  termsEffectiveDate,
-  type TermsBlock,
-} from "./content";
+import { termsChapters, termsEffectiveDate, type TermsBlock } from "./content";
 import styles from "./page.module.css";
 
 export const metadata = createPageMetadata({
-  title: "제로소싱 | 이용약관",
+  title: "제로소싱 | 사이트 이용약관",
   description:
-    "제로피가 제공하는 디지털 콘텐츠 거래 및 구독 플랫폼 서비스의 이용약관입니다.",
+    "제로소싱 웹사이트와 외주 개발 문의 서비스의 이용 기준 및 개별 개발 계약과의 관계를 안내합니다.",
   path: "/term",
 });
 
@@ -54,7 +50,7 @@ export default function TermsPage() {
       <div className={styles.content}>
         <article className={styles.document}>
           <header className={styles.documentHeader}>
-            <h1 className={styles.title}>이용약관</h1>
+            <h1 className={styles.title}>사이트 이용약관</h1>
           </header>
 
           <div className={styles.chapterList}>

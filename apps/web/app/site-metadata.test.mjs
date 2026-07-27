@@ -77,23 +77,26 @@ const staticMetadataExpectations = [
   {
     file: "./term/page.tsx",
     path: "/term",
-    title: "제로소싱 | 이용약관",
+    title: "제로소싱 | 사이트 이용약관",
     description:
-      "제로피가 제공하는 디지털 콘텐츠 거래 및 구독 플랫폼 서비스의 이용약관입니다.",
+      "제로소싱 웹사이트와 외주 개발 문의 서비스의 이용 기준 및 개별 개발 계약과의 관계를 안내합니다.",
   },
   {
     file: "./privacy/page.tsx",
     path: "/privacy",
     title: "제로소싱 | 개인정보처리방침",
     description:
-      "제로피가 수집·이용하는 개인정보의 항목, 처리 목적, 보유 기간 및 이용자 권리를 안내합니다.",
+      "제로소싱 외주 문의 과정에서 수집하는 개인정보의 항목, 이용 목적, 보유기간 및 처리 위탁·국외 이전 사항을 안내합니다.",
   },
 ];
 
 test("the shared metadata helper owns the canonical domain and social image", async () => {
   const source = await readOrEmpty("./site-metadata.ts");
 
-  assert.match(source, /export const SITE_URL = "https:\/\/www\.zerosourcing\.kr";/);
+  assert.match(
+    source,
+    /export const SITE_URL = "https:\/\/www\.zerosourcing\.kr";/,
+  );
   assert.match(source, /export function createPageMetadata/);
   assert.match(source, /url: `\$\{SITE_URL\}\/og_kakao\.png`/);
   assert.match(source, /width: 1200/);

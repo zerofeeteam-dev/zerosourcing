@@ -156,20 +156,54 @@
   gap: 20px;
 }
 
-.privacyRow {
+.consentList {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.privacyLink {
+.consentItem {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.consentDetails {
+  width: 100%;
+  color: var(--color-gray-500);
+}
+
+.consentDetails[open] {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.consentSummary {
   composes: pretendard-medium-14 from global;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: var(--color-gray-400);
   cursor: pointer;
+}
+
+.consentSummary:focus-visible {
+  outline: 2px solid var(--color-brand-500);
+  outline-offset: 3px;
+}
+
+.consentPanel {
+  composes: pretendard-medium-12-16 from global;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px;
+  border: 1px solid var(--color-gray-200);
+  border-radius: 8px;
+  background: var(--color-gray-50);
+  color: var(--color-gray-600);
+}
+
+.sensitiveDataNotice {
+  composes: pretendard-medium-12-16 from global;
+  color: var(--color-gray-500);
 }
 
 .statusMessage {

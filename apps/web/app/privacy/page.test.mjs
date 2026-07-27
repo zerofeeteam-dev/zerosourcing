@@ -10,7 +10,7 @@ async function readOrEmpty(path) {
   }
 }
 
-test("the privacy route renders the complete source policy with the shared chrome", async () => {
+test("the privacy route describes the actual inquiry data flow", async () => {
   const [page, content, styles, sharedStyles] = await Promise.all([
     readOrEmpty("./page.tsx"),
     readOrEmpty("./content.ts"),
@@ -22,17 +22,50 @@ test("the privacy route renders the complete source policy with the shared chrom
   assert.match(page, /<Footer \/>/);
   assert.match(page, /<h1[^>]*>개인정보처리방침<\/h1>/);
   assert.match(page, /privacyArticles\.map/);
-  assert.match(page, /<section/);
-  assert.match(page, /<h2/);
-  assert.match(page, /"ol"/);
-  assert.match(page, /"ul"/);
 
-  assert.match(content, /제로피\(이하 ‘회사’\)/);
-  assert.match(content, /제1조 \(수집하는 개인정보의 항목 및 수집 방법\)/);
-  assert.match(content, /제12조 \(부칙\)/);
-  assert.equal(content.match(/title:\s*"제\d+조/g)?.length, 12);
-  assert.match(content, /contact@zerofee\.kr/);
-  assert.match(content, /시행 일자: 2026년 4월 20일/);
+  for (const requiredCopy of [
+    "기업명",
+    "담당자 성명",
+    "이메일",
+    "연락처",
+    "선호 연락 방법",
+    "예산",
+    "문의 내용",
+    "접수일로부터 1년",
+    "제3자에게 제공하지 않습니다",
+    "Vercel Inc.",
+    "Slack Technologies, LLC",
+    "미국",
+    "contact@zerofee.kr",
+    "010-3242-8118",
+  ]) {
+    assert.ok(content.includes(requiredCopy), requiredCopy);
+  }
+
+  assert.equal(content.match(/title:\s*"제\d+조/g)?.length, 13);
+  assert.match(content, /문의 내용은 선택 항목/);
+  assert.match(
+    content,
+    /애플리케이션 데이터베이스에는 문의를 저장하지 않습니다/,
+  );
+  assert.match(content, /시행일: 2026년 7월 27일/);
+
+  for (const obsoleteTerm of [
+    "카카오 간편 로그인",
+    "닉네임",
+    "빌링키",
+    "정산 계좌",
+    "토스페이먼츠",
+    "링크허브",
+    "마이페이지",
+    "탈퇴하기",
+    "맞춤형 서비스",
+    "Bubble",
+    "AWS",
+  ]) {
+    assert.ok(!content.includes(obsoleteTerm), obsoleteTerm);
+  }
+
   assert.match(content, /https:\/\/privacy\.kisa\.or\.kr\//);
   assert.match(styles, /focus-visible/);
   assert.match(sharedStyles, /@media \(max-width: 768px\)/);

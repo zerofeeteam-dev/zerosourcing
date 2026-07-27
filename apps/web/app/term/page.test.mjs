@@ -10,7 +10,7 @@ async function readOrEmpty(path) {
   }
 }
 
-test("the terms route renders the complete source policy with the shared chrome", async () => {
+test("the terms route describes the public outsourcing inquiry site", async () => {
   const [page, content, styles] = await Promise.all([
     readOrEmpty("./page.tsx"),
     readOrEmpty("./content.ts"),
@@ -19,30 +19,45 @@ test("the terms route renders the complete source policy with the shared chrome"
 
   assert.match(page, /<Header \/>/);
   assert.match(page, /<Footer \/>/);
-  assert.match(page, /<h1[^>]*>이용약관<\/h1>/);
+  assert.match(page, /<h1[^>]*>사이트 이용약관<\/h1>/);
   assert.match(page, /termsChapters\.map/);
-  assert.match(page, /<section/);
-  assert.match(page, /<h2/);
-  assert.match(page, /<h3/);
-  assert.match(page, /<ol/);
-  assert.match(page, /<ul/);
 
-  for (const chapter of [
-    "제1장 총칙",
-    "제2장 이용계약 및 계정 관리",
-    "제3장 서비스 이용 및 결제",
-    "제4장 콘텐츠 제공 및 환불 (청약철회)",
-    "제5장 크리에이터 정산",
-    "제6장 의무 및 권리",
-    "제7장 면책 및 기타",
+  for (const title of [
+    "제1조 (목적)",
+    "제2조 (정의)",
+    "제3조 (약관과 개별 계약의 관계)",
+    "제4조 (사이트가 제공하는 기능)",
+    "제5조 (문의 접수)",
+    "제6조 (이용자의 의무)",
+    "제7조 (사이트 콘텐츠의 권리)",
+    "제8조 (이용자가 제출한 내용)",
+    "제9조 (외부 서비스와 링크)",
+    "제10조 (책임의 범위)",
+    "제11조 (약관의 변경)",
+    "제12조 (준거법 및 관할)",
   ]) {
-    assert.ok(content.includes(chapter), chapter);
+    assert.ok(content.includes(title), title);
   }
 
-  assert.match(content, /제1조 \(목적\)/);
-  assert.match(content, /제19조 \(준거법 및 재판관할\)/);
-  assert.equal(content.match(/title: "제\d+조/g)?.length, 19);
-  assert.match(content, /본 약관은 2026년 4월 20일부터 시행됩니다\./);
+  assert.equal(content.match(/title: "제\d+조/g)?.length, 12);
+  assert.match(content, /문의 제출만으로 외주 개발 계약이 성립하지 않습니다/);
+  assert.match(content, /개별 계약의 내용이 우선합니다/);
+  assert.match(content, /개인정보처리방침/);
+  assert.match(content, /2026년 7월 27일부터 시행됩니다/);
+
+  for (const obsoleteTerm of [
+    "크리에이터",
+    "구매자",
+    "카카오 로그인",
+    "빌링키",
+    "링크 페이",
+    "정기 결제",
+    "청약철회",
+    "정산",
+  ]) {
+    assert.ok(!content.includes(obsoleteTerm), obsoleteTerm);
+  }
+
   assert.match(styles, /@media \(max-width: 768px\)/);
 });
 
