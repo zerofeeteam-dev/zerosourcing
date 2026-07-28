@@ -1,13 +1,19 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
 
 import { BottomCtaBanner } from "../../components/BottomCtaBanner";
+import { FaqHashTarget } from "../../components/FaqHashTarget";
 import { Footer } from "../../components/Footer";
 import { Header } from "../../components/Header";
 import { Icon } from "../../components/Icon";
 import pageStyles from "../page.module.css";
-import { categories, navGroups, type FaqCategoryNavGroup } from "./content";
+import {
+  categories,
+  getFaqAnchorId,
+  navGroups,
+  type FaqCategoryNavGroup,
+} from "./content";
 import styles from "./page.module.css";
 
 type CategoryNavProps = {
@@ -94,9 +100,11 @@ function CategoryNav({ groups }: CategoryNavProps) {
     };
   }, [ids]);
 
-  const handleNavClick = (id: string) => {
+  const handleNavClick = (event: MouseEvent<HTMLAnchorElement>, id: string) => {
+    event.preventDefault();
     pendingIdRef.current = id;
     setActiveId(id);
+    window.history.pushState(null, "", `#${id}`);
     document.getElementById(id)?.scrollIntoView({
       behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
         ? "auto"
@@ -116,16 +124,16 @@ function CategoryNav({ groups }: CategoryNavProps) {
                 const isActive = activeId === item.id;
 
                 return (
-                  <button
+                  <a
                     aria-current={isActive ? "true" : undefined}
                     className={isActive ? styles.navItemActive : styles.navItem}
+                    href={`#${item.id}`}
                     key={item.id}
-                    onClick={() => handleNavClick(item.id)}
-                    type="button"
+                    onClick={(event) => handleNavClick(event, item.id)}
                   >
                     <Icon name={item.icon} size={16} />
                     <span>{item.title}</span>
-                  </button>
+                  </a>
                 );
               })}
             </div>
@@ -172,6 +180,7 @@ export default function FaqPage() {
               </div>
             </div>
 
+            <FaqHashTarget />
             <div className={styles.categoryStack}>
               {categories.map((category) => (
                 <section
@@ -193,12 +202,18 @@ export default function FaqPage() {
 
                   <div className={styles.faqList}>
                     {category.items.map((faq, index) => (
-                      <div className={styles.faqRow} key={faq.question}>
-                        <details className={styles.faqItem}>
+                      <div
+                        className={styles.faqRow}
+                        key={getFaqAnchorId(category.id, faq.id)}
+                      >
+                        <details
+                          className={styles.faqItem}
+                          id={getFaqAnchorId(category.id, faq.id)}
+                        >
                           <summary className={styles.summary}>
-                            <span className={styles.question}>
+                            <h3 className={styles.question}>
                               Q. {faq.question}
-                            </span>
+                            </h3>
                             <Icon
                               className={styles.chevron}
                               name="chevron-down"

@@ -17,6 +17,7 @@ import { ProofMetrics } from "../components/ProofMetrics";
 import { ProofPartnerLogoBanner } from "../components/ProofPartnerLogoBanner";
 import { SectionShell } from "../components/SectionShell";
 import { VideoBanner } from "../components/VideoBanner";
+import { homeFaqs } from "../content/faqs";
 import {
   getPublishedBlogPosts,
   getPublishedPortfolios,
@@ -26,7 +27,6 @@ import {
   selectHomePortfolios,
 } from "../lib/public-content/selectors";
 import {
-  homeFaqs,
   homeProblemQuotes,
   homeProofMetrics,
   homeReviews,

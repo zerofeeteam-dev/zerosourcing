@@ -33,7 +33,7 @@ test("the FAQ page owns its route-only category navigation", async () => {
   assert.equal(await exists(categoryNavPath), false);
 });
 
-test("FAQ content is managed as typed readonly route data", async () => {
+test("FAQ categories consume canonical typed readonly content", async () => {
   const [content, page] = await Promise.all([
     readOrEmpty(contentPath),
     readFile(pagePath, "utf8"),
@@ -41,30 +41,21 @@ test("FAQ content is managed as typed readonly route data", async () => {
 
   assert.match(page, /from "\.\/content";/);
 
-  for (const name of [
-    "commonFaqs",
-    "pricingFaqs",
-    "timelineFaqs",
-    "techFaqs",
-    "afterLaunchFaqs",
-    "mvpFaqs",
-    "appFaqs",
-    "companyHomepageFaqs",
-    "categories",
-    "navGroups",
-  ]) {
+  for (const name of ["categories", "navGroups"]) {
     assert.match(content, new RegExp(`export const ${name}`));
     assert.doesNotMatch(page, new RegExp(`const ${name}`));
   }
 
+  assert.match(content, /from "\.\.\/\.\.\/content\/faqs";/);
   assert.match(content, /import type \{ IconName \}/);
   assert.match(content, /icon: IconName;/);
   assert.match(content, /as const satisfies readonly FaqCategory\[\];/);
   assert.match(content, /as const satisfies readonly FaqCategoryNavGroup\[\];/);
+  assert.doesNotMatch(content, /question:|answer:/);
   assert.doesNotMatch(content, /<Icon\b|<br\s*\/?>|<>|<\/\w+>/);
 });
 
-test("inlined FAQ navigation preserves sticky and click behavior", async () => {
+test("inlined FAQ navigation uses real links and preserves click behavior", async () => {
   const page = await readFile(pagePath, "utf8");
 
   assert.match(page, /window\.setTimeout\(\(\) => \{[\s\S]*?\}, 140\);/);
@@ -85,9 +76,15 @@ test("inlined FAQ navigation preserves sticky and click behavior", async () => {
     page,
     /window\.matchMedia\("\(prefers-reduced-motion: reduce\)"\)/,
   );
-  assert.match(page, /onClick=\{\(\) => handleNavClick\(item\.id\)\}/);
+  assert.match(page, /href=\{`#\$\{item\.id\}`\}/);
+  assert.match(page, /window\.history\.pushState\(null, "", `#\$\{id\}`\)/);
+  assert.match(
+    page,
+    /onClick=\{\(event\) => handleNavClick\(event, item\.id\)\}/,
+  );
   assert.match(page, /aria-current=\{isActive \? "true" : undefined\}/);
   assert.match(page, /aria-label="FAQ 카테고리"/);
+  assert.doesNotMatch(page, /<button[\s\S]*?handleNavClick/);
 
   const summaryTags = [...page.matchAll(/<summary\b[^>]*>/g)].map(
     ([tag]) => tag,
@@ -108,7 +105,9 @@ test("FAQ DOM and approved visual values stay unchanged", async () => {
     assert.match(page, new RegExp(`data-node-id="${nodeId}"`));
   }
 
-  assert.match(page, /<details className=\{styles\.faqItem\}>/);
+  assert.match(page, /id=\{getFaqAnchorId\(category\.id, faq\.id\)\}/);
+  assert.match(page, /<h3 className=\{styles\.question\}>/);
+  assert.doesNotMatch(page, /<span className=\{styles\.question\}>/);
   assert.match(page, /<summary className=\{styles\.summary\}>/);
   assert.match(
     page,
@@ -119,7 +118,10 @@ test("FAQ DOM and approved visual values stay unchanged", async () => {
     styles,
     /\.layout\s*\{[\s\S]*?grid-template-columns:\s*320px minmax\(0, 1020px\);/,
   );
-  assert.match(styles, /\.sidebar\s*\{[\s\S]*?position:\s*sticky;[\s\S]*?top:\s*128px;/);
+  assert.match(
+    styles,
+    /\.sidebar\s*\{[\s\S]*?position:\s*sticky;[\s\S]*?top:\s*128px;/,
+  );
   assert.doesNotMatch(styles, /\.navPanelPinned\b/);
   assert.doesNotMatch(styles, /\.navPanelStopped\b/);
   assert.match(

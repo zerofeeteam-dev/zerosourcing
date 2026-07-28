@@ -14,6 +14,10 @@
   justify-content: center;
 }
 
+.chip:global([data-liquid-glass]) > :global(div:first-child) {
+  box-shadow: none !important;
+}
+
 .text {
   composes: pretendard-medium-14 from global;
   width: 100%;

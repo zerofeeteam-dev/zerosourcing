@@ -1,13 +1,10 @@
 import type { ReactNode } from "react";
 
+import type { FaqItem } from "../content/faqs";
+import { FaqHashTarget } from "./FaqHashTarget";
 import { Icon } from "./Icon";
 import { SectionShell } from "./SectionShell";
 import styles from "./FaqSection.module.css";
-
-type FaqItem = {
-  answer: string;
-  question: string;
-};
 
 type FaqSectionProps = {
   items: readonly FaqItem[];
@@ -22,12 +19,13 @@ export function FaqSection({
 }: FaqSectionProps) {
   return (
     <SectionShell label="자주 묻는 질문" order={order} title={title}>
+      <FaqHashTarget />
       <div className={styles.list}>
         {items.map((faq, index) => (
-          <div className={styles.row} key={faq.question}>
-            <details className={styles.item}>
+          <div className={styles.row} key={faq.id}>
+            <details className={styles.item} id={faq.id}>
               <summary className={styles.summary}>
-                <span className={styles.question}>Q. {faq.question}</span>
+                <h3 className={styles.question}>Q. {faq.question}</h3>
                 <Icon
                   className={styles.chevron}
                   name="chevron-down"

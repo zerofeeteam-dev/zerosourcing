@@ -61,17 +61,6 @@
   gap: 8px;
 }
 
-@media (max-width: 640px) {
-  :global(body:has([data-bottom-floating-cta="visible"])) .eyebrow,
-  :global(body:has([data-bottom-floating-cta="visible"])) .actions {
-    display: none;
-  }
-
-  :global(body:has([data-bottom-floating-cta="visible"])) .content {
-    padding-bottom: 120px;
-  }
-}
-
 @media (max-width: 768px) {
   .content {
     padding: 72px 0;

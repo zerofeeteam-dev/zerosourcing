@@ -142,12 +142,13 @@ test("home static marketing content stays JSX-free and managed cards use public 
     "homeProofMetrics",
     "homeReviews",
     "homeServiceScopeSteps",
-    "homeFaqs",
   ]) {
     assertExportUsesAsConst(content, name);
     assert.doesNotMatch(page, new RegExp(`const ${name}`));
   }
 
+  assert.match(page, /import \{ homeFaqs \} from "\.\.\/content\/faqs";/);
+  assert.doesNotMatch(content, /export const homeFaqs/);
   assert.doesNotMatch(content, /export const homePortfolios/);
   assert.doesNotMatch(content, /export const homeInsights/);
   assert.match(page, /getPublishedPortfolios/);

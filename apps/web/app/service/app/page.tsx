@@ -8,13 +8,13 @@ import { Icon } from "../../../components/Icon";
 import { SectionShell } from "../../../components/SectionShell";
 import { ServicePortfolioSection } from "../../../components/ServicePortfolioSection";
 import { VideoBanner } from "../../../components/VideoBanner";
+import { appServiceFaqs } from "../../../content/faqs";
 import styles from "../../page.module.css";
 import { createPageMetadata } from "../../site-metadata";
 import {
   appBuildFlowSteps,
   appDevelopmentDifferences,
   appDevelopmentIncludedItems,
-  appFaqs,
   appHybridAdvantages,
   appNativeFeatures,
 } from "./content";
@@ -323,7 +323,11 @@ export default function AppServicePage() {
         portfolioType="application"
         title="하이브리드 앱 개발 사례"
       />
-      <FaqSection items={appFaqs} order="06" title="앱 개발 자주 묻는 질문" />
+      <FaqSection
+        items={appServiceFaqs}
+        order="06"
+        title="앱 개발 자주 묻는 질문"
+      />
       <BottomCtaBanner
         actions={[
           {

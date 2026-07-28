@@ -6,11 +6,11 @@ import { ProcessSection } from "../../../components/ProcessSection";
 import { SectionShell } from "../../../components/SectionShell";
 import { ServicePortfolioSection } from "../../../components/ServicePortfolioSection";
 import { VideoBanner } from "../../../components/VideoBanner";
+import { mvpFaqs } from "../../../content/faqs";
 import styles from "../../page.module.css";
 import { createPageMetadata } from "../../site-metadata";
 import {
   fundingPrograms,
-  mvpFaqs,
   mvpIncludedCards,
   mvpIntroCards,
   supportStepText,

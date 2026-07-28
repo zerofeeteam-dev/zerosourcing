@@ -66,11 +66,17 @@ test("app page content is managed in the route content module", async () => {
     "appNativeFeatures",
     "appDevelopmentIncludedItems",
     "appDevelopmentDifferences",
-    "appFaqs",
   ]) {
     assert.match(content, new RegExp(`export const ${name}`));
     assert.doesNotMatch(page, new RegExp(`const ${name}`));
   }
+
+  assert.match(
+    page,
+    /import \{ appServiceFaqs \} from "\.\.\/\.\.\/\.\.\/content\/faqs";/,
+  );
+  assert.match(page, /items=\{appServiceFaqs\}/);
+  assert.doesNotMatch(content, /export const appFaqs/);
 });
 
 test("the inlined app sections preserve approved visual rules", async () => {

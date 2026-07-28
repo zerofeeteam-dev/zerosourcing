@@ -6,13 +6,10 @@ import { Icon } from "../../../components/Icon";
 import { SectionShell } from "../../../components/SectionShell";
 import { ServicePortfolioSection } from "../../../components/ServicePortfolioSection";
 import { VideoBanner } from "../../../components/VideoBanner";
+import { companyHomepageServiceFaqs } from "../../../content/faqs";
 import styles from "../../page.module.css";
 import { createPageMetadata } from "../../site-metadata";
-import {
-  companyHomepageFaqs,
-  companyHomepageScopeItems,
-  companyHomepageTypes,
-} from "./content";
+import { companyHomepageScopeItems, companyHomepageTypes } from "./content";
 import companyStyles from "./page.module.css";
 
 export const dynamic = "force-dynamic";
@@ -248,7 +245,7 @@ export default function CompanyHomepageServicePage() {
         </div>
       </SectionShell>
       <FaqSection
-        items={companyHomepageFaqs}
+        items={companyHomepageServiceFaqs}
         order="05"
         title="기업 홈페이지 제작 자주 묻는 질문"
       />
