@@ -22,7 +22,7 @@ export type PrivacyArticle = {
 };
 
 export const privacyIntroduction =
-  "제로피(제로소싱, 이하 ‘회사’)는 「개인정보 보호법」 등 관계 법령에 따라 개인정보를 보호하고, 외주 개발 문의 과정에서 처리하는 개인정보와 이용자의 권리를 다음과 같이 안내합니다.";
+  "제로피(제로소싱, 이하 ‘회사’)는 「개인정보 보호법」 등 관계 법령에 따라 개인정보를 보호하고, 웹사이트 운영과 외주 개발 문의 과정에서 처리하는 개인정보 및 이용자의 권리를 다음과 같이 안내합니다.";
 
 export const privacyArticles = [
   {
@@ -34,6 +34,9 @@ export const privacyArticles = [
           { text: "외주 개발 상담 접수와 본인·연락처 확인" },
           { text: "요구사항·예산 검토와 상담·견적 준비" },
           { text: "문의 답변, 민원 처리, 악성·반복 문의 방지" },
+          {
+            text: "웹사이트 방문 및 외주 문의 전환 분석, 광고 성과 측정과 맞춤형 광고 제공",
+          },
         ],
       },
     ],
@@ -50,6 +53,12 @@ export const privacyArticles = [
           { text: "선택 항목: 문의 내용" },
           {
             text: "수집 방법: /contact 문의 페이지에서 이용자가 직접 입력",
+          },
+          {
+            text: "자동 수집 항목: 웹사이트 방문·이용 기록, PageView·Lead 이벤트, 방문 페이지 주소와 이전 페이지 주소, IP 주소, 브라우저·기기 정보, 쿠키 식별자(_fbp, _fbc 등)",
+          },
+          {
+            text: "자동 수집 방법: 웹사이트 방문 및 문의 접수 성공 시 Meta Pixel을 통해 수집",
           },
         ],
       },
@@ -118,7 +127,7 @@ export const privacyArticles = [
     blocks: [
       {
         type: "paragraph",
-        text: "회사는 외주 문의 처리를 위해 다음과 같이 업무를 위탁합니다. 애플리케이션 데이터베이스에는 문의를 저장하지 않습니다.",
+        text: "회사는 웹사이트 운영과 외주 문의 처리를 위해 다음과 같이 업무를 위탁합니다. 애플리케이션 데이터베이스에는 문의를 저장하지 않습니다.",
       },
       {
         type: "unordered-list",
@@ -133,6 +142,14 @@ export const privacyArticles = [
             text: "Slack Technologies, LLC",
             subitems: [
               { text: "위탁 업무: 외주 문의 전달, 상담 알림, 내부 협업" },
+            ],
+          },
+          {
+            text: "Meta Platforms, Inc.",
+            subitems: [
+              {
+                text: "위탁 업무: Meta Pixel 제공, 광고 성과 측정, 웹사이트 방문 및 문의 전환 분석",
+              },
             ],
           },
           {
@@ -182,11 +199,29 @@ export const privacyArticles = [
               { text: "보유기간: 문의 접수일로부터 1년" },
             ],
           },
+          {
+            text: "이전받는 자: Meta Platforms, Inc.",
+            subitems: [
+              { text: "이전 국가: 미국" },
+              {
+                text: "이전 시점 및 방법: 웹사이트 방문 및 문의 접수 성공 시 암호화된 네트워크를 통해 자동 전송",
+              },
+              {
+                text: "이전 항목: 웹사이트 방문·이용 기록, PageView·Lead 이벤트, 방문 페이지 주소와 이전 페이지 주소, IP 주소, 브라우저·기기 정보, 쿠키 식별자(_fbp, _fbc 등)",
+              },
+              {
+                text: "이전 목적: 광고 성과 측정, 웹사이트 방문 및 문의 전환 분석, 맞춤형 광고 제공",
+              },
+              {
+                text: "보유기간: Meta Business Tools 약관에 따라 이벤트 데이터는 최대 2년",
+              },
+            ],
+          },
         ],
       },
       {
         type: "paragraph",
-        text: "이용자는 개인정보 국외 이전을 거부할 수 있습니다. 다만 필수 국외 이전에 동의하지 않으면 문의 폼을 제출할 수 없습니다.",
+        text: "이용자는 개인정보 국외 이전을 거부할 수 있습니다. Vercel 및 Slack으로의 필수 국외 이전에 동의하지 않으면 문의 폼을 제출할 수 없으며, Meta Pixel을 통한 자동 전송은 제10조의 방법으로 차단할 수 있습니다. Meta Pixel을 차단해도 웹사이트와 문의 기능은 이용할 수 있습니다.",
       },
     ],
   },
@@ -229,17 +264,78 @@ export const privacyArticles = [
     ],
   },
   {
-    title: "제10조 (자동 수집 정보 및 외부 서비스)",
+    title: "제10조 (자동 수집 정보, 행태정보 및 외부 서비스)",
     blocks: [
       {
-        type: "ordered-list",
+        type: "paragraph",
+        text: "회사는 광고 성과 측정과 웹사이트 방문·문의 전환 분석 및 맞춤형 광고 제공을 위해 제3자 자동 수집 장치인 Meta Pixel을 사용합니다.",
+      },
+      {
+        type: "unordered-list",
         items: [
           {
-            text: "현재 회사는 맞춤형 광고나 행동정보 분석을 위한 쿠키를 운영하지 않습니다.",
+            text: "자동 수집 장치: Meta Pixel(웹페이지에 설치된 JavaScript 및 쿠키)",
           },
           {
-            text: "사이트 호스팅 및 보안 과정에서 IP 주소와 접속 정보가 생성될 수 있습니다.",
+            text: "수집 사업자: Meta Platforms, Inc.",
           },
+          {
+            text: "수집 항목: 웹사이트 방문·이용 기록, PageView·Lead 이벤트, 방문 페이지 주소와 이전 페이지 주소, IP 주소, 브라우저·기기 정보, 쿠키 식별자(_fbp, _fbc 등)",
+          },
+          {
+            text: "수집 시점: 웹사이트 방문 시 PageView 이벤트, 문의 접수 성공 시 Lead 이벤트",
+          },
+          {
+            text: "수집 목적: 광고 성과 측정, 웹사이트 방문 및 문의 전환 분석, 맞춤형 광고 제공",
+          },
+          {
+            text: "보유기간: Meta Business Tools 약관에 따라 이벤트 데이터는 최대 2년이며, Meta 쿠키 정책상 _fbp와 _fbc 쿠키의 유효기간은 90일",
+          },
+          {
+            text: "문의 폼에 입력한 기업명, 담당자 성명, 이메일, 연락처, 선호 연락 방법, 예산 및 문의 내용은 Meta Pixel로 전송하지 않습니다.",
+          },
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "이용자는 브라우저에서 제3자 쿠키를 차단하거나 저장된 쿠키를 삭제하여 Meta Pixel의 행태정보 수집을 거부할 수 있습니다.",
+      },
+      {
+        type: "unordered-list",
+        items: [
+          {
+            text: "Chrome: 설정 > 개인정보 보호 및 보안 > 서드 파티 쿠키 > 서드 파티 쿠키 차단",
+          },
+          {
+            text: "Edge: 설정 > 개인정보, 검색 및 서비스 > 추적 방지 수준을 ‘엄격’으로 설정하거나 타사 쿠키 차단",
+          },
+          {
+            text: "Safari: 설정 > 앱 > Safari > 고급 > 모든 쿠키 차단",
+          },
+          {
+            text: "Meta 광고 설정: ",
+            href: "https://accountscenter.facebook.com/ad_preferences",
+            linkLabel: "accountscenter.facebook.com/ad_preferences",
+          },
+          {
+            text: "Meta 외부 활동 관리: ",
+            href: "https://accountscenter.facebook.com/info_and_permissions/off_facebook_activity/",
+            linkLabel:
+              "accountscenter.facebook.com/info_and_permissions/off_facebook_activity",
+          },
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "쿠키를 차단해도 웹사이트와 문의 기능을 이용할 수 있으나, 광고 성과 측정과 맞춤형 광고 제공은 제한될 수 있습니다.",
+      },
+      {
+        type: "paragraph",
+        text: "그 밖에 사이트 호스팅 및 보안 과정에서 IP 주소와 접속 정보가 생성될 수 있습니다.",
+      },
+      {
+        type: "unordered-list",
+        items: [
           {
             text: "회사소개 페이지에서 Google 지도가 표시되는 경우 Google LLC가 IP 주소와 기기·브라우저 정보를 처리할 수 있으며 Google 개인정보처리방침이 적용됩니다.",
           },
@@ -331,7 +427,7 @@ export const privacyArticles = [
       },
       {
         type: "paragraph",
-        text: "시행일: 2026년 7월 27일",
+        text: "시행일: 2026년 7월 28일",
       },
     ],
   },

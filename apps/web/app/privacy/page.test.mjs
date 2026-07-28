@@ -35,6 +35,15 @@ test("the privacy route describes the actual inquiry data flow", async () => {
     "제3자에게 제공하지 않습니다",
     "Vercel Inc.",
     "Slack Technologies, LLC",
+    "Meta Platforms, Inc.",
+    "Meta Pixel",
+    "PageView",
+    "Lead",
+    "_fbp",
+    "_fbc",
+    "최대 2년",
+    "서드 파티 쿠키 차단",
+    "문의 폼에 입력한 기업명",
     "미국",
     "contact@zerofee.kr",
     "010-3242-8118",
@@ -48,7 +57,11 @@ test("the privacy route describes the actual inquiry data flow", async () => {
     content,
     /애플리케이션 데이터베이스에는 문의를 저장하지 않습니다/,
   );
-  assert.match(content, /시행일: 2026년 7월 27일/);
+  assert.doesNotMatch(
+    content,
+    /맞춤형 광고나 행동정보 분석을 위한 쿠키를 운영하지 않습니다/,
+  );
+  assert.match(content, /시행일: 2026년 7월 28일/);
 
   for (const obsoleteTerm of [
     "카카오 간편 로그인",
