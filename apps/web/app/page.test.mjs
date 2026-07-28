@@ -257,7 +257,7 @@ test("merged home styles preserve collision ownership and visual values", async 
   );
   assert.match(
     styles,
-    /\.scopeSection::before\s*\{[\s\S]*?background-image:\s*url\("\/images\/s4_bg\.png"\);/,
+    /\.scopeSection::before\s*\{[\s\S]*?background-image:\s*url\("\/images\/s4_bg\.webp"\);/,
   );
   assert.match(
     styles,
