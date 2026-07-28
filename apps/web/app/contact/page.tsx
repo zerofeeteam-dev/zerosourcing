@@ -5,6 +5,7 @@ import {
   type ChangeEvent,
   type CSSProperties,
   type FormEvent,
+  useRef,
   useState,
 } from "react";
 import { Button } from "@repo/ui/button";
@@ -15,6 +16,7 @@ import { Footer } from "../../components/Footer";
 import { Header } from "../../components/Header";
 import { Icon } from "../../components/Icon";
 import { trackMetaLead } from "../../lib/meta-pixel";
+import { POSTHOG_EVENTS, trackPostHogEvent } from "../../lib/posthog";
 import pageStyles from "../page.module.css";
 import styles from "./page.module.css";
 
@@ -87,8 +89,18 @@ function formatPhoneInput(value: string) {
 }
 
 export default function ContactPage() {
+  const hasTrackedFormStart = useRef(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus>("idle");
+
+  function handleFormFocus() {
+    if (hasTrackedFormStart.current) return;
+
+    hasTrackedFormStart.current = true;
+    trackPostHogEvent(POSTHOG_EVENTS.contactFormStarted, {
+      form_name: "contact",
+    });
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -124,6 +136,9 @@ export default function ContactPage() {
       if (!response.ok) throw new Error("Failed to submit contact form");
 
       trackMetaLead();
+      trackPostHogEvent(POSTHOG_EVENTS.contactFormSubmitted, {
+        form_name: "contact",
+      });
       setSubmitStatus("success");
     } catch {
       setSubmitStatus("error");
@@ -159,7 +174,11 @@ export default function ContactPage() {
             </h1>
           </div>
 
-          <form className={styles.formCard} onSubmit={handleSubmit}>
+          <form
+            className={styles.formCard}
+            onFocusCapture={handleFormFocus}
+            onSubmit={handleSubmit}
+          >
             <div className={styles.fields}>
               <div className={styles.twoColumn}>
                 {textFields.slice(0, 2).map((field) => (

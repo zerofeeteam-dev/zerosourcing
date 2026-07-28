@@ -5,7 +5,12 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "env": ["SUPABASE_URL", "SUPABASE_PUBLISHABLE_KEY"],
+      "env": [
+        "NEXT_PUBLIC_POSTHOG_HOST",
+        "NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN",
+        "SUPABASE_URL",
+        "SUPABASE_PUBLISHABLE_KEY"
+      ],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": [".next/**", "!.next/cache/**", "!.next/dev/**", "dist/**"]
     },

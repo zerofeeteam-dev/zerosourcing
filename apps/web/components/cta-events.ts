@@ -1,3 +1,5 @@
+import { POSTHOG_EVENTS, trackPostHogEvent } from "../lib/posthog";
+
 export type CtaAction =
   | "outsource"
   | "quick"
@@ -23,6 +25,11 @@ export function emitCtaEvent(action: CtaAction) {
   if (typeof window === "undefined") {
     return;
   }
+
+  trackPostHogEvent(POSTHOG_EVENTS.ctaClicked, {
+    cta_action: action,
+    destination: ctaHrefs[action],
+  });
 
   window.dispatchEvent(
     new CustomEvent("zerosourcing:cta-click", {
