@@ -34,9 +34,9 @@ type VideoBannerProps = {
   descriptionMaxWidth?: number;
   eyebrow?: string;
   title: ReactNode;
-  webmSrc?: string;
 };
 
+const bannerVideoWebmSrc = "/banner_video.webm";
 const bannerVideoSrc = "/banner_video_origin.mp4";
 const bannerPosterSrc = "/banner-poster.webp";
 const actionButtonStyle = {
@@ -52,7 +52,6 @@ export function VideoBanner({
   descriptionMaxWidth,
   eyebrow,
   title,
-  webmSrc,
 }: VideoBannerProps) {
   return (
     <section className={styles.banner} data-node-id="292:74456">
@@ -72,7 +71,7 @@ export function VideoBanner({
         poster={bannerPosterSrc}
         preload="auto"
       >
-        {webmSrc ? <source src={webmSrc} type="video/webm" /> : null}
+        <source src={bannerVideoWebmSrc} type="video/webm" />
         <source src={bannerVideoSrc} type="video/mp4" />
       </video>
       <div

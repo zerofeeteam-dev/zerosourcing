@@ -93,7 +93,6 @@ export default async function Home() {
             MVP·홈페이지 개발 파트너, 제로소싱
           </>
         }
-        webmSrc="/banner_video.webm"
       />
 
       <div className={styles.root}>
