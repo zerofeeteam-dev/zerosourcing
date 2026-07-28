@@ -283,15 +283,16 @@ export function mapBlogCard(value: unknown): BlogCard {
   const row = record(value);
   const type = enumField(row, "type", blogTypes);
   const publishedAt = timestampField(row, "published_at");
-  const date =
+  const publishedDate =
     nullableDateField(row, "published_date") ?? publishedAt.slice(0, 10);
   return {
     bannerAlt: stringField(row, "banner_alt"),
     bannerPublished: booleanField(row, "banner_published"),
     bannerUrl: nullableStringField(row, "banner_public_url"),
     category: blogCategory(type),
-    date: displayDate(date),
+    date: displayDate(publishedDate),
     landingPublished: booleanField(row, "landing_published"),
+    publishedDate,
     slug: slugField(row, "slug"),
     summary: stringField(row, "summary"),
     thumbnailAlt: stringField(row, "thumbnail_alt"),

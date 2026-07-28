@@ -47,6 +47,7 @@ export type BlogCard = {
   readonly category: string;
   readonly date: string;
   readonly landingPublished: boolean;
+  readonly publishedDate: string;
   readonly slug: string;
   readonly summary: string;
   readonly thumbnailAlt: string;
