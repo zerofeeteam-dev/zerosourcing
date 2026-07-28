@@ -1,0 +1,170 @@
+.page {
+  width: 100%;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.headerLayer {
+  position: fixed;
+  top: 20px;
+  left: 0;
+  z-index: 1000;
+  width: 100%;
+  padding: 0 40px;
+}
+
+.hero {
+  width: 100%;
+  padding: 160px 20px 112px;
+  background:
+    radial-gradient(
+      circle at 50% 34%,
+      var(--color-brand-50) 0,
+      rgb(242 247 255 / 0%) 34%
+    ),
+    #ffffff;
+  display: flex;
+  justify-content: center;
+}
+
+.content {
+  width: min(100%, 720px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 36px;
+  text-align: center;
+}
+
+.visual {
+  width: 320px;
+  height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.illustration {
+  width: 320px;
+  height: 240px;
+  display: block;
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.title {
+  composes: pretendard-bold-32 from global;
+  margin: 0;
+  color: var(--color-gray-800);
+}
+
+.description {
+  composes: pretendard-medium-16 from global;
+  color: var(--color-gray-500);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.primaryLink,
+.secondaryLink {
+  composes: pretendard-bold-14 from global;
+  height: 52px;
+  padding: 0 20px;
+  border: 1px solid var(--color-brand-500);
+  border-radius: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;
+}
+
+.primaryLink {
+  background: var(--color-brand-500);
+  color: #ffffff;
+}
+
+.secondaryLink {
+  background: #ffffff;
+  color: var(--color-brand-500);
+}
+
+.primaryLink:hover,
+.primaryLink:focus-visible {
+  border-color: var(--color-brand-600);
+  background: var(--color-brand-600);
+  transform: translateY(-1px);
+}
+
+.secondaryLink:hover,
+.secondaryLink:focus-visible {
+  background: var(--color-brand-50);
+  transform: translateY(-1px);
+}
+
+.primaryLink:focus-visible,
+.secondaryLink:focus-visible {
+  outline: 2px solid var(--color-brand-300);
+  outline-offset: 3px;
+}
+
+@media (max-width: 768px) {
+  .headerLayer {
+    padding: 0 16px;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero {
+    padding: 132px 20px 80px;
+  }
+
+  .content {
+    gap: 32px;
+  }
+
+  .visual {
+    width: 272px;
+    height: 204px;
+  }
+
+  .illustration {
+    width: 272px;
+    height: 204px;
+  }
+
+  .title {
+    font-size: 28px;
+    line-height: 36px;
+  }
+
+  .description br {
+    display: none;
+  }
+
+  .actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .primaryLink,
+  .secondaryLink {
+    width: 100%;
+  }
+}
