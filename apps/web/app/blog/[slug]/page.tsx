@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { Footer } from "../../../components/Footer";
 import { Header } from "../../../components/Header";
+import { JsonLd } from "../../../components/JsonLd";
 import { ManagedContent } from "../../../components/ManagedContent";
 import { ManagedThumbnail } from "../../../components/ManagedThumbnail";
 import {
@@ -11,6 +12,10 @@ import {
   getRelatedBlogPosts,
 } from "../../../lib/public-content/queries";
 import type { BlogCard, BlogDetail } from "../../../lib/public-content/types";
+import {
+  createBlogPostingJsonLd,
+  createBreadcrumbJsonLd,
+} from "../../../lib/seo/structured-data";
 import { createPageMetadata } from "../../site-metadata";
 import { QuickConsultCtaButton } from "../../../components/QuickConsultCtaButton";
 import styles from "./blog-detail.module.css";
@@ -93,10 +98,26 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
     notFound();
   }
 
+  const blogPostingJsonLd = createBlogPostingJsonLd({
+    category: post.category,
+    description: post.seoDescription || post.summary,
+    imageUrl: post.thumbnailUrl,
+    publishedDate: post.publishedDate,
+    slug: post.slug,
+    title: post.title,
+    updatedAt: post.updatedAt,
+  });
+  const breadcrumbJsonLd = createBreadcrumbJsonLd([
+    { name: "Index", path: "/" },
+    { name: "Blog", path: "/blog" },
+    { name: post.title, path: `/blog/${post.slug}` },
+  ]);
   const relatedPosts = await getRelatedBlogPosts(post.type, post.slug);
 
   return (
     <main className={styles.page}>
+      <JsonLd data={blogPostingJsonLd} id="blog-posting-json-ld" />
+      <JsonLd data={breadcrumbJsonLd} id="blog-breadcrumb-json-ld" />
       <div className={styles.headerLayer}>
         <Header />
       </div>

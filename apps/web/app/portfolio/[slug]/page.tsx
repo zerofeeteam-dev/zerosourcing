@@ -3,9 +3,11 @@ import { notFound } from "next/navigation";
 
 import { Footer } from "../../../components/Footer";
 import { Header } from "../../../components/Header";
+import { JsonLd } from "../../../components/JsonLd";
 import { ManagedContent } from "../../../components/ManagedContent";
 import { ManagedThumbnail } from "../../../components/ManagedThumbnail";
 import { getPublishedPortfolio } from "../../../lib/public-content/queries";
+import { createBreadcrumbJsonLd } from "../../../lib/seo/structured-data";
 import { createPageMetadata } from "../../site-metadata";
 import pageStyles from "../../page.module.css";
 import { QuickConsultCtaButton } from "../../../components/QuickConsultCtaButton";
@@ -42,8 +44,18 @@ export default async function PortfolioDetailPage({
     notFound();
   }
 
+  const breadcrumbJsonLd = createBreadcrumbJsonLd([
+    { name: "Index", path: "/" },
+    { name: "Portfolio", path: "/portfolio" },
+    {
+      name: portfolio.title,
+      path: `/portfolio/${portfolio.slug}`,
+    },
+  ]);
+
   return (
     <main className={pageStyles.page}>
+      <JsonLd data={breadcrumbJsonLd} id="portfolio-breadcrumb-json-ld" />
       <div className={pageStyles.headerLayer}>
         <Header />
       </div>
