@@ -174,7 +174,7 @@ export default function CompanyHomepageServicePage() {
                 </p>
                 <div className={companyStyles.resultText}>
                   <p className={companyStyles.resultUrl}>
-                    https://www.zerosourcing.com
+                    https://www.zerosourcing.kr
                   </p>
                   <p className={companyStyles.resultDescription}>
                     MVP 개발 외주 전문 OO 주식회사. 핵심 기능만 담아 평균 4주
