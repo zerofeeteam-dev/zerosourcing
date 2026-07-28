@@ -19,6 +19,7 @@ const mocks = vi.hoisted(() => ({
   deleteBlogPost: vi.fn(),
   getBlogPostBySlug: vi.fn(),
   persistThumbnailChange: vi.fn(),
+  revalidatePublicContent: vi.fn().mockResolvedValue({ ok: true }),
   updateBlogPost: vi.fn(),
 }));
 
@@ -31,6 +32,10 @@ vi.mock("../../lib/blogRepository", () => ({
 
 vi.mock("../../lib/thumbnailPersistence", () => ({
   persistThumbnailChange: mocks.persistThumbnailChange,
+}));
+
+vi.mock("../../lib/publicContentRevalidation", () => ({
+  revalidatePublicContent: mocks.revalidatePublicContent,
 }));
 
 vi.mock("../../components/content/AdminContentEditor", () => ({
@@ -320,9 +325,7 @@ describe("BlogFormPage", () => {
     await act(async () => {
       await finishPersistence?.();
     });
-    await waitFor(() =>
-      expect(onNavigate).toHaveBeenCalledWith("/blog"),
-    );
+    await waitFor(() => expect(onNavigate).toHaveBeenCalledWith("/blog"));
 
     const persistenceInput = mocks.persistThumbnailChange.mock.calls[0]?.[0];
     expect(persistenceInput).toMatchObject({

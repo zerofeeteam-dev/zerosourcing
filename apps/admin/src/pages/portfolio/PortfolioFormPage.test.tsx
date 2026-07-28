@@ -16,6 +16,7 @@ const mocks = vi.hoisted(() => ({
   deletePortfolioWithStorageCleanup: vi.fn(),
   getPortfolioBySlug: vi.fn(),
   persistThumbnailChange: vi.fn(),
+  revalidatePublicContent: vi.fn().mockResolvedValue({ ok: true }),
   updatePortfolio: vi.fn(),
 }));
 
@@ -31,6 +32,10 @@ vi.mock("../../lib/portfolioDeletion", () => ({
 
 vi.mock("../../lib/thumbnailPersistence", () => ({
   persistThumbnailChange: mocks.persistThumbnailChange,
+}));
+
+vi.mock("../../lib/publicContentRevalidation", () => ({
+  revalidatePublicContent: mocks.revalidatePublicContent,
 }));
 
 vi.mock("../../components/content/AdminContentEditor", () => ({
@@ -247,9 +252,7 @@ describe("PortfolioFormPage", () => {
     const firstInvalidField = screen.getByRole("combobox", {
       name: "포트폴리오 유형",
     });
-    await waitFor(() =>
-      expect(document.activeElement).toBe(firstInvalidField),
-    );
+    await waitFor(() => expect(document.activeElement).toBe(firstInvalidField));
     expect(HTMLElement.prototype.scrollIntoView).toHaveBeenCalledWith({
       behavior: "smooth",
       block: "center",
@@ -430,9 +433,7 @@ describe("PortfolioFormPage", () => {
       .getByTestId("portfolio-editor")
       .getAttribute("data-document-key");
     await user.click(screen.getByRole("button", { name: "등록하기" }));
-    await waitFor(() =>
-      expect(onNavigate).toHaveBeenCalledWith("/portfolio"),
-    );
+    await waitFor(() => expect(onNavigate).toHaveBeenCalledWith("/portfolio"));
 
     const persistenceInput = mocks.persistThumbnailChange.mock.calls[0]?.[0];
     expect(persistenceInput).toMatchObject({

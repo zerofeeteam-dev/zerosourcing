@@ -27,6 +27,7 @@ import {
   updatePortfolio,
 } from "../../lib/portfolioRepository";
 import { deletePortfolioWithStorageCleanup } from "../../lib/portfolioDeletion";
+import { revalidatePublicContent } from "../../lib/publicContentRevalidation";
 import { supabaseConfig } from "../../lib/supabase";
 import { persistThumbnailChange } from "../../lib/thumbnailPersistence";
 import { usePendingAssetRegistration } from "../../navigation/PendingAssetNavigation";
@@ -98,8 +99,7 @@ export function PortfolioFormPage({
     useState<HTMLDivElement | null>(null);
 
   usePendingAssetRegistration(editorState.pendingAssetCount);
-  const { formRef, requestFailureNavigation } =
-    useAdminFormFailureNavigation();
+  const { formRef, requestFailureNavigation } = useAdminFormFailureNavigation();
 
   const mutationControllerRef = useRef<AbortController | null>(null);
   const operationGenerationRef = useRef<OperationGeneration | null>(null);
@@ -443,6 +443,19 @@ export function PortfolioFormPage({
     }
 
     if (!formOwner.acceptSaved(owner, outcome.result.value, savedForm)) return;
+    if (
+      existingPortfolio?.status === "published" ||
+      outcome.result.value.status === "published"
+    ) {
+      const revalidation = await revalidatePublicContent(supabaseConfig, {
+        entity: "portfolio",
+        previousSlug: existingPortfolio?.slug,
+        slug: outcome.result.value.slug,
+      });
+      if (!revalidation.ok) {
+        console.error(revalidation.message);
+      }
+    }
     releaseOperation();
     setIsPending(false);
     setEditingPortfolio(outcome.result.value);
@@ -486,13 +499,24 @@ export function PortfolioFormPage({
     if (!operationIsCurrent(operation) || !formOwner.ownerIsCurrent(owner)) {
       return;
     }
-    releaseOperation();
-    setIsPending(false);
     if (!outcome.result.ok) {
+      releaseOperation();
+      setIsPending(false);
       formOwner.unlockOwner(owner);
       setGlobalError(adminFailureMessage(outcome.result.error));
       return;
     }
+    if (editingPortfolio.status === "published") {
+      const revalidation = await revalidatePublicContent(supabaseConfig, {
+        entity: "portfolio",
+        previousSlug: editingPortfolio.slug,
+      });
+      if (!revalidation.ok) {
+        console.error(revalidation.message);
+      }
+    }
+    releaseOperation();
+    setIsPending(false);
     formOwner.unlockOwner(owner);
     onNavigate("/portfolio");
   };

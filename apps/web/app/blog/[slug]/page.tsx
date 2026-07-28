@@ -24,7 +24,11 @@ type BlogDetailPageProps = {
   params: Promise<{ slug: string }>;
 };
 
-export const dynamic = "force-dynamic";
+export const revalidate = 86400;
+
+export function generateStaticParams() {
+  return [];
+}
 
 export async function generateMetadata({ params }: BlogDetailPageProps) {
   const { slug } = await params;

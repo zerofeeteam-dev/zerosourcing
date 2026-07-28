@@ -2,8 +2,13 @@ export const PUBLIC_CONTENT_PAGE_SIZE = 1_000;
 export const PUBLIC_CONTENT_MAX_PAGES = 100;
 export const PUBLIC_CONTENT_MAX_ROWS =
   PUBLIC_CONTENT_PAGE_SIZE * PUBLIC_CONTENT_MAX_PAGES;
+export const PUBLIC_CONTENT_REVALIDATE_SECONDS = 86_400;
 
 export type PublicTable = "blog_posts" | "portfolios";
+
+export function publicContentCacheTag(table: PublicTable): string {
+  return `public-content:${table}`;
+}
 
 export type PublicContentConfig = {
   readonly publishableKey: string;
@@ -91,8 +96,11 @@ export async function fetchPublicRowsWithConfig({
   let response: Response;
   try {
     response = await fetch(endpoint, {
-      cache: "no-store",
       headers: { apikey: config.publishableKey },
+      next: {
+        revalidate: PUBLIC_CONTENT_REVALIDATE_SECONDS,
+        tags: [publicContentCacheTag(table)],
+      },
     });
   } catch (cause) {
     throw new PublicContentNetworkError(table, cause);

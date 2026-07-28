@@ -254,7 +254,7 @@ describe("public content configuration", () => {
 });
 
 describe("PostgREST public reader", () => {
-  it("uses only the publishable apikey header and no-store", async () => {
+  it("uses only the publishable apikey header and the shared public cache policy", async () => {
     const fetchMock = vi.fn().mockResolvedValue(jsonResponse([{ slug: "ok" }]));
     vi.stubGlobal("fetch", fetchMock);
 
@@ -271,9 +271,13 @@ describe("PostgREST public reader", () => {
       "https://project.supabase.co/rest/v1/portfolios?select=slug%2Ctitle&status=eq.published",
     );
     expect(init).toMatchObject({
-      cache: "no-store",
       headers: { apikey: "publishable-test-key" },
+      next: {
+        revalidate: 86_400,
+        tags: ["public-content:portfolios"],
+      },
     });
+    expect(init).not.toHaveProperty("cache");
     expect(init?.headers).not.toHaveProperty("Authorization");
     expect(init?.headers).not.toHaveProperty("authorization");
   });
@@ -423,7 +427,9 @@ describe("public row mapping", () => {
       updatedAt: "2026-07-14T12:30:45.123456+09:00",
     });
 
-    expect(mapPortfolioCard(portfolioRow({ type: "web_service" }))).toMatchObject({
+    expect(
+      mapPortfolioCard(portfolioRow({ type: "web_service" })),
+    ).toMatchObject({
       category: "웹서비스",
       type: "web_service",
     });
@@ -637,7 +643,8 @@ describe("public selectors", () => {
       top: [blogs[0], blogs[1], blogs[2]],
     });
     expect(
-      selectPortfolioIndex([{ featuredPublished: false, slug: "none" }]).featured,
+      selectPortfolioIndex([{ featuredPublished: false, slug: "none" }])
+        .featured,
     ).toBeNull();
     const onlyBlog = { bannerPublished: true, slug: "only" };
     expect(selectBlogIndex([onlyBlog])).toEqual({

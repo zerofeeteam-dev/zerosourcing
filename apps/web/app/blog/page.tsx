@@ -2,7 +2,7 @@ import { getPublishedBlogPosts } from "../../lib/public-content/queries";
 import { selectBlogIndex } from "../../lib/public-content/selectors";
 import { BlogListClient } from "./BlogListClient";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 86400;
 
 export default async function BlogPage() {
   const rows = await getPublishedBlogPosts();

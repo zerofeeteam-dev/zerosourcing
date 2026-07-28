@@ -14,6 +14,8 @@ test("home portfolio and process cards link to registered detail pages", async (
   assert.match(page, /import Link from "next\/link";/);
   assert.match(page, /export const revalidate = 300;/);
   assert.match(page, /unstable_cache/);
+  assert.match(page, /"public-content:portfolios"/);
+  assert.match(page, /"public-content:blog_posts"/);
   assert.match(page, /export default async function Home/);
   assert.match(page, /getPublishedPortfolios/);
   assert.match(page, /getPublishedBlogPosts/);

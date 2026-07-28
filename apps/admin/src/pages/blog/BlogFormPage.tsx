@@ -27,6 +27,7 @@ import {
   updateBlogPost,
 } from "../../lib/blogRepository";
 import { deleteBlogPostWithStorageCleanup } from "../../lib/blogDeletion";
+import { revalidatePublicContent } from "../../lib/publicContentRevalidation";
 import { supabaseConfig } from "../../lib/supabase";
 import { persistThumbnailChange } from "../../lib/thumbnailPersistence";
 import { usePendingAssetRegistration } from "../../navigation/PendingAssetNavigation";
@@ -95,8 +96,7 @@ export function BlogFormPage({ onNavigate, route }: BlogFormPageProps) {
     useState<HTMLDivElement | null>(null);
 
   usePendingAssetRegistration(editorState.pendingAssetCount);
-  const { formRef, requestFailureNavigation } =
-    useAdminFormFailureNavigation();
+  const { formRef, requestFailureNavigation } = useAdminFormFailureNavigation();
 
   const mutationControllerRef = useRef<AbortController | null>(null);
   const operationGenerationRef = useRef<OperationGeneration | null>(null);
@@ -412,6 +412,19 @@ export function BlogFormPage({ onNavigate, route }: BlogFormPageProps) {
     }
 
     if (!formOwner.acceptSaved(owner, outcome.result.value, savedForm)) return;
+    if (
+      existingPost?.status === "published" ||
+      outcome.result.value.status === "published"
+    ) {
+      const revalidation = await revalidatePublicContent(supabaseConfig, {
+        entity: "blog",
+        previousSlug: existingPost?.slug,
+        slug: outcome.result.value.slug,
+      });
+      if (!revalidation.ok) {
+        console.error(revalidation.message);
+      }
+    }
     releaseOperation();
     setEditingPost(outcome.result.value);
     thumbnail.reset(outcome.result.value.thumbnail_public_url);
@@ -462,6 +475,15 @@ export function BlogFormPage({ onNavigate, route }: BlogFormPageProps) {
       setGlobalError(adminFailureMessage(outcome.result.error));
       setIsDeleting(false);
       return;
+    }
+    if (editingPost.status === "published") {
+      const revalidation = await revalidatePublicContent(supabaseConfig, {
+        entity: "blog",
+        previousSlug: editingPost.slug,
+      });
+      if (!revalidation.ok) {
+        console.error(revalidation.message);
+      }
     }
     formOwner.unlockOwner(owner);
     releaseOperation();

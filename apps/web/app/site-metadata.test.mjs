@@ -114,10 +114,7 @@ test("the root layout supplies Korean defaults and Organization JSON-LD", async 
   assert.match(layout, /metadataBase: new URL\(SITE_URL\)/);
   assert.match(layout, /createPageMetadata/);
   assert.match(layout, /organization-json-ld\.json/);
-  assert.match(
-    layout,
-    /import \{ JsonLd \} from "\.\.\/components\/JsonLd";/,
-  );
+  assert.match(layout, /import \{ JsonLd \} from "\.\.\/components\/JsonLd";/);
   assert.match(
     layout,
     /<JsonLd data=\{organizationJsonLd\} id="organization-json-ld" \/>/,
@@ -159,7 +156,9 @@ test("blog and portfolio details derive metadata from their route data", async (
   assert.match(blog, /description: post\.seoDescription \|\| post\.summary/);
   assert.match(blog, /path: `\/blog\/\$\{post\.slug\}`/);
   assert.match(blog, /<ManagedContent/);
-  assert.doesNotMatch(blog, /blog-posts|generateStaticParams/);
+  assert.match(blog, /export const revalidate = 86400;/);
+  assert.match(blog, /export function generateStaticParams\(\)/);
+  assert.doesNotMatch(blog, /blog-posts|force-dynamic/);
 
   assert.match(portfolio, /export async function generateMetadata/);
   assert.match(portfolio, /getPublishedPortfolio/);
@@ -170,15 +169,19 @@ test("blog and portfolio details derive metadata from their route data", async (
   );
   assert.match(portfolio, /path: `\/portfolio\/\$\{portfolio\.slug\}`/);
   assert.match(portfolio, /<ManagedContent/);
-  assert.doesNotMatch(portfolio, /portfolio-items|generateStaticParams/);
+  assert.match(portfolio, /export const revalidate = 86400;/);
+  assert.match(portfolio, /export function generateStaticParams\(\)/);
+  assert.doesNotMatch(portfolio, /portfolio-items|force-dynamic/);
 
   assert.match(blogIndex, /getPublishedBlogPosts/);
   assert.match(blogIndex, /selectBlogIndex/);
-  assert.doesNotMatch(blogIndex, /blog-posts/);
+  assert.match(blogIndex, /export const revalidate = 86400;/);
+  assert.doesNotMatch(blogIndex, /blog-posts|force-dynamic/);
 
   assert.match(portfolioIndex, /getPublishedPortfolios/);
   assert.match(portfolioIndex, /selectPortfolioIndex/);
-  assert.doesNotMatch(portfolioIndex, /portfolio-items/);
+  assert.match(portfolioIndex, /export const revalidate = 86400;/);
+  assert.doesNotMatch(portfolioIndex, /portfolio-items|force-dynamic/);
 });
 
 test("robots and sitemap expose the canonical public routes", async () => {

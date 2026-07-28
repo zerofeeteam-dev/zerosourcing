@@ -50,7 +50,10 @@ export const revalidate = 300;
 const getHomeContent = unstable_cache(
   () => Promise.all([getPublishedPortfolios(), getPublishedBlogPosts()]),
   ["home-public-content"],
-  { revalidate },
+  {
+    revalidate,
+    tags: ["public-content:portfolios", "public-content:blog_posts"],
+  },
 );
 
 export default async function Home() {
