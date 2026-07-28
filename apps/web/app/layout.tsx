@@ -5,6 +5,7 @@ import "./glass.css";
 import "../../../design-system.css";
 import "@repo/content/rich-content.css";
 import { BottomFloatingCta } from "../components/BottomFloatingCta";
+import { JsonLd } from "../components/JsonLd";
 import { MetaPixel } from "../components/MetaPixel";
 import organizationJsonLd from "./organization-json-ld.json";
 import {
@@ -29,11 +30,6 @@ export const metadata: Metadata = {
   }),
 };
 
-const organizationJsonLdString = JSON.stringify(organizationJsonLd).replace(
-  /</g,
-  "\\u003c",
-);
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -42,11 +38,7 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body>
-        <script
-          dangerouslySetInnerHTML={{ __html: organizationJsonLdString }}
-          id="organization-json-ld"
-          type="application/ld+json"
-        />
+        <JsonLd data={organizationJsonLd} id="organization-json-ld" />
         {children}
         <BottomFloatingCta />
         <Suspense fallback={null}>
