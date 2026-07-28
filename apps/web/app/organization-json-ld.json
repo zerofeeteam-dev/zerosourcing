@@ -69,6 +69,7 @@
         "@type": "Offer",
         "itemOffered": {
           "@type": "Service",
+          "@id": "https://www.zerosourcing.kr/service/mvp#service",
           "name": "MVP 개발",
           "description": "검증에 필요한 핵심 기능만 담아 평균 4주 만에 출시하는 MVP 개발 외주 서비스. 정부지원사업 자금으로 개발비 집행이 가능하다.",
           "serviceType": "MVP 개발",
@@ -79,6 +80,7 @@
         "@type": "Offer",
         "itemOffered": {
           "@type": "Service",
+          "@id": "https://www.zerosourcing.kr/service/app#service",
           "name": "하이브리드 앱 개발",
           "description": "웹뷰 하이브리드 방식으로 한 번 개발해 iOS·안드로이드에 동시 출시하고, 구글·애플 스토어 등록까지 대행하는 앱 개발 서비스",
           "serviceType": "앱 개발",
@@ -89,6 +91,7 @@
         "@type": "Offer",
         "itemOffered": {
           "@type": "Service",
+          "@id": "https://www.zerosourcing.kr/service/company-homepage#service",
           "name": "기업 홈페이지 제작",
           "description": "반응형과 검색엔진·생성형 AI 검색 최적화(SEO·GEO), 도메인·서버·보안까지 포함하는 기업 홈페이지 제작 서비스",
           "serviceType": "홈페이지 제작",

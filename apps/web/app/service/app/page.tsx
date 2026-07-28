@@ -5,10 +5,12 @@ import { FaqSection } from "../../../components/FaqSection";
 import { Footer } from "../../../components/Footer";
 import { Header } from "../../../components/Header";
 import { Icon } from "../../../components/Icon";
+import { JsonLd } from "../../../components/JsonLd";
 import { SectionShell } from "../../../components/SectionShell";
 import { ServicePortfolioSection } from "../../../components/ServicePortfolioSection";
 import { VideoBanner } from "../../../components/VideoBanner";
 import { appServiceFaqs } from "../../../content/faqs";
+import { createServiceJsonLd } from "../../../lib/seo/structured-data";
 import styles from "../../page.module.css";
 import { createPageMetadata } from "../../site-metadata";
 import {
@@ -22,11 +24,20 @@ import appStyles from "./page.module.css";
 
 export const dynamic = "force-dynamic";
 
-export const metadata = createPageMetadata({
+const servicePageMetadata = {
   title: "제로소싱 | 하이브리드 앱 개발 (iOS·안드로이드)",
   description:
     "제로소싱의 하이브리드 앱 개발은 한 번 개발해 iOS·안드로이드에 동시 출시합니다. 푸시·결제 등 네이티브 기능 연동과 구글·애플 스토어 등록 대행 포함. 앱 개발 비용·기간을 안내합니다.",
   path: "/service/app",
+} as const;
+
+export const metadata = createPageMetadata({ ...servicePageMetadata });
+
+const serviceJsonLd = createServiceJsonLd({
+  description: servicePageMetadata.description,
+  name: "하이브리드 앱 개발",
+  path: servicePageMetadata.path,
+  serviceType: "앱 개발",
 });
 
 const [sourceStep, packagingStep, appStoreStep, googlePlayStep] =
@@ -35,6 +46,7 @@ const [sourceStep, packagingStep, appStoreStep, googlePlayStep] =
 export default function AppServicePage() {
   return (
     <main className={styles.page}>
+      <JsonLd data={serviceJsonLd} id="app-service-json-ld" />
       <div className={styles.headerLayer}>
         <Header />
       </div>

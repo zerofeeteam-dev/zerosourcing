@@ -3,10 +3,12 @@ import { FaqSection } from "../../../components/FaqSection";
 import { Footer } from "../../../components/Footer";
 import { Header } from "../../../components/Header";
 import { Icon } from "../../../components/Icon";
+import { JsonLd } from "../../../components/JsonLd";
 import { SectionShell } from "../../../components/SectionShell";
 import { ServicePortfolioSection } from "../../../components/ServicePortfolioSection";
 import { VideoBanner } from "../../../components/VideoBanner";
 import { companyHomepageServiceFaqs } from "../../../content/faqs";
+import { createServiceJsonLd } from "../../../lib/seo/structured-data";
 import styles from "../../page.module.css";
 import { createPageMetadata } from "../../site-metadata";
 import { companyHomepageScopeItems, companyHomepageTypes } from "./content";
@@ -14,16 +16,29 @@ import companyStyles from "./page.module.css";
 
 export const dynamic = "force-dynamic";
 
-export const metadata = createPageMetadata({
+const servicePageMetadata = {
   title: "제로소싱 | 기업 홈페이지 제작 (반응형·SEO)",
   description:
     "제로소싱의 기업 홈페이지 제작은 반응형과 네이버·구글·AI 검색 노출(SEO·GEO), 도메인·서버·보안까지 한 번에 제공합니다. 홈페이지 제작 비용·과정과 업종별 제작 사례를 확인하세요.",
   path: "/service/company-homepage",
+} as const;
+
+export const metadata = createPageMetadata({ ...servicePageMetadata });
+
+const serviceJsonLd = createServiceJsonLd({
+  description: servicePageMetadata.description,
+  name: "기업 홈페이지 제작",
+  path: servicePageMetadata.path,
+  serviceType: "기업 홈페이지 제작",
 });
 
 export default function CompanyHomepageServicePage() {
   return (
     <main className={styles.page}>
+      <JsonLd
+        data={serviceJsonLd}
+        id="company-homepage-service-json-ld"
+      />
       <div className={styles.headerLayer}>
         <Header />
       </div>

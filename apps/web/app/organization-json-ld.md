@@ -79,6 +79,7 @@
 | `hasOfferCatalog.itemListElement[].@type`                   | 개별 항목의 종류다. `Offer`는 회사가 제공하는 하나의 제안을 의미한다.                     |
 | `hasOfferCatalog.itemListElement[].itemOffered`             | 해당 제안이 실제로 제공하는 서비스 정보를 묶는 객체다.                                    |
 | `hasOfferCatalog.itemListElement[].itemOffered.@type`       | 제공 대상의 종류다. `Service`는 개발 용역 같은 서비스를 의미한다.                         |
+| `hasOfferCatalog.itemListElement[].itemOffered.@id`         | 전용 페이지가 있는 서비스를 페이지별 `Service` 노드와 연결하는 안정적인 엔터티 ID다. URL 뒤에 `#service`를 붙인다. |
 | `hasOfferCatalog.itemListElement[].itemOffered.name`        | 고객에게 표시되는 개별 서비스명이다.                                                      |
 | `hasOfferCatalog.itemListElement[].itemOffered.description` | 해당 서비스의 범위와 특징을 설명한다. 공개 페이지에 상세 내용이 있는 서비스에만 사용한다. |
 | `hasOfferCatalog.itemListElement[].itemOffered.serviceType` | 검색엔진이 서비스 분야를 분류할 수 있도록 제공하는 서비스 유형명이다.                     |

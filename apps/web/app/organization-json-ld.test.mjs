@@ -79,6 +79,14 @@ test("organization JSON-LD is valid and matches public company facts", async () 
       "https://www.zerosourcing.kr/service/company-homepage",
     ],
   );
+  assert.deepEqual(
+    offers.slice(0, 3).map(({ itemOffered }) => itemOffered["@id"]),
+    [
+      "https://www.zerosourcing.kr/service/mvp#service",
+      "https://www.zerosourcing.kr/service/app#service",
+      "https://www.zerosourcing.kr/service/company-homepage#service",
+    ],
+  );
   assert.equal(offers[3].itemOffered.url, undefined);
   assert.equal(offers[3].itemOffered.description, undefined);
   assert.equal(offers[4].itemOffered.url, undefined);

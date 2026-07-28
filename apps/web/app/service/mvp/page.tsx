@@ -2,11 +2,13 @@ import { BottomCtaBanner } from "../../../components/BottomCtaBanner";
 import { FaqSection } from "../../../components/FaqSection";
 import { Footer } from "../../../components/Footer";
 import { Header } from "../../../components/Header";
+import { JsonLd } from "../../../components/JsonLd";
 import { ProcessSection } from "../../../components/ProcessSection";
 import { SectionShell } from "../../../components/SectionShell";
 import { ServicePortfolioSection } from "../../../components/ServicePortfolioSection";
 import { VideoBanner } from "../../../components/VideoBanner";
 import { mvpFaqs } from "../../../content/faqs";
+import { createServiceJsonLd } from "../../../lib/seo/structured-data";
 import styles from "../../page.module.css";
 import { createPageMetadata } from "../../site-metadata";
 import {
@@ -19,16 +21,26 @@ import mvpStyles from "./page.module.css";
 
 export const dynamic = "force-dynamic";
 
-export const metadata = createPageMetadata({
+const servicePageMetadata = {
   title: "제로소싱 | MVP 개발 외주, 평균 4주 출시",
   description:
     "제로소싱의 MVP 개발 외주는 검증되는 MVP를 평균 4주 만에 제작합니다. 예비창업패키지 등 정부지원금 집행이 가능하고, 기능별 정찰가로 견적이 투명합니다. MVP 개발 비용·기간·진행 방식을 안내합니다.",
   path: "/service/mvp",
+} as const;
+
+export const metadata = createPageMetadata({ ...servicePageMetadata });
+
+const serviceJsonLd = createServiceJsonLd({
+  description: servicePageMetadata.description,
+  name: "MVP 개발",
+  path: servicePageMetadata.path,
+  serviceType: "MVP 개발",
 });
 
 export default function MvpServicePage() {
   return (
     <main className={styles.page}>
+      <JsonLd data={serviceJsonLd} id="mvp-service-json-ld" />
       <div className={styles.headerLayer}>
         <Header />
       </div>
