@@ -35,11 +35,12 @@ test("service portfolio cards navigate to registered portfolio pages", async () 
   assert.doesNotMatch(component, /<article className=\{styles\.card\}/);
 });
 
-test("each service route supplies its exact Admin portfolio type", async () => {
+test("each service route uses one-day ISR and its exact Admin portfolio type", async () => {
   for (const servicePage of servicePages) {
     const page = await readFile(servicePage.path, "utf8");
 
-    assert.match(page, /export const dynamic = "force-dynamic";/);
+    assert.match(page, /export const revalidate = 86400;/);
+    assert.doesNotMatch(page, /force-dynamic/);
     assert.match(
       page,
       new RegExp(`portfolioType="${servicePage.portfolioType}"`),

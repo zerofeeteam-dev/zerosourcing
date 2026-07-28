@@ -22,7 +22,7 @@ import {
 } from "./content";
 import appStyles from "./page.module.css";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 86400;
 
 const servicePageMetadata = {
   title: "제로소싱 | 하이브리드 앱 개발 (iOS·안드로이드)",

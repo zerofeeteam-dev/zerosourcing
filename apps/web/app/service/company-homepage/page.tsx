@@ -14,7 +14,7 @@ import { createPageMetadata } from "../../site-metadata";
 import { companyHomepageScopeItems, companyHomepageTypes } from "./content";
 import companyStyles from "./page.module.css";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 86400;
 
 const servicePageMetadata = {
   title: "제로소싱 | 기업 홈페이지 제작 (반응형·SEO)",

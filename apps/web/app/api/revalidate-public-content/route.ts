@@ -12,6 +12,11 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "OPTIONS, POST",
   "Access-Control-Allow-Origin": "*",
 } as const;
+const portfolioServicePaths = [
+  "/service/app",
+  "/service/company-homepage",
+  "/service/mvp",
+] as const;
 
 type PublicContentEntity = "blog" | "portfolio";
 
@@ -143,6 +148,12 @@ export async function POST(request: Request): Promise<Response> {
   revalidateTag(publicContentCacheTag(table), { expire: 0 });
   revalidatePath("/");
   revalidatePath(indexPath);
+
+  if (input.entity === "portfolio") {
+    for (const servicePath of portfolioServicePaths) {
+      revalidatePath(servicePath);
+    }
+  }
 
   for (const slug of new Set([input.slug, input.previousSlug])) {
     if (slug) {

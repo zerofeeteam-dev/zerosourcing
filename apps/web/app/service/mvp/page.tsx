@@ -19,7 +19,7 @@ import {
 } from "./content";
 import mvpStyles from "./page.module.css";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 86400;
 
 const servicePageMetadata = {
   title: "제로소싱 | MVP 개발 외주, 평균 4주 출시",

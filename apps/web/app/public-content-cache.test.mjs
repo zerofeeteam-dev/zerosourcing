@@ -52,5 +52,14 @@ test("admin-authenticated invalidation expires data and affected routes", async 
   );
   assert.match(source, /revalidatePath\("\/"\)/);
   assert.match(source, /revalidatePath\(indexPath\)/);
+  assert.match(source, /if \(input\.entity === "portfolio"\)/);
+  assert.match(source, /revalidatePath\(servicePath\)/);
+  for (const servicePath of [
+    "/service/app",
+    "/service/company-homepage",
+    "/service/mvp",
+  ]) {
+    assert.match(source, new RegExp(`"${servicePath}"`));
+  }
   assert.match(source, /revalidatePath\(`\$\{indexPath\}\/\$\{slug\}`\)/);
 });
