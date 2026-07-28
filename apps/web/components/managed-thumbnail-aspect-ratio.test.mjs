@@ -46,10 +46,10 @@ function selectorBodies(styles, selector) {
   ].map((match) => match[1]);
 }
 
-test("managed thumbnails serve the stored asset without next/image optimization", async () => {
+test("managed thumbnails use next/image optimization", async () => {
   const component = await readFile(managedThumbnailComponentPath, "utf8");
 
-  assert.match(component, /\bunoptimized\b/u);
+  assert.doesNotMatch(component, /\bunoptimized\b/u);
 });
 
 test("managed thumbnails preserve the stored 3:2 image ratio", async () => {

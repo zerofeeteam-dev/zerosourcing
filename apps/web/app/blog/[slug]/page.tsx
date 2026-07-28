@@ -43,6 +43,7 @@ export async function generateMetadata({ params }: BlogDetailPageProps) {
     title: `제로소싱 | ${post.title}`,
     description: post.seoDescription || post.summary,
     path: `/blog/${post.slug}`,
+    socialImageUrl: post.thumbnailUrl,
   });
 }
 

@@ -8,22 +8,29 @@ export const HOME_DESCRIPTION =
 type PageMetadataInput = {
   description: string;
   path: string;
+  socialImageUrl?: string | null;
   title: string;
 };
 
 export function createPageMetadata({
   description,
   path,
+  socialImageUrl,
   title,
 }: PageMetadataInput): Metadata {
   const url = new URL(path, `${SITE_URL}/`).toString();
-  const socialImage = {
-    url: `${SITE_URL}/og_kakao.png`,
-    width: 1200,
-    height: 800,
-    alt: title,
-    type: "image/png",
-  };
+  const socialImage = socialImageUrl
+    ? {
+        url: socialImageUrl,
+        alt: title,
+      }
+    : {
+        url: `${SITE_URL}/og_kakao.png`,
+        width: 1200,
+        height: 800,
+        alt: title,
+        type: "image/png",
+      };
 
   return {
     title,

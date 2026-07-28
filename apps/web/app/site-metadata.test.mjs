@@ -101,6 +101,8 @@ test("the shared metadata helper owns the canonical domain and social image", as
   assert.match(source, /url: `\$\{SITE_URL\}\/og_kakao\.png`/);
   assert.match(source, /width: 1200/);
   assert.match(source, /height: 800/);
+  assert.match(source, /socialImageUrl\?: string \| null/);
+  assert.match(source, /socialImageUrl\s+\?\s+\{/);
   assert.match(source, /card: "summary_large_image"/);
   assert.doesNotMatch(source, /zerosourcing\.com/);
 });
@@ -155,6 +157,7 @@ test("blog and portfolio details derive metadata from their route data", async (
   assert.match(blog, /title: `제로소싱 \| \$\{post\.title\}`/);
   assert.match(blog, /description: post\.seoDescription \|\| post\.summary/);
   assert.match(blog, /path: `\/blog\/\$\{post\.slug\}`/);
+  assert.match(blog, /socialImageUrl: post\.thumbnailUrl/);
   assert.match(blog, /<ManagedContent/);
   assert.match(blog, /export const revalidate = 86400;/);
   assert.match(blog, /export function generateStaticParams\(\)/);
@@ -168,6 +171,7 @@ test("blog and portfolio details derive metadata from their route data", async (
     /description: portfolio\.seoDescription \|\| portfolio\.description/,
   );
   assert.match(portfolio, /path: `\/portfolio\/\$\{portfolio\.slug\}`/);
+  assert.match(portfolio, /socialImageUrl: portfolio\.thumbnailUrl/);
   assert.match(portfolio, /<ManagedContent/);
   assert.match(portfolio, /export const revalidate = 86400;/);
   assert.match(portfolio, /export function generateStaticParams\(\)/);

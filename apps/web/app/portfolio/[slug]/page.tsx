@@ -36,6 +36,7 @@ export async function generateMetadata({ params }: PortfolioDetailPageProps) {
     title: `제로소싱 | ${portfolio.title}`,
     description: portfolio.seoDescription || portfolio.description,
     path: `/portfolio/${portfolio.slug}`,
+    socialImageUrl: portfolio.thumbnailUrl,
   });
 }
 
