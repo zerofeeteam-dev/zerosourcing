@@ -107,7 +107,7 @@ test("the shared metadata helper owns the canonical domain and social image", as
   assert.doesNotMatch(source, /zerosourcing\.com/);
 });
 
-test("the root layout supplies Korean defaults and Organization JSON-LD", async () => {
+test("the root layout supplies Korean defaults and site-wide JSON-LD", async () => {
   const [layout, jsonLd] = await Promise.all([
     readOrEmpty("./layout.tsx"),
     readOrEmpty("../components/JsonLd.tsx"),
@@ -120,6 +120,11 @@ test("the root layout supplies Korean defaults and Organization JSON-LD", async 
   assert.match(
     layout,
     /<JsonLd data=\{organizationJsonLd\} id="organization-json-ld" \/>/,
+  );
+  assert.match(layout, /createWebSiteJsonLd/);
+  assert.match(
+    layout,
+    /<JsonLd data=\{websiteJsonLd\} id="website-json-ld" \/>/,
   );
   assert.match(jsonLd, /serializeJsonLd\(data\)/);
   assert.match(jsonLd, /type="application\/ld\+json"/);

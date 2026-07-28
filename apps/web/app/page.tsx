@@ -10,6 +10,7 @@ import { FaqSection } from "../components/FaqSection";
 import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
 import { Icon } from "../components/Icon";
+import { JsonLd } from "../components/JsonLd";
 import { ManagedThumbnail } from "../components/ManagedThumbnail";
 import { partnerLogos } from "../components/partner-logos";
 import { ProcessSection } from "../components/ProcessSection";
@@ -26,6 +27,7 @@ import {
   selectHomeBlogPosts,
   selectHomePortfolios,
 } from "../lib/public-content/selectors";
+import { createFaqPageJsonLd } from "../lib/seo/structured-data";
 import {
   homeProblemQuotes,
   homeProofMetrics,
@@ -42,6 +44,12 @@ const homeDescription =
 export const metadata = createPageMetadata({
   title: homeTitle,
   description: homeDescription,
+  path: "/",
+});
+
+const homeFaqJsonLd = createFaqPageJsonLd({
+  faqs: homeFaqs,
+  name: homeTitle,
   path: "/",
 });
 
@@ -69,6 +77,7 @@ export default async function Home() {
 
   return (
     <main className={styles.page}>
+      <JsonLd data={homeFaqJsonLd} id="home-faq-json-ld" />
       <div className={styles.headerLayer}>
         <Header />
       </div>

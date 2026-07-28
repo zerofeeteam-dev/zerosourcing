@@ -1,12 +1,18 @@
 import { SITE_URL } from "../../app/site-metadata";
 
 export const ORGANIZATION_ID = `${SITE_URL}/#organization`;
+export const WEBSITE_ID = `${SITE_URL}/#website`;
 
 const organizationReference = {
   "@type": "Organization",
   "@id": ORGANIZATION_ID,
   name: "제로소싱",
   url: SITE_URL,
+} as const;
+
+const websiteReference = {
+  "@type": "WebSite",
+  "@id": WEBSITE_ID,
 } as const;
 
 type ServiceJsonLdInput = {
@@ -26,6 +32,15 @@ type BlogPostingJsonLdInput = {
   readonly updatedAt: string;
 };
 
+type FaqPageJsonLdInput = {
+  readonly faqs: readonly {
+    readonly answer: string;
+    readonly question: string;
+  }[];
+  readonly name: string;
+  readonly path: string;
+};
+
 type BreadcrumbItem = {
   readonly name: string;
   readonly path: string;
@@ -39,6 +54,47 @@ type BreadcrumbItems = readonly [
 
 function createSiteUrl(path: string): string {
   return new URL(path, `${SITE_URL}/`).toString();
+}
+
+export function createWebSiteJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": WEBSITE_ID,
+    inLanguage: "ko-KR",
+    name: "제로소싱",
+    publisher: organizationReference,
+    url: SITE_URL,
+  } as const;
+}
+
+export function createFaqPageJsonLd({
+  faqs,
+  name,
+  path,
+}: FaqPageJsonLdInput) {
+  const url = createSiteUrl(path);
+  const uniqueFaqs = [
+    ...new Map(faqs.map((faq) => [faq.question, faq])).values(),
+  ];
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "@id": `${url}#faq`,
+    inLanguage: "ko-KR",
+    isPartOf: websiteReference,
+    mainEntity: uniqueFaqs.map(({ answer, question }) => ({
+      "@type": "Question",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: answer,
+      },
+      name: question,
+    })),
+    name,
+    url,
+  } as const;
 }
 
 export function createServiceJsonLd({

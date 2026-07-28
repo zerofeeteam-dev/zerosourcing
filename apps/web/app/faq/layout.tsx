@@ -1,4 +1,7 @@
+import { JsonLd } from "../../components/JsonLd";
+import { createFaqPageJsonLd } from "../../lib/seo/structured-data";
 import { createPageMetadata } from "../site-metadata";
+import { categories } from "./content";
 
 export const metadata = createPageMetadata({
   title: "제로소싱 | 자주 묻는 질문(FAQ)",
@@ -7,8 +10,19 @@ export const metadata = createPageMetadata({
   path: "/faq",
 });
 
+const faqPageJsonLd = createFaqPageJsonLd({
+  faqs: categories.flatMap((category) => category.items),
+  name: "제로소싱 자주 묻는 질문",
+  path: "/faq",
+});
+
 export default function FaqLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  return children;
+  return (
+    <>
+      <JsonLd data={faqPageJsonLd} id="faq-page-json-ld" />
+      {children}
+    </>
+  );
 }

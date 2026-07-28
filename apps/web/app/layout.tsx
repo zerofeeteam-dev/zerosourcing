@@ -8,6 +8,7 @@ import { BottomFloatingCta } from "../components/BottomFloatingCta";
 import { JsonLd } from "../components/JsonLd";
 import { MetaPixel } from "../components/MetaPixel";
 import organizationJsonLd from "./organization-json-ld.json";
+import { createWebSiteJsonLd } from "../lib/seo/structured-data";
 import {
   createPageMetadata,
   HOME_DESCRIPTION,
@@ -30,6 +31,8 @@ export const metadata: Metadata = {
   }),
 };
 
+const websiteJsonLd = createWebSiteJsonLd();
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -39,6 +42,7 @@ export default function RootLayout({
     <html lang="ko">
       <body>
         <JsonLd data={organizationJsonLd} id="organization-json-ld" />
+        <JsonLd data={websiteJsonLd} id="website-json-ld" />
         {children}
         <BottomFloatingCta />
         <Suspense fallback={null}>

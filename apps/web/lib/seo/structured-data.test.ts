@@ -2,9 +2,12 @@ import { describe, expect, it } from "vitest";
 
 import {
   ORGANIZATION_ID,
+  WEBSITE_ID,
   createBlogPostingJsonLd,
   createBreadcrumbJsonLd,
+  createFaqPageJsonLd,
   createServiceJsonLd,
+  createWebSiteJsonLd,
   serializeJsonLd,
 } from "./structured-data";
 
@@ -16,6 +19,59 @@ const organizationReference = {
 };
 
 describe("page-specific structured data", () => {
+  it("builds a Korean WebSite connected to the canonical organization", () => {
+    expect(WEBSITE_ID).toBe("https://www.zerosourcing.kr/#website");
+    expect(createWebSiteJsonLd()).toEqual({
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "@id": "https://www.zerosourcing.kr/#website",
+      inLanguage: "ko-KR",
+      name: "제로소싱",
+      publisher: organizationReference,
+      url: "https://www.zerosourcing.kr",
+    });
+  });
+
+  it("builds an FAQPage from questions that are visible on the page", () => {
+    expect(
+      createFaqPageJsonLd({
+        faqs: [
+          {
+            answer: "네. 상담과 1차 견적은 무료입니다.",
+            question: "상담과 견적은 무료인가요?",
+          },
+          {
+            answer: "네. 상담과 1차 견적은 무료입니다.",
+            question: "상담과 견적은 무료인가요?",
+          },
+        ],
+        name: "제로소싱 자주 묻는 질문",
+        path: "/faq",
+      }),
+    ).toEqual({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "@id": "https://www.zerosourcing.kr/faq#faq",
+      inLanguage: "ko-KR",
+      isPartOf: {
+        "@type": "WebSite",
+        "@id": "https://www.zerosourcing.kr/#website",
+      },
+      mainEntity: [
+        {
+          "@type": "Question",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "네. 상담과 1차 견적은 무료입니다.",
+          },
+          name: "상담과 견적은 무료인가요?",
+        },
+      ],
+      name: "제로소싱 자주 묻는 질문",
+      url: "https://www.zerosourcing.kr/faq",
+    });
+  });
+
   it("builds a routed Service connected to the canonical organization", () => {
     expect(ORGANIZATION_ID).toBe("https://www.zerosourcing.kr/#organization");
     expect(

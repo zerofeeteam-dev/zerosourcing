@@ -26,6 +26,19 @@ const serviceExpectations = [
   },
 ];
 
+test("home and FAQ pages render FAQPage JSON-LD from visible questions", async () => {
+  const [homePage, faqLayout] = await Promise.all([
+    readFile(new URL("./page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("./faq/layout.tsx", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(homePage, /createFaqPageJsonLd\(\{/);
+  assert.match(homePage, /faqs: homeFaqs/);
+  assert.match(homePage, /id="home-faq-json-ld"/);
+  assert.match(faqLayout, /categories\.flatMap/);
+  assert.match(faqLayout, /id="faq-page-json-ld"/);
+});
+
 test("each routed service renders its own Service JSON-LD", async () => {
   for (const expectation of serviceExpectations) {
     const page = await readFile(
