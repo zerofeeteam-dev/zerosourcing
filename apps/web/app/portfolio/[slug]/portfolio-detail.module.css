@@ -52,14 +52,6 @@
   white-space: nowrap;
 }
 
-.breadcrumb {
-  composes: pretendard-medium-14 from global;
-  overflow: hidden;
-  color: var(--color-gray-800);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 .title {
   composes: pretendard-bold-28 from global;
   width: 784px;

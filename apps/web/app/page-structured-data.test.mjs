@@ -57,10 +57,13 @@ test("blog detail builds BlogPosting and breadcrumbs after its notFound guard", 
     "imageUrl: post.thumbnailUrl",
     "publishedDate: post.publishedDate",
     "updatedAt: post.updatedAt",
+    "const breadcrumbItems = [",
+    "createBreadcrumbJsonLd(breadcrumbItems)",
     'name: "Index"',
     'name: "Blog"',
     'id="blog-posting-json-ld"',
     'id="blog-breadcrumb-json-ld"',
+    "<Breadcrumb items={breadcrumbItems} />",
   ]) {
     assert.ok(page.includes(expected), expected);
   }
@@ -78,17 +81,21 @@ test("portfolio detail builds breadcrumbs after its notFound guard", async () =>
   );
 
   for (const expected of [
-    "createBreadcrumbJsonLd([",
+    "const breadcrumbItems = [",
+    "createBreadcrumbJsonLd(breadcrumbItems)",
     'name: "Index"',
     'name: "Portfolio"',
     "path: `/portfolio/${portfolio.slug}`",
     'id="portfolio-breadcrumb-json-ld"',
+    "<Breadcrumb items={breadcrumbItems} />",
   ]) {
     assert.ok(page.includes(expected), expected);
   }
 
   const guardPosition = page.indexOf("if (!portfolio)");
-  const schemaPosition = page.indexOf("createBreadcrumbJsonLd([");
+  const schemaPosition = page.indexOf(
+    "createBreadcrumbJsonLd(breadcrumbItems)",
+  );
   assert.ok(guardPosition >= 0);
   assert.ok(schemaPosition > guardPosition);
   assert.doesNotMatch(page, /createBlogPostingJsonLd/);

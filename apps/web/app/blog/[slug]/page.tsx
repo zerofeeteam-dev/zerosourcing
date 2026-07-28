@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { Footer } from "../../../components/Footer";
 import { Header } from "../../../components/Header";
+import { Breadcrumb } from "../../../components/Breadcrumb";
 import { JsonLd } from "../../../components/JsonLd";
 import { ManagedContent } from "../../../components/ManagedContent";
 import { ManagedThumbnail } from "../../../components/ManagedThumbnail";
@@ -111,11 +112,12 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
     title: post.title,
     updatedAt: post.updatedAt,
   });
-  const breadcrumbJsonLd = createBreadcrumbJsonLd([
+  const breadcrumbItems = [
     { name: "Index", path: "/" },
     { name: "Blog", path: "/blog" },
     { name: post.title, path: `/blog/${post.slug}` },
-  ]);
+  ] as const;
+  const breadcrumbJsonLd = createBreadcrumbJsonLd(breadcrumbItems);
   const relatedPosts = await getRelatedBlogPosts(post.type, post.slug);
 
   return (
@@ -133,9 +135,7 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
               <div className={styles.heading}>
                 <div className={styles.kicker}>
                   <CategoryChip>{post.category}</CategoryChip>
-                  <p className={styles.breadcrumb}>
-                    Index / Blog / {post.title} /
-                  </p>
+                  <Breadcrumb items={breadcrumbItems} />
                 </div>
                 <h1 className={styles.title}>{post.title}</h1>
               </div>

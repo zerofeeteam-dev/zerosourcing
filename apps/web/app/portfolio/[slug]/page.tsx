@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import { Footer } from "../../../components/Footer";
 import { Header } from "../../../components/Header";
+import { Breadcrumb } from "../../../components/Breadcrumb";
 import { JsonLd } from "../../../components/JsonLd";
 import { ManagedContent } from "../../../components/ManagedContent";
 import { ManagedThumbnail } from "../../../components/ManagedThumbnail";
@@ -48,14 +49,15 @@ export default async function PortfolioDetailPage({
     notFound();
   }
 
-  const breadcrumbJsonLd = createBreadcrumbJsonLd([
+  const breadcrumbItems = [
     { name: "Index", path: "/" },
     { name: "Portfolio", path: "/portfolio" },
     {
       name: portfolio.title,
       path: `/portfolio/${portfolio.slug}`,
     },
-  ]);
+  ] as const;
+  const breadcrumbJsonLd = createBreadcrumbJsonLd(breadcrumbItems);
 
   return (
     <main className={pageStyles.page}>
@@ -71,9 +73,7 @@ export default async function PortfolioDetailPage({
               <div className={styles.heading}>
                 <div className={styles.kicker}>
                   <span className={styles.kickerChip}>포트폴리오</span>
-                  <p className={styles.breadcrumb}>
-                    Index / Portfolio / {portfolio.title}
-                  </p>
+                  <Breadcrumb items={breadcrumbItems} />
                 </div>
                 <h1 className={styles.title}>{portfolio.title}</h1>
               </div>
