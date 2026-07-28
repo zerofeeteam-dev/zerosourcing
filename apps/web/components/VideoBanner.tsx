@@ -36,6 +36,7 @@ type VideoBannerProps = {
   title: ReactNode;
 };
 
+const bannerVideoWebmSrc = "/banner_video.webm";
 const bannerVideoSrc = "/banner_video_origin.mp4";
 const bannerPosterSrc = "/banner-poster.webp";
 const actionButtonStyle = {
@@ -70,6 +71,7 @@ export function VideoBanner({
         poster={bannerPosterSrc}
         preload="auto"
       >
+        <source src={bannerVideoWebmSrc} type="video/webm" />
         <source src={bannerVideoSrc} type="video/mp4" />
       </video>
       <div

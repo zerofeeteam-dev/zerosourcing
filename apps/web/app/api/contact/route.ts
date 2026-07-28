@@ -17,13 +17,20 @@ type SlackResponse = {
   ok?: boolean;
 };
 
-function getString(data: Record<string, unknown>, key: string, maxLength = 300) {
+function getString(
+  data: Record<string, unknown>,
+  key: string,
+  maxLength = 300,
+) {
   const value = data[key];
   return typeof value === "string" ? value.trim().slice(0, maxLength) : "";
 }
 
 function escapeSlackText(value: string) {
-  return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
 }
 
 function formatBudget(value: string) {
@@ -68,7 +75,8 @@ function parseContactMessage(data: Record<string, unknown>) {
     !/^010-\d{4}-\d{3,4}$/.test(contact.phone) ||
     !contactMethods.has(contact.contactMethod) ||
     !contact.budget ||
-    data.privacyConsent !== true
+    data.privacyConsent !== true ||
+    data.overseasTransferConsent !== true
   ) {
     return null;
   }
@@ -79,7 +87,7 @@ function parseContactMessage(data: Record<string, unknown>) {
 function buildSlackBlocks(contact: ContactMessage) {
   const fields = [
     `• 기업명: ${escapeSlackText(contact.company)}`,
-    `• 담당자 성함: ${escapeSlackText(contact.name)}`,
+    `• 담당자 성명: ${escapeSlackText(contact.name)}`,
     `• 이메일: ${escapeSlackText(contact.email)}`,
     `• 연락처: ${escapeSlackText(contact.phone)}`,
     `• 연락 방법: ${escapeSlackText(formatContactMethod(contact.contactMethod))}`,
@@ -149,7 +157,9 @@ export async function POST(request: Request) {
 
   if (!slackResponse.ok || !isSlackResponse(slackResult) || !slackResult.ok) {
     console.error("Slack contact notification failed", {
-      error: isSlackResponse(slackResult) ? slackResult.error : "invalid_response",
+      error: isSlackResponse(slackResult)
+        ? slackResult.error
+        : "invalid_response",
       status: slackResponse.status,
     });
 

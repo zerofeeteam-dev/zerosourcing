@@ -71,6 +71,10 @@ test("BannerEyebrowChip uses the liquid-glass library", async () => {
     styles,
     /\.chip::before|backdrop-filter|background-image/u,
   );
+  assert.match(
+    styles,
+    /\.chip:global\(\[data-liquid-glass\]\) > :global\(div:first-child\)[\s\S]*?box-shadow:\s*none\s*!important/u,
+  );
 });
 
 test("hero and bottom banners share the liquid-glass eyebrow chip", async () => {

@@ -31,7 +31,10 @@ test("the company homepage page owns its route-only sections", async () => {
     page,
     /import \{ CompanyHomepage(?:Types|SeoGeo|Scope)Section \}/,
   );
-  assert.match(page, /import \{ Icon \} from "\.\.\/\.\.\/\.\.\/components\/Icon";/);
+  assert.match(
+    page,
+    /import \{ Icon \} from "\.\.\/\.\.\/\.\.\/components\/Icon";/,
+  );
   assert.match(
     page,
     /import \{ SectionShell \} from "\.\.\/\.\.\/\.\.\/components\/SectionShell";/,
@@ -60,15 +63,17 @@ test("company homepage data is managed in the route content module", async () =>
 
   assert.match(page, /from "\.\/content";/);
 
-  for (const name of [
-    "companyHomepageTypes",
-    "companyHomepageScopeItems",
-    "companyHomepageFaqs",
-  ]) {
+  for (const name of ["companyHomepageTypes", "companyHomepageScopeItems"]) {
     assert.match(content, new RegExp(`export const ${name}`));
     assert.doesNotMatch(page, new RegExp(`const ${name}`));
   }
 
+  assert.match(
+    page,
+    /import \{ companyHomepageServiceFaqs \} from "\.\.\/\.\.\/\.\.\/content\/faqs";/,
+  );
+  assert.match(page, /items=\{companyHomepageServiceFaqs\}/);
+  assert.doesNotMatch(content, /export const companyHomepageFaqs/);
   assert.match(content, /import type \{ IconName \}/);
   assert.match(
     content,

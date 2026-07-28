@@ -13,7 +13,7 @@ import styles from "./page.module.css";
 export const metadata = createPageMetadata({
   title: "제로소싱 | 개인정보처리방침",
   description:
-    "제로피가 수집·이용하는 개인정보의 항목, 처리 목적, 보유 기간 및 이용자 권리를 안내합니다.",
+    "제로소싱 외주 문의 과정에서 수집하는 개인정보와 Meta Pixel 행태정보의 항목, 이용 목적, 보유기간 및 처리 위탁·국외 이전 사항을 안내합니다.",
   path: "/privacy",
 });
 

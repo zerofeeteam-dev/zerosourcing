@@ -32,7 +32,7 @@ test("every managed portfolio card links to its published detail slug", async ()
   );
 });
 
-test("featured portfolio tag rows use an 8px gap at every viewport", async () => {
+test("featured portfolio tags use the approved row and column gaps", async () => {
   const styles = await readFile(stylesPath, "utf8");
 
   assert.match(
@@ -41,7 +41,7 @@ test("featured portfolio tag rows use an 8px gap at every viewport", async () =>
   );
   assert.match(
     styles,
-    /\.featured \.tagList\s*\{[\s\S]*?column-gap:\s*12px;[\s\S]*?row-gap:\s*8px;/,
+    /\.featured \.tagList\s*\{[\s\S]*?column-gap:\s*12px;[\s\S]*?row-gap:\s*4px;/,
   );
   assert.doesNotMatch(styles, /@media \(min-width: 481px\)/);
 });
@@ -58,5 +58,5 @@ test("mobile portfolio filters remain swipeable without a visible scrollbar", as
     mobileStyles,
     /\.filterBar\s*\{[\s\S]*?width:\s*calc\(100vw\s*-\s*40px\);[\s\S]*?overflow-x:\s*auto;[\s\S]*?scrollbar-width:\s*none;/,
   );
-  assert.match(mobileStyles, /\.filterBar::\-webkit-scrollbar\s*\{[\s\S]*?display:\s*none;/);
+  assert.match(mobileStyles, /\.filterBar::-webkit-scrollbar\s*\{[\s\S]*?display:\s*none;/);
 });

@@ -448,14 +448,16 @@ describe("public row mapping", () => {
       category: "인사이트",
       contentAuthoringMode: "wysiwyg",
       date: "2026. 07. 12",
+      publishedDate: "2026-07-12",
       thumbnailUrl: null,
     });
   });
 
   it("uses published_at only when published_date is null", () => {
-    expect(mapBlogCard(blogRow({ published_date: null })).date).toBe(
-      "2026. 07. 13",
-    );
+    expect(mapBlogCard(blogRow({ published_date: null }))).toMatchObject({
+      date: "2026. 07. 13",
+      publishedDate: "2026-07-13",
+    });
     expect(() =>
       mapBlogCard(blogRow({ published_at: "2026-02-30T01:00:00Z" })),
     ).toThrow(PublicContentMappingError);

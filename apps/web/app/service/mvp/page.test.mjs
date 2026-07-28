@@ -38,9 +38,14 @@ test("MVP page content is managed in the route content module", async () => {
     "supportSteps",
     "supportStepText",
     "mvpIncludedCards",
-    "mvpFaqs",
   ]) {
     assert.match(content, new RegExp(`export const ${name}`));
     assert.doesNotMatch(page, new RegExp(`const ${name}`));
   }
+
+  assert.match(
+    page,
+    /import \{ mvpFaqs \} from "\.\.\/\.\.\/\.\.\/content\/faqs";/,
+  );
+  assert.doesNotMatch(content, /export const mvpFaqs/);
 });
