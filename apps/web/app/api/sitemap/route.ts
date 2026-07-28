@@ -16,6 +16,7 @@ const staticPaths = [
   "/contact",
   "/term",
   "/privacy",
+  "/privacy/consent",
 ] as const;
 
 export const dynamic = "force-dynamic";

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import {
   type ChangeEvent,
   type CSSProperties,
@@ -61,6 +62,7 @@ const contactMethodStyle = {
 } satisfies CSSProperties;
 
 const privacyCheckboxStyle = {
+  flex: "1 1 auto",
   width: "auto",
 } satisfies CSSProperties;
 
@@ -278,27 +280,13 @@ export default function ContactPage() {
                     style={privacyCheckboxStyle}
                     value="true"
                   />
-                  <details className={styles.consentDetails}>
-                    <summary
-                      aria-label="개인정보 수집·이용 동의 내용 보기"
-                      className={styles.consentSummary}
-                    >
-                      보기
-                    </summary>
-                    <div className={styles.consentPanel}>
-                      <p>목적: 외주 개발 상담 접수, 연락 및 견적 검토</p>
-                      <p>
-                        필수 항목: 기업명, 담당자 성명, 이메일, 연락처, 선호
-                        연락 방법, 예산
-                      </p>
-                      <p>선택 항목: 문의 내용은 선택 항목입니다.</p>
-                      <p>보유기간: 문의 접수일로부터 1년</p>
-                      <p>
-                        동의를 거부할 수 있으나 필수 항목 동의 없이는 문의를
-                        제출할 수 없습니다.
-                      </p>
-                    </div>
-                  </details>
+                  <Link
+                    aria-label="개인정보 수집·이용 동의 내용 보기"
+                    className={styles.consentLink}
+                    href="/privacy/consent#collection-use"
+                  >
+                    보기
+                  </Link>
                 </div>
 
                 <div className={styles.consentItem}>
@@ -309,36 +297,13 @@ export default function ContactPage() {
                     style={privacyCheckboxStyle}
                     value="true"
                   />
-                  <details className={styles.consentDetails}>
-                    <summary
-                      aria-label="개인정보 국외 이전 동의 내용 보기"
-                      className={styles.consentSummary}
-                    >
-                      보기
-                    </summary>
-                    <div className={styles.consentPanel}>
-                      <p>이전받는 자: Vercel Inc., Slack Technologies, LLC</p>
-                      <p>이전 국가: 미국</p>
-                      <p>
-                        이전 시점·방법: 문의 제출 시 암호화된 네트워크로 전송
-                      </p>
-                      <p>
-                        이전 항목: 필수 항목과 이용자가 입력한 선택 문의 내용
-                      </p>
-                      <p>
-                        목적: 사이트 호스팅·서버 처리, 문의 알림 및 내부 상담
-                        협업
-                      </p>
-                      <p>
-                        보유기간: Vercel은 Slack 전달 완료 시까지 일시 처리,
-                        Slack은 접수일로부터 1년
-                      </p>
-                      <p>
-                        동의를 거부할 수 있으나 국외 이전 동의 없이는 문의를
-                        제출할 수 없습니다.
-                      </p>
-                    </div>
-                  </details>
+                  <Link
+                    aria-label="개인정보 국외 이전 동의 내용 보기"
+                    className={styles.consentLink}
+                    href="/privacy/consent#overseas-transfer"
+                  >
+                    보기
+                  </Link>
                 </div>
 
                 <p className={styles.sensitiveDataNotice}>
