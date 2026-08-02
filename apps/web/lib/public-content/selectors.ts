@@ -43,7 +43,7 @@ export function selectBlogIndex<
   const top = rows.slice(0, 3);
   return {
     featured,
-    list: rows.filter((row) => !top.includes(row) || row === featured),
+    list: rows,
     top,
   };
 }

@@ -619,7 +619,7 @@ describe("public selectors", () => {
     ]);
   });
 
-  it("keeps featured content in the lower index lists", () => {
+  it("keeps all content in the lower index lists", () => {
     const portfolios = [
       { featuredPublished: false, slug: "newest" },
       { featuredPublished: true, slug: "featured" },
@@ -639,7 +639,7 @@ describe("public selectors", () => {
     });
     expect(selectBlogIndex(blogs)).toEqual({
       featured: blogs[1],
-      list: [blogs[1], blogs[3], blogs[4]],
+      list: blogs,
       top: [blogs[0], blogs[1], blogs[2]],
     });
     expect(
