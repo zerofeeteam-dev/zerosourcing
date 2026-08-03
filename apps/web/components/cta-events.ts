@@ -1,3 +1,4 @@
+import { trackOutsourcingLead } from "../lib/google-analytics";
 import { POSTHOG_EVENTS, trackPostHogEvent } from "../lib/posthog";
 
 export type CtaAction =
@@ -24,6 +25,10 @@ export function getCtaHref(action: CtaAction) {
 export function emitCtaEvent(action: CtaAction) {
   if (typeof window === "undefined") {
     return;
+  }
+
+  if (action === "quick") {
+    trackOutsourcingLead("kakao");
   }
 
   trackPostHogEvent(POSTHOG_EVENTS.ctaClicked, {

@@ -15,6 +15,7 @@ import { Radio } from "@repo/ui/radio";
 import { Footer } from "../../components/Footer";
 import { Header } from "../../components/Header";
 import { Icon } from "../../components/Icon";
+import { trackOutsourcingLead } from "../../lib/google-analytics";
 import { trackMetaLead } from "../../lib/meta-pixel";
 import { POSTHOG_EVENTS, trackPostHogEvent } from "../../lib/posthog";
 import pageStyles from "../page.module.css";
@@ -135,6 +136,7 @@ export default function ContactPage() {
 
       if (!response.ok) throw new Error("Failed to submit contact form");
 
+      trackOutsourcingLead("website");
       trackMetaLead();
       trackPostHogEvent(POSTHOG_EVENTS.contactFormSubmitted, {
         form_name: "contact",

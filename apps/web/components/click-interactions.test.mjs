@@ -56,6 +56,10 @@ test("ServiceCard actions emit typed CTA events for all four cards", async () =>
     /export function emitCtaEvent\(action: CtaAction\)[\s\S]*?window\.dispatchEvent/,
   );
   assert.match(
+    ctaEvents,
+    /if \(action === "quick"\) \{\s*trackOutsourcingLead\("kakao"\);\s*\}/,
+  );
+  assert.match(
     businessTypes,
     /const services = \[[\s\S]*?\] as const satisfies readonly ServiceCardData\[\];/,
   );
